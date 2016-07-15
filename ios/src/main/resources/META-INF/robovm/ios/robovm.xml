@@ -1,0 +1,10 @@
+<config>
+  <!-- NOTE: this will be merged with implementing app config file -->
+  <forceLinkClasses>
+    <!--This is needed for reflection usage-->
+    <pattern>com.spilgames.spilgdxsdk.ios.robovm.*</pattern>
+  </forceLinkClasses>
+  <libs>
+      <!--<lib></lib>-->
+  </libs>
+</config>

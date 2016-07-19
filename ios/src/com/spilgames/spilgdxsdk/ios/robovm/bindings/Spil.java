@@ -102,4 +102,13 @@ public class Spil extends NSObject {
 	 */
 	@Method(selector = "getConfigValue:")
 	public static native NSString getConfigValue(String key);
+
+	/**
+	 *  Handle remote notification packages
+	 *
+	 *  @param application     Reference to the UIApplication object
+	 *  @param userInfo        Reference to the push notification payload
+	 */
+	@Method(selector = "application:didReceiveRemoteNotification:")
+	public static native void didReceiveRemoteNotification(UIApplication application, NSDictionary userInfo);
 }

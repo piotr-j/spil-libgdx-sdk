@@ -45,14 +45,12 @@
     -->
     <!--<framework>Spil</framework>-->
 
-    <!--<framework>AdjustSdk</framework>-->
-    <!--<framework>UnityAds</framework>-->
-    <!--<framework>Chartboost</framework>-->
-    <!--<framework>MMAdSDK</framework>-->
-    <!--<framework>FBAudienceNetwork</framework>-->
-    <!--<framework>Fyber_AdColony</framework>-->
-    <!--<framework>Fyber_AppLovin</framework>-->
-    <!--<framework>Fyber_UnityAds</framework>-->
-    <!--<framework>GoogleMobileAds</framework>-->
+    <framework>Chartboost</framework>
+    <framework>MMAdSDK</framework>
+    <framework>FBAudienceNetwork</framework>
+    <framework>Fyber_AdColony</framework>
+    <framework>Fyber_AppLovin</framework>
+    <framework>Fyber_UnityAds</framework>
+    <framework>GoogleMobileAds</framework>
   </frameworks>
 </config>

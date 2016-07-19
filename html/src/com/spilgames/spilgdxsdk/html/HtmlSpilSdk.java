@@ -1,5 +1,8 @@
 package com.spilgames.spilgdxsdk.html;
 
+import com.badlogic.gdx.utils.ObjectMap;
+import com.spilgames.spilgdxsdk.SpilEvent;
+import com.spilgames.spilgdxsdk.SpilEventActionListener;
 import com.spilgames.spilgdxsdk.SpilSdk;
 import com.spilgames.spilgdxsdk.SpilSdkType;
 
@@ -9,5 +12,53 @@ import com.spilgames.spilgdxsdk.SpilSdkType;
 public class HtmlSpilSdk implements SpilSdk {
 	@Override public SpilSdkType getBackendType () {
 		return SpilSdkType.HTML;
+	}
+
+	@Override public void setDebug (boolean debug) {
+
+	}
+
+	@Override public void trackEvent (SpilEvent event) {
+
+	}
+
+	@Override public void trackEvent (SpilEvent event, SpilEventActionListener listener) {
+
+	}
+
+	@Override public void onCreate () {
+
+	}
+
+	@Override public void onStart () {
+
+	}
+
+	@Override public void onResume () {
+
+	}
+
+	@Override public void onPause () {
+
+	}
+
+	@Override public void onDestroy () {
+
+	}
+
+	@Override public void onBackPressed () {
+
+	}
+
+	@Override public ObjectMap<String, String> getConfigAll () {
+		return null;
+	}
+
+	@Override public String getConfigValue (String key) {
+		return null;
+	}
+
+	@Override public void startChartboost (String appId, String appSignature) {
+
 	}
 }

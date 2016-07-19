@@ -25,6 +25,11 @@ android {
 		sourceCompatibility JavaVersion.VERSION_1_7
 		targetCompatibility JavaVersion.VERSION_1_7
 	}
+
+//	lintOptions {
+//		abortOnError false
+//		checkReleaseBuilds false
+//	}
 }
 
 ext {
@@ -32,3 +37,5 @@ ext {
 }
 
 apply from : '../androidpublish.gradle'
+
+//apply plugin: 'com.google.gms.google-services'

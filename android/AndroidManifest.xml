@@ -2,5 +2,51 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.spilgames.spilgdxsdk.android">
-    <application/>
+    <!-- can/should we have this in here? -->
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <application>
+        <!-- Spil base -->
+        <activity android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen" android:label="" android:name="com.spilgames.spilsdk.web.WebViewActivity"/>
+
+        <service android:name="com.github.airk.trigger.TriggerLoop" />
+        <receiver
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+                <category android:name="com.spilgames.spilsdk" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name="com.spilgames.spilsdk.utils.gcm.GCMListenerService"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name="com.spilgames.spilsdk.utils.gcm.GCMInstanceIdListenerService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name="com.spilgames.spilsdk.utils.gcm.GCMRegistrationIntentService"
+            android:exported="false">
+        </service>
+
+        <!-- Spil ads -->
+    </application>
 </manifest>

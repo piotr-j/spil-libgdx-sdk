@@ -14,7 +14,10 @@ buildscript {
         classpath 'de.richsource.gradle.plugins:gwt-gradle-plugin:0.6'
         classpath 'com.android.tools.build:gradle:2.1.0'
         classpath 'com.intel.gradle:moeGradlePlugin:1.1.0.final-1'
-        classpath 'com.mobidevelop.robovm:robovm-gradle-plugin:2.1.0'
+//        classpath 'com.mobidevelop.robovm:robovm-gradle-plugin:2.1.0'
+        classpath 'com.mobidevelop.robovm:robovm-gradle-plugin:2.2.0-SNAPSHOT'
+
+//        classpath 'com.google.gms:google-services:3.0.0'
     }
 }
 
@@ -64,8 +67,18 @@ project(":android") {
         compile project(':core')
         compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
 //        compile fileTree(dir: 'libs', include: '*.jar')
+//        compile file(dir: 'libs', include: '*.jar')
+        compile name: 'spilSDK-2.1.0'
+//        embedded name: 'spilSDK-2.1.0'
+//        embedded project('spilSDK-2.1.0')
+//        compile(name:'spilSDK-2.1.0') {
+//            transitive true
+//        }
+//        compile fileTree(dir: 'libs', include: '*.jar')
         // note; apparently, its not feasible to bundle the aar inside our own aar, so we need to distribute both
 //        compile(name:'aartestlib-debug', ext:'aar')
+
+//        compile 'com.google.android.gms:play-services-gcm:9.2.0'
     }
 }
 

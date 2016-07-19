@@ -150,5 +150,8 @@ artifacts {
 }
 
 afterEvaluate {
-    androidJavadocs.classpath += project.android.libraryVariants.toList().first().javaCompile.classpath
+//    androidJavadocs.classpath += project.android.libraryVariants.toList().first().javaCompile.classpath
+    androidJavadocs.classpath += files(android.libraryVariants.collect { variant ->
+        variant.javaCompile.classpath.files
+    })
 }

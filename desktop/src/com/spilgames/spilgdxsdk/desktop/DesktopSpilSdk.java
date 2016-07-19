@@ -2,10 +2,7 @@ package com.spilgames.spilgdxsdk.desktop;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.spilgames.spilgdxsdk.SpilEvent;
-import com.spilgames.spilgdxsdk.SpilEventActionListener;
-import com.spilgames.spilgdxsdk.SpilSdk;
-import com.spilgames.spilgdxsdk.SpilSdkType;
+import com.spilgames.spilgdxsdk.*;
 
 /**
  * Dummy implementation for desktop
@@ -65,5 +62,25 @@ public class DesktopSpilSdk implements SpilSdk {
 
 	@Override public void startChartboost (String appId, String appSignature) {
 		Gdx.app.log(TAG, "startChartboost ("+appId+", "+appSignature+")");
+	}
+
+	@Override public void setSpilAdCallbacks (SpilAdCallbacks adCallbacks) {
+		Gdx.app.log(TAG, "setSpilAdCallbacks ("+adCallbacks+")");
+	}
+
+	@Override public void devRequestAd (String provider, String adType, boolean parentalGate) {
+		Gdx.app.log(TAG, "devRequestAd ("+provider+", "+adType+", "+parentalGate+")");
+	}
+
+	@Override public void devShowRewardVideo (String provider) {
+		Gdx.app.log(TAG, "devShowRewardVideo ("+provider+")");
+	}
+
+	@Override public void devShowInterstitial (String provider) {
+		Gdx.app.log(TAG, "devShowInterstitial ("+provider+")");
+	}
+
+	@Override public void devShowMoreApps (String provider) {
+		Gdx.app.log(TAG, "devShowMoreApps ("+provider+")");
 	}
 }

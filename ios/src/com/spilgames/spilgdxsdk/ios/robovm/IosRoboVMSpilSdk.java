@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.spilgames.spilgdxsdk.*;
 import com.spilgames.spilgdxsdk.ios.robovm.bindings.Spil;
+import com.spilgames.spilgdxsdk.ios.robovm.bindings.SpilDelegateAdapter;
 import org.robovm.apple.foundation.NSDictionary;
 import org.robovm.apple.foundation.NSMutableDictionary;
 import org.robovm.apple.foundation.NSObject;
@@ -122,5 +123,46 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 
 	@Override public void startChartboost (String appId, String appSignature) {
 
+	}
+
+	@Override public void setSpilAdCallbacks (final SpilAdCallbacks adCallbacks) {
+		if (adCallbacks == null) throw new AssertionError("SpilAdCallbacks cannot be null!");
+		Spil instance = Spil.getInstance();
+		// TODO we have more events in the delegate, we probably need to keep an instance for other callbacks
+		instance.setDelegate(new SpilDelegateAdapter(){
+			@Override public void adAvailable (String type) {
+				adCallbacks.adAvailable(type);
+			}
+
+			@Override public void adNotAvailable (String type) {
+				adCallbacks.adNotAvailable(type);
+			}
+
+			@Override public void adStart (String type) {
+				adCallbacks.adStart();
+			}
+
+			@Override public void adFinished (String type, String reason, String reward, String network) {
+				// TODO what do we do with the rest of the stuff?
+				adCallbacks.adFinished(type);
+			}
+		});
+	}
+
+
+	@Override public void devRequestAd (String provider, String adType, boolean parentalGate) {
+		Spil.devRequestAd(provider, adType, parentalGate);
+	}
+
+	@Override public void devShowRewardVideo (String provider) {
+		Spil.devShowRewardVideo(provider);
+	}
+
+	@Override public void devShowInterstitial (String provider) {
+		Spil.devShowInterstitial(provider);
+	}
+
+	@Override public void devShowMoreApps (String provider) {
+		Spil.devShowMoreApps(provider);
 	}
 }

@@ -1,10 +1,8 @@
 package com.spilgames.spilgdxsdk.html;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.spilgames.spilgdxsdk.SpilEvent;
-import com.spilgames.spilgdxsdk.SpilEventActionListener;
-import com.spilgames.spilgdxsdk.SpilSdk;
-import com.spilgames.spilgdxsdk.SpilSdkType;
+import com.spilgames.spilgdxsdk.*;
 
 /**
  * Created by PiotrJ on 01/07/16.
@@ -59,6 +57,26 @@ public class HtmlSpilSdk implements SpilSdk {
 	}
 
 	@Override public void startChartboost (String appId, String appSignature) {
+
+	}
+
+	@Override public void setSpilAdCallbacks (SpilAdCallbacks adCallbacks) {
+
+	}
+
+	@Override public void devRequestAd (String provider, String adType, boolean parentalGate) {
+
+	}
+
+	@Override public void devShowRewardVideo (String provider) {
+
+	}
+
+	@Override public void devShowInterstitial (String provider) {
+
+	}
+
+	@Override public void devShowMoreApps (String provider) {
 
 	}
 }

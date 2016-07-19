@@ -10,6 +10,8 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.spilgames.spilgdxsdk.*;
+import com.spilgames.spilsdk.ads.NativeAdCallbacks;
+import com.spilgames.spilsdk.ads.OnAdsListener;
 import com.spilgames.spilsdk.events.Event;
 import com.spilgames.spilsdk.events.EventActionListener;
 import com.spilgames.spilsdk.events.response.ResponseEvent;
@@ -149,6 +151,28 @@ public class AndroidSpilSdk implements SpilSdk {
 //		instance.onDestroy();
 	}
 
+	@Override public void setSpilAdCallbacks (final SpilAdCallbacks adCallbacks) {
+		if (adCallbacks == null) throw new AssertionError("SpilAdCallbacks cannot be null.");
+		NativeAdCallbacks nativeAdCallbacks = new NativeAdCallbacks(new OnAdsListener() {
+			@Override public void AdAvailable (String type) {
+				adCallbacks.adAvailable(type);
+			}
+
+			@Override public void AdNotAvailable (String type) {
+				adCallbacks.adNotAvailable(type);
+			}
+
+			@Override public void AdStart () {
+				adCallbacks.adStart();
+			}
+
+			@Override public void AdFinished (String type) {
+				adCallbacks.adFinished(type);
+			}
+		});
+		instance.setNativeAdCallbacks(nativeAdCallbacks);
+	}
+
 	@Override public void onBackPressed () {
 		instance.onBackPressed();
 	}
@@ -156,5 +180,22 @@ public class AndroidSpilSdk implements SpilSdk {
 
 	@Override public void startChartboost (String appId, String appSignature) {
 		instance.setupChartBoost(appId, appSignature);
+	}
+
+
+	@Override public void devRequestAd (String provider, String adType, boolean parentalGate) {
+
+	}
+
+	@Override public void devShowRewardVideo (String provider) {
+
+	}
+
+	@Override public void devShowInterstitial (String provider) {
+
+	}
+
+	@Override public void devShowMoreApps (String provider) {
+
 	}
 }

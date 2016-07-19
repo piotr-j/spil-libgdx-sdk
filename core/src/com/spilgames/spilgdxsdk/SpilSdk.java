@@ -28,4 +28,12 @@ public interface SpilSdk {
 	// Ads
 
 	void startChartboost (String appId, String appSignature);
+
+	void setSpilAdCallbacks(SpilAdCallbacks adCallbacks);
+
+	// dev
+	void devRequestAd(String provider, String adType, boolean parentalGate);
+	void devShowRewardVideo (String provider);
+	void devShowInterstitial(String provider);
+	void devShowMoreApps (String provider);
 }

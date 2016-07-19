@@ -7,6 +7,7 @@ import org.robovm.apple.uikit.UIApplication;
 import org.robovm.objc.annotation.Block;
 import org.robovm.objc.annotation.Method;
 import org.robovm.objc.annotation.NativeClass;
+import org.robovm.objc.annotation.Property;
 import org.robovm.objc.block.VoidBlock1;
 import org.robovm.rt.bro.annotation.Library;
 
@@ -18,6 +19,15 @@ import org.robovm.rt.bro.annotation.Library;
 @Library(Library.INTERNAL)
 @NativeClass
 public class Spil extends NSObject {
+
+	@Method(selector = "sharedInstance")
+	public static native Spil getInstance ();
+
+	@Property(selector = "delegate")
+	public native SpilDelegate getDelegate();
+
+	@Property(selector = "setDelegate:", strongRef = true)
+	public native void setDelegate(SpilDelegate delegate);
 
 	/**
 	 *  Show debug logs
@@ -111,4 +121,22 @@ public class Spil extends NSObject {
 	 */
 	@Method(selector = "application:didReceiveRemoteNotification:")
 	public static native void didReceiveRemoteNotification(UIApplication application, NSDictionary userInfo);
+
+
+
+	//+(void)devRequestAd:(NSString*)provider withAdType:(NSString*)adType withParentalGate:(BOOL)parentalGate;
+	@Method(selector = "devRequestAd:withAdType:withParentalGate:")
+	public static native void devRequestAd(String adProvider, String adType, boolean parentalGate);
+
+	//+(void)devShowRewardVideo:(NSString*)adProvider;
+	@Method(selector = "adProvider:")
+	public static native void devShowRewardVideo(String adProvider);
+
+	//+(void)devShowInterstitial:(NSString*)adProvider;
+	@Method(selector = "devShowInterstitial:")
+	public static native void devShowInterstitial(String adProvider);
+
+	//+(void)devShowMoreApps:(NSString*)adProvider;
+	@Method(selector = "devShowMoreApps:")
+	public static native void devShowMoreApps(String adProvider);
 }

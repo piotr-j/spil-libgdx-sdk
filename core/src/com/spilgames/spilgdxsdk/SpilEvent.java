@@ -20,6 +20,11 @@ public class SpilEvent {
 	private long timestamp = System.currentTimeMillis();
 
 	public SpilEvent() {
+		this(null);
+	}
+
+	public SpilEvent(String name) {
+		setName(name);
 	}
 
 	public static String getTAG() {

@@ -66,19 +66,13 @@ project(":android") {
     dependencies {
         compile project(':core')
         compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
-//        compile fileTree(dir: 'libs', include: '*.jar')
-//        compile file(dir: 'libs', include: '*.jar')
-        compile name: 'spilSDK-2.1.0'
-//        embedded name: 'spilSDK-2.1.0'
-//        embedded project('spilSDK-2.1.0')
-//        compile(name:'spilSDK-2.1.0') {
-//            transitive true
-//        }
-//        compile fileTree(dir: 'libs', include: '*.jar')
+        /* note: using compile adds the dependency to pom when and since its a local jar,
+          it cant be found and stuff fails in project that depends on this one */
+//        compile name: 'spilSDK-2.1.0'
+        // note: sp we just do this, that way jars are not added to the pom
+        compile fileTree(dir: 'libs', include: '*.jar')
         // note; apparently, its not feasible to bundle the aar inside our own aar, so we need to distribute both
 //        compile(name:'aartestlib-debug', ext:'aar')
-
-//        compile 'com.google.android.gms:play-services-gcm:9.2.0'
     }
 }
 

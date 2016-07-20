@@ -9,6 +9,8 @@ import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.chartboost.sdk.Chartboost;
+import com.fyber.Fyber;
 import com.spilgames.spilgdxsdk.*;
 import com.spilgames.spilsdk.ads.NativeAdCallbacks;
 import com.spilgames.spilsdk.ads.OnAdsListener;
@@ -184,18 +186,75 @@ public class AndroidSpilSdk implements SpilSdk {
 
 
 	@Override public void devRequestAd (String provider, String adType, boolean parentalGate) {
+		// TODO how do we want to show these?
+		if (SpilSdk.PROVIDER_CHARTBOOST.equals(provider)) {
+			if (SpilSdk.AD_INTERSTITIAL.equals(adType)) {
+				Chartboost.cacheInterstitial("Default");
+			} else if (SpilSdk.AD_REWARD_VIDEO.equals(adType)) {
+				Chartboost.cacheRewardedVideo("Default");
+			} else if (SpilSdk.AD_MORE_APPS.equals(adType)) {
+				Chartboost.cacheMoreApps("Default");
+			} else {
+				Gdx.app.error(TAG, "Unknown ad type " + adType);
+			}
+		} else if (SpilSdk.PROVIDER_FYBER.equals(provider)) {
+			if (SpilSdk.AD_INTERSTITIAL.equals(adType)) {
 
+			} else if (SpilSdk.AD_REWARD_VIDEO.equals(adType)) {
+
+			} else if (SpilSdk.AD_MORE_APPS.equals(adType)) {
+
+			} else {
+				Gdx.app.error(TAG, "Unknown ad type " + adType);
+			}
+		} else if (SpilSdk.PROVIDER_DFP.equals(provider)) {
+			if (SpilSdk.AD_INTERSTITIAL.equals(adType)) {
+
+			} else if (SpilSdk.AD_REWARD_VIDEO.equals(adType)) {
+
+			} else if (SpilSdk.AD_MORE_APPS.equals(adType)) {
+
+			} else {
+				Gdx.app.error(TAG, "Unknown ad type " + adType);
+			}
+		} else {
+			Gdx.app.error(TAG, "Unknown ad provider " + provider);
+		}
 	}
 
 	@Override public void devShowRewardVideo (String provider) {
+		if (SpilSdk.PROVIDER_CHARTBOOST.equals(provider)) {
+			Chartboost.showRewardedVideo("Default");
+		} else if (SpilSdk.PROVIDER_FYBER.equals(provider)) {
 
+		} else if (SpilSdk.PROVIDER_DFP.equals(provider)) {
+
+		} else {
+			Gdx.app.error(TAG, "Unknown ad provider " + provider);
+		}
 	}
 
 	@Override public void devShowInterstitial (String provider) {
+		if (SpilSdk.PROVIDER_CHARTBOOST.equals(provider)) {
+			Chartboost.showInterstitial("Default");
+		} else if (SpilSdk.PROVIDER_FYBER.equals(provider)) {
 
+		} else if (SpilSdk.PROVIDER_DFP.equals(provider)) {
+
+		} else {
+			Gdx.app.error(TAG, "Unknown ad provider " + provider);
+		}
 	}
 
 	@Override public void devShowMoreApps (String provider) {
+		if (SpilSdk.PROVIDER_CHARTBOOST.equals(provider)) {
+			Chartboost.showMoreApps("Default");
+		} else if (SpilSdk.PROVIDER_FYBER.equals(provider)) {
 
+		} else if (SpilSdk.PROVIDER_DFP.equals(provider)) {
+
+		} else {
+			Gdx.app.error(TAG, "Unknown ad provider " + provider);
+		}
 	}
 }

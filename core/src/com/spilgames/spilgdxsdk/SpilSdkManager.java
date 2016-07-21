@@ -37,6 +37,17 @@ public final class SpilSdkManager {
 		return null;
 	}
 
+	/**
+	 * @return SpilSdk instance, or null if not installed
+	 */
+	public static SpilSdk instance() {
+		// TODO do we want to install if not loaded in here?
+		if (!loaded) {
+			Gdx.app.error(TAG, "SpilSdk was no loaded, did you forgot to call SpilSdkManager#install()?");
+		}
+		return spilSdk;
+	}
+
 	public static void uninstall() {
 		if (!loaded) return;
 		loaded = false;

@@ -1,6 +1,7 @@
 package com.spilgames.spilgdxsdk.ios.robovm;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.spilgames.spilgdxsdk.*;
 import com.spilgames.spilgdxsdk.ios.robovm.bindings.Spil;
@@ -59,19 +60,18 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 	}
 
 	private NSDictionary<NSString, NSString> buildParams (SpilEvent event) {
-		ObjectMap<String, String> data = event.getData();
-		ObjectMap<String, String> customData = event.getCustomData();
+		JsonValue data = event.getData();
+		JsonValue customData = event.getCustomData();
 		if (data == null && customData == null) return null;
 		NSMutableDictionary<NSString, NSString> params = new NSMutableDictionary<>();
-		if (data != null) {
-			for (ObjectMap.Entry<String, String> entry : data.entries()) {
-				params.put(entry.key, entry.value);
+		if (data != null && data.child != null) {
+			for (JsonValue next : data) {
+				params.put(next.name, next.asString());
 			}
 		}
-
-		if (customData != null) {
-			for (ObjectMap.Entry<String, String> entry : customData.entries()) {
-				params.put(entry.key, entry.value);
+		if (customData != null && customData.child != null) {
+			for (JsonValue next : customData) {
+				params.put(next.name, next.asString());
 			}
 		}
 		return params;

@@ -7,6 +7,7 @@ import android.util.Log;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.chartboost.sdk.Chartboost;
@@ -17,6 +18,9 @@ import com.spilgames.spilsdk.ads.OnAdsListener;
 import com.spilgames.spilsdk.events.Event;
 import com.spilgames.spilsdk.events.EventActionListener;
 import com.spilgames.spilsdk.events.response.ResponseEvent;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class AndroidSpilSdk implements SpilSdk {
 	private final static String TAG = AndroidSpilSdk.class.getSimpleName();
@@ -87,23 +91,65 @@ public class AndroidSpilSdk implements SpilSdk {
 	}
 
 	private Event fillDataInEvent (Event event, SpilEvent spilEvent) {
+//		ObjectMap<String, String> data = spilEvent.getData();
+//		if (data != null) {
+//			for (ObjectMap.Entry<String, String> entry : data.entries()) {
+//				event.addCustomData(entry.key, entry.value);
+//			}
+//		}
+//
+//		ObjectMap<String, String> customData = spilEvent.getCustomData();
+//		if (customData != null) {
+//			for (ObjectMap.Entry<String, String> entry : customData.entries()) {
+//				event.addCustomData(entry.key, entry.value);
+//			}
+//		}
 		event.setName(spilEvent.getName());
 		event.setTimestamp(spilEvent.getTimestamp());
-
-		ObjectMap<String, String> data = spilEvent.getData();
-		if (data != null) {
-			for (ObjectMap.Entry<String, String> entry : data.entries()) {
-				event.addData(entry.key, entry.value);
+		JsonValue data = spilEvent.getData();
+		if (data != null && data.child != null) {
+			for (JsonValue next : data) {
+				event.addData(next.name, next.asString());
 			}
 		}
-
-		ObjectMap<String, String> customData = spilEvent.getCustomData();
-		if (customData != null) {
-			for (ObjectMap.Entry<String, String> entry : customData.entries()) {
-				event.addCustomData(entry.key, entry.value);
+		JsonValue customData = spilEvent.getCustomData();
+		if (customData != null && customData.child != null) {
+			for (JsonValue next : customData) {
+				addCustomData(event, next);
 			}
 		}
 		return event;
+	}
+
+	private void addCustomData (Event event, JsonValue value) {
+		switch (value.type()) {
+		case object: {
+			String json = value.toJson(JsonWriter.OutputType.json);
+			try {
+				event.addCustomData(value.name, new JSONObject(json));
+			} catch (JSONException ex) {
+				Gdx.app.error(TAG, "Failed to add custom object data", ex);
+			}
+		}break;
+		case array:
+			String json = value.toJson(JsonWriter.OutputType.json);
+			try {
+				event.addCustomData(value.name, new JSONArray(json));
+			} catch (JSONException ex) {
+				Gdx.app.error(TAG, "Failed to add custom object data", ex);
+			}
+			break;
+		case stringValue:
+		case doubleValue:
+		case booleanValue:
+			event.addCustomData(value.name, value.asString());
+			break;
+		case longValue:
+			event.addCustomData(value.name, value.asInt());
+			break;
+		case nullValue:
+			break;
+		}
 	}
 
 	private SpilResponseEvent fillDataInSpilResponseEvent (SpilResponseEvent event, ResponseEvent responseEvent) {

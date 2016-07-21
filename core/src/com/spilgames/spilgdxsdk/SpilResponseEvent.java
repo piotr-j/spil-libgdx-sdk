@@ -43,6 +43,6 @@ public class SpilResponseEvent extends SpilEvent {
 	}
 
 	@Override public String toString () {
-		return "SpilResponseEvent{" + "action='" + action + '\'' + ", type='" + type + '\'' + ", ts='" + ts + '\'' + "name='" + name + '\'' + ", data=" + data + ", customData=" + customData +"}";
+		return "SpilResponseEvent{" + "action='" + action + '\'' + ", type='" + type + '\'' + ", ts='" + ts + '\'' + ", name='" + name + '\'' + ", data=" + data + ", customData=" + customData +"}";
 	}
 }

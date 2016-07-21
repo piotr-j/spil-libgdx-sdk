@@ -11,6 +11,11 @@ import com.spilgames.spilgdxsdk.*;
  */
 public class DesktopSpilSdk implements SpilSdk {
 	private final static String TAG = DesktopSpilSdk.class.getSimpleName();
+	private ObjectMap<String, String> config = new ObjectMap<>();
+
+	public DesktopSpilSdk() {
+		config.put("dummyKey", "dummyData");
+	}
 
 	@Override public SpilSdkType getBackendType () {
 		return SpilSdkType.DESKTOP;
@@ -53,11 +58,11 @@ public class DesktopSpilSdk implements SpilSdk {
 	}
 
 	@Override public ObjectMap<String, String> getConfigAll () {
-		return new ObjectMap<>();
+		return config;
 	}
 
 	@Override public String getConfigValue (String key) {
-		return null;
+		return config.get(key, null);
 	}
 
 	@Override public void startChartboost (String appId, String appSignature) {

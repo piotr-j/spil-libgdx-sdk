@@ -13,11 +13,11 @@ import com.badlogic.gdx.utils.ObjectMap;
  */
 public class SpilEvent {
 	private static String TAG = "SpilEvent";
-	private String name;
+	protected String name;
 	ObjectMap<String, String> data;
 	ObjectMap<String, String> customData;
-	private boolean queued = false;
-	private long timestamp = System.currentTimeMillis();
+	protected boolean queued = false;
+	protected long timestamp = System.currentTimeMillis();
 
 	public SpilEvent() {
 		this(null);
@@ -114,5 +114,9 @@ public class SpilEvent {
 
 	public ObjectMap<String, String> getCustomData () {
 		return customData;
+	}
+
+	@Override public String toString () {
+		return "SpilEvent{" + "name='" + name + '\'' + ", data=" + data + ", customData=" + customData + '}';
 	}
 }

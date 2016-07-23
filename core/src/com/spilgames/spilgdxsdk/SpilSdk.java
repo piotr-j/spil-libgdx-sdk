@@ -30,11 +30,14 @@ public interface SpilSdk {
 	void onResume ();
 	void onPause ();
 	void onDestroy ();
-	void onBackPressed ();
 
 	// Ads
-
+	// TODO this is kind janky
 	void startChartboost (String appId, String appSignature);
+	void startFyber (String appId, String token);
+	void startDFP (String adUnitId);
+
+	void registerDevice(String device);
 
 	void setSpilAdCallbacks(SpilAdCallbacks adCallbacks);
 

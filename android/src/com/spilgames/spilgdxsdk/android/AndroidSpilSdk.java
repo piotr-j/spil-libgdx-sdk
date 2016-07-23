@@ -3,6 +3,7 @@ package com.spilgames.spilgdxsdk.android;
 import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplication;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.chartboost.sdk.Chartboost;
 import com.fyber.Fyber;
 import com.spilgames.spilgdxsdk.*;
+import com.spilgames.spilsdk.SpilEnvironment;
 import com.spilgames.spilsdk.ads.NativeAdCallbacks;
 import com.spilgames.spilsdk.ads.OnAdsListener;
 import com.spilgames.spilsdk.events.Event;
@@ -26,12 +28,13 @@ public class AndroidSpilSdk implements SpilSdk {
 	private final static String TAG = AndroidSpilSdk.class.getSimpleName();
 
 	private com.spilgames.spilsdk.SpilSdk instance;
-
 	public AndroidSpilSdk () {
 		if (Gdx.app instanceof AndroidApplication) {
 			AndroidApplication app = (AndroidApplication)Gdx.app;
+
 			Log.d(TAG, "App = " + app);
 			instance = com.spilgames.spilsdk.SpilSdk.getInstance(app);
+			instance.setEnvironment(SpilEnvironment.STAGING);
 			Application application = app.getApplication();
 			// since SpilSDK requires sdk >14, this should be fine
 			application.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
@@ -41,18 +44,22 @@ public class AndroidSpilSdk implements SpilSdk {
 				}
 
 				@Override public void onActivityStarted (Activity activity) {
+					Log.d(TAG, "onActivityStarted");
 					instance.onStart();
 				}
 
 				@Override public void onActivityResumed (Activity activity) {
+					Log.d(TAG, "onActivityResumed");
 					instance.onResume();
 				}
 
 				@Override public void onActivityPaused (Activity activity) {
+					Log.d(TAG, "onActivityPaused");
 					instance.onPause();
 				}
 
 				@Override public void onActivityDestroyed (Activity activity) {
+					Log.d(TAG, "onActivityDestroyed");
 					instance.onDestroy();
 				}
 
@@ -63,6 +70,10 @@ public class AndroidSpilSdk implements SpilSdk {
 		} else {
 			throw new AssertionError("Not running in android app?" + Gdx.app);
 		}
+	}
+
+	@Override public void registerDevice (String projectID) {
+		instance.registerDevice(projectID);
 	}
 
 	@Override public SpilSdkType getBackendType () {
@@ -221,86 +232,125 @@ public class AndroidSpilSdk implements SpilSdk {
 		instance.setNativeAdCallbacks(nativeAdCallbacks);
 	}
 
-	@Override public void onBackPressed () {
+	public void onBackPressed () {
 		instance.onBackPressed();
 	}
-
 
 	@Override public void startChartboost (String appId, String appSignature) {
 		instance.setupChartBoost(appId, appSignature);
 	}
 
+	@Override public void startDFP (String adUnitId) {
+		instance.startDFP(adUnitId, null);
+	}
 
-	@Override public void devRequestAd (String provider, String adType, boolean parentalGate) {
-		// TODO how do we want to show these?
-		if (SpilSdk.PROVIDER_CHARTBOOST.equals(provider)) {
-			if (SpilSdk.AD_INTERSTITIAL.equals(adType)) {
-				Chartboost.cacheInterstitial("Default");
-			} else if (SpilSdk.AD_REWARD_VIDEO.equals(adType)) {
-				Chartboost.cacheRewardedVideo("Default");
-			} else if (SpilSdk.AD_MORE_APPS.equals(adType)) {
-				Chartboost.cacheMoreApps("Default");
-			} else {
-				Gdx.app.error(TAG, "Unknown ad type " + adType);
+	@Override public void startFyber (String appId, String token) {
+		instance.startFyber(appId, token, null);
+	}
+
+	private void post(Runnable runnable) {
+		((AndroidApplication)Gdx.app).getHandler().post(runnable);
+	}
+
+	@Override public void devRequestAd (final String provider, final String adType, final boolean parentalGate) {
+		// NOTE this touches views and in gdx we are not on a proper thread
+		post(new Runnable() {
+			@Override public void run () {
+				// TODO how do we want to show these?
+				if (SpilSdk.PROVIDER_CHARTBOOST.equals(provider)) {
+					if (SpilSdk.AD_INTERSTITIAL.equals(adType)) {
+						instance.requestAd("ChartBoost", "interstitial", false);
+					} else if (SpilSdk.AD_REWARD_VIDEO.equals(adType)) {
+						instance.requestAd("ChartBoost", "rewardVideo", false);
+					} else if (SpilSdk.AD_MORE_APPS.equals(adType)) {
+						instance.requestAd("ChartBoost", "moreApps", false);
+					} else {
+						Gdx.app.error(TAG, "Unknown ad type " + adType);
+					}
+				} else if (SpilSdk.PROVIDER_FYBER.equals(provider)) {
+					if (SpilSdk.AD_INTERSTITIAL.equals(adType)) {
+
+					} else if (SpilSdk.AD_REWARD_VIDEO.equals(adType)) {
+						//			instance.requestAd(provider, SpilSdk.AD_REWARD_VIDEO, false);
+						instance.requestAd("Fyber", "rewardVideo", false);
+					} else if (SpilSdk.AD_MORE_APPS.equals(adType)) {
+
+					} else {
+						Gdx.app.error(TAG, "Unknown ad type " + adType);
+					}
+				} else if (SpilSdk.PROVIDER_DFP.equals(provider)) {
+					if (SpilSdk.AD_INTERSTITIAL.equals(adType)) {
+						//			instance.requestAd(provider, SpilSdk.AD_REWARD_VIDEO, false);
+						instance.requestAd("DFP", "interstitial", false);
+					} else if (SpilSdk.AD_REWARD_VIDEO.equals(adType)) {
+
+					} else if (SpilSdk.AD_MORE_APPS.equals(adType)) {
+
+					} else {
+						Gdx.app.error(TAG, "Unknown ad type " + adType);
+					}
+				} else {
+					Gdx.app.error(TAG, "Unknown ad provider " + provider);
+				}
 			}
-		} else if (SpilSdk.PROVIDER_FYBER.equals(provider)) {
-			if (SpilSdk.AD_INTERSTITIAL.equals(adType)) {
 
-			} else if (SpilSdk.AD_REWARD_VIDEO.equals(adType)) {
-
-			} else if (SpilSdk.AD_MORE_APPS.equals(adType)) {
-
-			} else {
-				Gdx.app.error(TAG, "Unknown ad type " + adType);
-			}
-		} else if (SpilSdk.PROVIDER_DFP.equals(provider)) {
-			if (SpilSdk.AD_INTERSTITIAL.equals(adType)) {
-
-			} else if (SpilSdk.AD_REWARD_VIDEO.equals(adType)) {
-
-			} else if (SpilSdk.AD_MORE_APPS.equals(adType)) {
-
-			} else {
-				Gdx.app.error(TAG, "Unknown ad type " + adType);
-			}
-		} else {
-			Gdx.app.error(TAG, "Unknown ad provider " + provider);
-		}
+		});
 	}
 
 	@Override public void devShowRewardVideo (String provider) {
-		if (SpilSdk.PROVIDER_CHARTBOOST.equals(provider)) {
-			Chartboost.showRewardedVideo("Default");
-		} else if (SpilSdk.PROVIDER_FYBER.equals(provider)) {
-
-		} else if (SpilSdk.PROVIDER_DFP.equals(provider)) {
-
-		} else {
-			Gdx.app.error(TAG, "Unknown ad provider " + provider);
-		}
+		// NOTE this touches views and in gdx we are not on a proper thread
+//		instance.playVideo();
+		post(new Runnable() {
+			@Override public void run () {
+				instance.playVideo();
+			}
+		});
+//		if (SpilSdk.PROVIDER_CHARTBOOST.equals(provider)) {
+//
+//		} else if (SpilSdk.PROVIDER_FYBER.equals(provider)) {
+//
+//		} else if (SpilSdk.PROVIDER_DFP.equals(provider)) {
+//
+//		} else {
+//			Gdx.app.error(TAG, "Unknown ad provider " + provider);
+//		}
 	}
 
 	@Override public void devShowInterstitial (String provider) {
-		if (SpilSdk.PROVIDER_CHARTBOOST.equals(provider)) {
-			Chartboost.showInterstitial("Default");
-		} else if (SpilSdk.PROVIDER_FYBER.equals(provider)) {
-
-		} else if (SpilSdk.PROVIDER_DFP.equals(provider)) {
-
-		} else {
-			Gdx.app.error(TAG, "Unknown ad provider " + provider);
-		}
+//		instance.playInterstitial();
+		// NOTE this touches views and in gdx we are not on a proper thread
+		post(new Runnable() {
+			@Override public void run () {
+				instance.playInterstitial();
+			}
+		});
+//		if (SpilSdk.PROVIDER_CHARTBOOST.equals(provider)) {
+//
+//		} else if (SpilSdk.PROVIDER_FYBER.equals(provider)) {
+//
+//		} else if (SpilSdk.PROVIDER_DFP.equals(provider)) {
+//
+//		} else {
+//			Gdx.app.error(TAG, "Unknown ad provider " + provider);
+//		}
 	}
 
 	@Override public void devShowMoreApps (String provider) {
-		if (SpilSdk.PROVIDER_CHARTBOOST.equals(provider)) {
-			Chartboost.showMoreApps("Default");
-		} else if (SpilSdk.PROVIDER_FYBER.equals(provider)) {
-
-		} else if (SpilSdk.PROVIDER_DFP.equals(provider)) {
-
-		} else {
-			Gdx.app.error(TAG, "Unknown ad provider " + provider);
-		}
+		// NOTE this touches views and in gdx we are not on a proper thread
+//		instance.playMoreApps();
+		post(new Runnable() {
+			@Override public void run () {
+				instance.playMoreApps();
+			}
+		});
+//		if (SpilSdk.PROVIDER_CHARTBOOST.equals(provider)) {
+//
+//		} else if (SpilSdk.PROVIDER_FYBER.equals(provider)) {
+//
+//		} else if (SpilSdk.PROVIDER_DFP.equals(provider)) {
+//
+//		} else {
+//			Gdx.app.error(TAG, "Unknown ad provider " + provider);
+//		}
 	}
 }

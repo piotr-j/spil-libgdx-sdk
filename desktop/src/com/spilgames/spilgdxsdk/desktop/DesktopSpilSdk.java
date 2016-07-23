@@ -21,6 +21,10 @@ public class DesktopSpilSdk implements SpilSdk {
 		return SpilSdkType.DESKTOP;
 	}
 
+	@Override public void registerDevice (String projectID) {
+		Gdx.app.log(TAG, "registerDevice ("+projectID+")");
+	}
+
 	@Override public void setDebug (boolean debug) {
 		Gdx.app.log(TAG, "setDebug ("+debug+")");
 	}
@@ -53,10 +57,6 @@ public class DesktopSpilSdk implements SpilSdk {
 		Gdx.app.log(TAG, "onDestroy");
 	}
 
-	@Override public void onBackPressed () {
-		Gdx.app.log(TAG, "onBackPressed");
-	}
-
 	@Override public ObjectMap<String, String> getConfigAll () {
 		return config;
 	}
@@ -67,6 +67,14 @@ public class DesktopSpilSdk implements SpilSdk {
 
 	@Override public void startChartboost (String appId, String appSignature) {
 		Gdx.app.log(TAG, "startChartboost ("+appId+", "+appSignature+")");
+	}
+
+	@Override public void startFyber (String appId, String token) {
+		Gdx.app.log(TAG, "startFyber ("+appId+", "+token+")");
+	}
+
+	@Override public void startDFP (String adUnitId) {
+		Gdx.app.log(TAG, "startDFP ("+adUnitId+")");
 	}
 
 	@Override public void setSpilAdCallbacks (SpilAdCallbacks adCallbacks) {

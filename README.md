@@ -64,7 +64,7 @@ compile "com.spilgames.spilgdxsdk:spil-gdx-sdk-ios-robovm:2.1.0"
 ```
 
 NOTE currently this is a custom Spil.framework, build without unity thing that requires `-Wl,-U,_UnitySendMessage`
-`
+TODO we probably can solve this by using simple lib with dummy implementation of this method 
 
 Copy Spil.framework from ios/libs directory into ios/libs in your project 
 

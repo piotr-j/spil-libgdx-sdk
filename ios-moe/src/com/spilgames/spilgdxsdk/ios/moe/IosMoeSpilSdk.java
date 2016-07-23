@@ -56,7 +56,15 @@ public class IosMoeSpilSdk implements SpilSdk {
 	}
 
 	@Override public void startChartboost (String appId, String appSignature) {
+		Gdx.app.log(TAG, "startChartboost ("+appId+", "+appId+")");
+	}
 
+	@Override public void startFyber (String appId, String token) {
+		Gdx.app.log(TAG, "startFyber ("+appId+", "+token+")");
+	}
+
+	@Override public void startDFP (String adUnitId) {
+		Gdx.app.log(TAG, "startDFP ("+adUnitId+")");
 	}
 
 	@Override public void setSpilAdCallbacks (SpilAdCallbacks adCallbacks) {

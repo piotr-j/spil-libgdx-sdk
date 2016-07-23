@@ -11,6 +11,7 @@ import org.robovm.apple.foundation.NSMutableDictionary;
 import org.robovm.apple.foundation.NSObject;
 import org.robovm.apple.foundation.NSString;
 import org.robovm.apple.uikit.UIApplication;
+import org.robovm.apple.uikit.UIRemoteNotification;
 import org.robovm.objc.block.VoidBlock1;
 
 
@@ -26,6 +27,10 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 
 	@Override public SpilSdkType getBackendType () {
 		return SpilSdkType.IOS_ROBOVM;
+	}
+
+	@Override public void registerDevice (String projectID) {
+		// does nothing on ios
 	}
 
 	@Override public void setDebug (boolean debug) {
@@ -97,10 +102,6 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 
 	}
 
-	@Override public void onBackPressed () {
-		// do nothing on iOS
-	}
-
 	@Override public ObjectMap<String, String> getConfigAll () {
 		NSDictionary<NSString, NSString> config = Spil.getConfig();
 		if (config == null) return null;
@@ -122,7 +123,15 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 	}
 
 	@Override public void startChartboost (String appId, String appSignature) {
+		Gdx.app.log(TAG, "startChartboost ("+appId+", "+appSignature+")");
+	}
 
+	@Override public void startFyber (String appId, String token) {
+		Gdx.app.log(TAG, "startFyber ("+appId+", "+token+")");
+	}
+
+	@Override public void startDFP (String adUnitId) {
+		Gdx.app.log(TAG, "startDFP ("+adUnitId+")");
 	}
 
 	@Override public void setSpilAdCallbacks (final SpilAdCallbacks adCallbacks) {
@@ -164,5 +173,9 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 
 	@Override public void devShowMoreApps (String provider) {
 		Spil.devShowMoreApps(provider);
+	}
+
+	public void didReceiveRemoteNotification(UIApplication application, UIRemoteNotification userInfo) {
+		Spil.didReceiveRemoteNotification(application, userInfo.getDictionary());
 	}
 }

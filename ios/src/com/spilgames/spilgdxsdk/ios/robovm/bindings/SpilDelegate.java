@@ -26,7 +26,7 @@ public interface SpilDelegate extends NSObjectProtocol {
 	void adNotAvailable(String type);
 
 	@Method(selector = "adStart")
-	void adStart(String type);
+	void adStart();
 
 	@Method(selector = "adFinished:reason:reward:network:")
 	void adFinished(String type, String reason, String reward, String network);

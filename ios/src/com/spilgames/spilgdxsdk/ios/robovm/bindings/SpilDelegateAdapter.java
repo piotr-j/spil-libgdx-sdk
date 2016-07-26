@@ -20,7 +20,7 @@ public class SpilDelegateAdapter extends NSObject implements SpilDelegate {
 	}
 
 	@NotImplemented("adStart")
-	@Override public void adStart (String type) {
+	@Override public void adStart () {
 
 	}
 

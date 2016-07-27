@@ -186,4 +186,44 @@ public class Spil extends NSObject {
 	 */
 	@Method(selector = "requestPackages")
 	public static native void requestPackages();
+
+	/*
+		Wallet APIs
+	 */
+
+	@Method(selector = "requestPlayerData")
+	public static native void requestPlayerData();
+
+	@Method(selector = "getUserProfile")
+	public static native String getUserProfile();
+
+	@Method(selector = "getWallet")
+	public static native String getWallet();
+
+	@Method(selector = "getSpilGameData")
+	public static native String getSpilGameData();
+
+	@Method(selector = "getInventory")
+	public static native String getInventory();
+
+	@Method(selector = "getShop")
+	public static native String getShop();
+
+	@Method(selector = "getShopPromotions")
+	public static native String getShopPromotions();
+
+	@Method(selector = "addCurrencyToWallet:")
+	public static native void addCurrencyToWallet(int currencyId, int amount, String reason);//	+(void)addCurrencyToWallet:(int)currencyId withAmount:(int)amount withReason:(NSString*)reason;
+
+	@Method(selector = "subtractCurrencyFromWallet:")
+	public static native void subtractCurrencyFromWallet(int currencyId, int amount, String reason);
+
+	@Method(selector = "addItemToInventory:withAmount:withReason:")
+	public static native void addItemToInventory(int itemId, int amount, String reason);
+
+	@Method(selector = "subtractItemFromInventory:withAmount:withReason:")
+	public static native void subtractItemFromInventory(int itemId, int amount, String reason);
+
+	@Method(selector = "consumeBundle:withReason:")
+	public static native void consumeBundle(int bundleId, String reason);
 }

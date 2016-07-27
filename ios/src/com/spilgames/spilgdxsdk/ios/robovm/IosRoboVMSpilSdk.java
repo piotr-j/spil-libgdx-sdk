@@ -1,10 +1,12 @@
 package com.spilgames.spilgdxsdk.ios.robovm;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.spilgames.spilgdxsdk.*;
 import com.spilgames.spilgdxsdk.ios.robovm.bindings.Spil;
 import com.spilgames.spilgdxsdk.ios.robovm.bindings.SpilDelegateAdapter;
+import com.spilgames.spilgdxsdk.ios.robovm.bindings.JsonUtil;
 import org.robovm.apple.foundation.*;
 import org.robovm.apple.uikit.UIApplication;
 import org.robovm.apple.uikit.UIRemoteNotification;
@@ -102,66 +104,14 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 	@Override public JsonValue getConfig () {
 		NSDictionary<?, ?> rawConfig = Spil.getConfig();
 		if (rawConfig == null) return null;
-		JsonValue config = new JsonValue(JsonValue.ValueType.object);
-		for (Object key : rawConfig.keySet()) {
-			NSObject object = rawConfig.get(key);
-			if (key instanceof NSString) {
-				buildConfig(config, key.toString(), object);
-			} else {
-				Gdx.app.error(TAG, "Unexpected value type in config inner dictionary! " + key.getClass());
-			}
+		NSString jsonString = JsonUtil.convertObjectToJson(rawConfig);
+		if (jsonString == null) return null;
+		try {
+			return new JsonReader().parse(jsonString.toString());
+		} catch (Exception ex) {
+			Gdx.app.error(TAG, "Failed to parse config data ", ex);
 		}
-		return config;
-	}
-
-	private void buildConfig (JsonValue parent, String name, Object value) {
-		if (value instanceof NSDictionary) {
-			NSDictionary dict = (NSDictionary)value;
-			JsonValue pairs = new JsonValue(JsonValue.ValueType.object);
-			addChild(parent, name, pairs);
-			for (Object key : dict.keySet()) {
-				NSObject object = dict.get(key);
-				if (key instanceof NSString) {
-					buildConfig(pairs, key.toString(), object);
-				} else {
-					Gdx.app.error(TAG, "Unexpected key type in config data! " + value.getClass());
-				}
-			}
-		} else if (value instanceof NSArray) {
-			NSArray array = (NSArray)value;
-			JsonValue values = new JsonValue(JsonValue.ValueType.array);
-			addChild(parent, name, values);
-			for (Object object : array) {
-				buildConfig(values, null, object);
-			}
-		} else if (value instanceof NSString) {
-			NSString string = (NSString)value;
-			JsonValue stringValue = new JsonValue(string.toString());
-			addChild(parent, name, stringValue);
-		} else if (value instanceof NSNumber) {
-			// we can get ints, floats and bool, but there is no obvious way to check what we got. Let user deals with this
-			NSNumber number = (NSNumber)value;
-			JsonValue numberValue = new JsonValue(number.floatValue());
-			addChild(parent, name, numberValue);
-		} else {
-			Gdx.app.error(TAG, "Unexpected value type in config data! " + value.getClass());
-		}
-	}
-
-	private void addChild (JsonValue parent, String name, JsonValue child) {
-		child.name = name;
-		if (parent.child == null) {
-			parent.child = child;
-			child.parent = parent;
-		} else {
-			JsonValue lastChild = parent.child;
-			while (lastChild.next != null) {
-				lastChild = lastChild.next;
-			}
-			lastChild.next = child;
-			child.prev = lastChild;
-			child.parent = parent;
-		}
+		return null;
 	}
 
 	@Override public void startChartboost (String appId, String appSignature) {

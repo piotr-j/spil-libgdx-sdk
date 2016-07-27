@@ -1,5 +1,6 @@
 package com.spilgames.spilgdxsdk.ios.robovm.bindings;
 
+import org.robovm.apple.foundation.NSArray;
 import org.robovm.apple.foundation.NSDictionary;
 import org.robovm.apple.foundation.NSObject;
 import org.robovm.apple.foundation.NSString;
@@ -122,21 +123,15 @@ public class Spil extends NSObject {
 	@Method(selector = "application:didReceiveRemoteNotification:")
 	public static native void didReceiveRemoteNotification(UIApplication application, NSDictionary userInfo);
 
-
-
-	//+(void)devRequestAd:(NSString*)provider withAdType:(NSString*)adType withParentalGate:(BOOL)parentalGate;
 	@Method(selector = "devRequestAd:withAdType:withParentalGate:")
 	public static native void devRequestAd(String adProvider, String adType, boolean parentalGate);
 
-	//+(void)devShowRewardVideo:(NSString*)adProvider;
 	@Method(selector = "adProvider:")
 	public static native void devShowRewardVideo(String adProvider);
 
-	//+(void)devShowInterstitial:(NSString*)adProvider;
 	@Method(selector = "devShowInterstitial:")
 	public static native void devShowInterstitial(String adProvider);
 
-	//+(void)devShowMoreApps:(NSString*)adProvider;
 	@Method(selector = "devShowMoreApps:")
 	public static native void devShowMoreApps(String adProvider);
 
@@ -152,4 +147,43 @@ public class Spil extends NSObject {
 	@Method(selector = "playRewardVideo")
 	public static native void playRewardVideo();
 
+	/**
+	 * Get the latest stored store packages.
+	 *
+	 * @return NSArray object representation from the stored store packages
+	 */
+	@Method(selector = "getAllPackages")
+	public static native NSArray<?> getAllPackages();
+
+	/**
+	 * Get a specific package from the store
+	 *
+	 * @param key for the package
+	 * @return returns the store package, or nil if not found
+	 */
+	@Method(selector = "getPackageByID:")
+	public static native NSDictionary<?, ?> getPackageByID(String key);
+
+	/**
+	 * Get the latest stored store promotions.
+	 *
+	 * @return NSArray object representation from the stored store promotions
+	 */
+	@Method(selector = "getAllPromotions")
+	public static native NSArray<?> getAllPromotions();
+
+	/**
+	 * Get a specific promotion from the store
+	 *
+	 * @param key for the promotion
+	 * @return returns the store promotion, or null if not found
+	 */
+	@Method(selector = "getPromotionByID:")
+	public static native NSDictionary<?, ?> getPromotionByID(String key);
+
+	/**
+	 * Refresh the package and promotion data
+	 */
+	@Method(selector = "requestPackages")
+	public static native void requestPackages();
 }

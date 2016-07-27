@@ -58,7 +58,7 @@ public class Spil extends NSObject {
 	 *  @param params A key value dictionary holding the params
 	 */
 	@Method(selector = "trackEvent:withParameters:")
-	public static native void trackEvent(String name, NSDictionary<NSString, NSString> params);
+	public static native void trackEvent(String name, NSDictionary<?, ?> params);
 
 	/**
 	 *  Track a basic named event with a response
@@ -77,7 +77,7 @@ public class Spil extends NSObject {
 	 *  @param block  A block with response param that will be executed when the server sends a reponse on the tracked event
 	 */
 	@Method(selector = "trackEvent:withParameters:onResponse:")
-	public static native void trackEvent(String name, NSDictionary<NSString, NSString> params, @Block VoidBlock1<NSObject> block);
+	public static native void trackEvent(String name, NSDictionary<?, ?> params, @Block VoidBlock1<NSObject> block);
 
 	/**
 	 *  Forwarding Delegate methods to let the Spil framework know when the app went to the background
@@ -102,7 +102,7 @@ public class Spil extends NSObject {
 	 * @return NSDictionary object representation from the stored game configuration
 	 */
 	@Method(selector = "getConfig")
-	public static native NSDictionary<NSString, NSString> getConfig();
+	public static native NSDictionary<?, ?> getConfig();
 
 	/**
 	 * Get a specific value from a particular key from the game configuration
@@ -139,4 +139,17 @@ public class Spil extends NSObject {
 	//+(void)devShowMoreApps:(NSString*)adProvider;
 	@Method(selector = "devShowMoreApps:")
 	public static native void devShowMoreApps(String adProvider);
+
+	/**
+	 * Show the more apps screen
+	 */
+	@Method(selector = "showMoreApps")
+	public static native void showMoreApps();
+
+	/**
+	 * Show the last requested reward video
+	 */
+	@Method(selector = "playRewardVideo")
+	public static native void playRewardVideo();
+
 }

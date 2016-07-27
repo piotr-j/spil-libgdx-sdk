@@ -2,14 +2,10 @@ package com.spilgames.spilgdxsdk.ios.robovm;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.JsonValue;
-import com.badlogic.gdx.utils.ObjectMap;
 import com.spilgames.spilgdxsdk.*;
 import com.spilgames.spilgdxsdk.ios.robovm.bindings.Spil;
 import com.spilgames.spilgdxsdk.ios.robovm.bindings.SpilDelegateAdapter;
-import org.robovm.apple.foundation.NSDictionary;
-import org.robovm.apple.foundation.NSMutableDictionary;
-import org.robovm.apple.foundation.NSObject;
-import org.robovm.apple.foundation.NSString;
+import org.robovm.apple.foundation.*;
 import org.robovm.apple.uikit.UIApplication;
 import org.robovm.apple.uikit.UIRemoteNotification;
 import org.robovm.objc.block.VoidBlock1;
@@ -21,6 +17,7 @@ import org.robovm.objc.block.VoidBlock1;
 public class IosRoboVMSpilSdk implements SpilSdk {
 	private final static String TAG = IosRoboVMSpilSdk.class.getSimpleName();
 
+	private SpilDelegate delegate;
 	public IosRoboVMSpilSdk (){
 
 	}
@@ -48,12 +45,12 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 				SpilResponseEvent responseEvent = new SpilResponseEvent();
 				responseEvent.setName("responseEvent");
 				if (nsObject instanceof NSDictionary) {
-					NSDictionary<NSString, NSString> responseDict = (NSDictionary<NSString, NSString>)nsObject;
+					NSDictionary<?, ?> responseDict = (NSDictionary<?, ?>)nsObject;
 					if (responseDict.containsKey(KEY_NAME)) {
 						responseEvent.setName(responseDict.getString(KEY_NAME));
 					}
 					// TODO is this data or custom data? lets go with data for now
-					for (NSString key : responseDict.keySet()) {
+					for (NSObject key : responseDict.keySet()) {
 						responseEvent.addData(key.toString(), responseDict.getString(key));
 					}
 				} else {
@@ -64,11 +61,11 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 		});
 	}
 
-	private NSDictionary<NSString, NSString> buildParams (SpilEvent event) {
+	private NSDictionary<?, ?> buildParams (SpilEvent event) {
 		JsonValue data = event.getData();
 		JsonValue customData = event.getCustomData();
 		if (data == null && customData == null) return null;
-		NSMutableDictionary<NSString, NSString> params = new NSMutableDictionary<>();
+		NSMutableDictionary<?, ?> params = new NSMutableDictionary<>();
 		if (data != null && data.child != null) {
 			for (JsonValue next : data) {
 				params.put(next.name, next.asString());
@@ -102,24 +99,69 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 
 	}
 
-	@Override public ObjectMap<String, String> getConfigAll () {
-		NSDictionary<NSString, NSString> config = Spil.getConfig();
-		if (config == null) return null;
-		ObjectMap<String, String> configMap = new ObjectMap<>();
-		for (NSString key : config.keySet()) {
-			configMap.put(key.toString(), config.getString(key));
+	@Override public JsonValue getConfig () {
+		NSDictionary<?, ?> rawConfig = Spil.getConfig();
+		if (rawConfig == null) return null;
+		JsonValue config = new JsonValue(JsonValue.ValueType.object);
+		for (Object key : rawConfig.keySet()) {
+			NSObject object = rawConfig.get(key);
+			if (key instanceof NSString) {
+				buildConfig(config, key.toString(), object);
+			} else {
+				Gdx.app.error(TAG, "Unexpected value type in config inner dictionary! " + key.getClass());
+			}
 		}
-		return configMap;
+		return config;
 	}
 
-	@Override public String getConfigValue (String key) {
-		NSString value = Spil.getConfigValue(key);
-		if (value == null) return null;
-		String stringValue = value.toString();
-		// it returns empty string on missing key
-		// android returns null when key is missing, so we will as well
-		if (stringValue.trim().length() == 0) return null;
-		return stringValue;
+	private void buildConfig (JsonValue parent, String name, Object value) {
+		if (value instanceof NSDictionary) {
+			NSDictionary dict = (NSDictionary)value;
+			JsonValue pairs = new JsonValue(JsonValue.ValueType.object);
+			addChild(parent, name, pairs);
+			for (Object key : dict.keySet()) {
+				NSObject object = dict.get(key);
+				if (key instanceof NSString) {
+					buildConfig(pairs, key.toString(), object);
+				} else {
+					Gdx.app.error(TAG, "Unexpected key type in config data! " + value.getClass());
+				}
+			}
+		} else if (value instanceof NSArray) {
+			NSArray array = (NSArray)value;
+			JsonValue values = new JsonValue(JsonValue.ValueType.array);
+			addChild(parent, name, values);
+			for (Object object : array) {
+				buildConfig(values, null, object);
+			}
+		} else if (value instanceof NSString) {
+			NSString string = (NSString)value;
+			JsonValue stringValue = new JsonValue(string.toString());
+			addChild(parent, name, stringValue);
+		} else if (value instanceof NSNumber) {
+			// we can get ints, floats and bool, but there is no obvious way to check what we got. Let user deals with this
+			NSNumber number = (NSNumber)value;
+			JsonValue numberValue = new JsonValue(number.floatValue());
+			addChild(parent, name, numberValue);
+		} else {
+			Gdx.app.error(TAG, "Unexpected value type in config data! " + value.getClass());
+		}
+	}
+
+	private void addChild (JsonValue parent, String name, JsonValue child) {
+		child.name = name;
+		if (parent.child == null) {
+			parent.child = child;
+			child.parent = parent;
+		} else {
+			JsonValue lastChild = parent.child;
+			while (lastChild.next != null) {
+				lastChild = lastChild.next;
+			}
+			lastChild.next = child;
+			child.prev = lastChild;
+			child.parent = parent;
+		}
 	}
 
 	@Override public void startChartboost (String appId, String appSignature) {
@@ -135,34 +177,33 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 	}
 
 	@Override public void setSpilAdCallbacks (final SpilAdCallbacks adCallbacks) {
-		if (adCallbacks == null) throw new AssertionError("SpilAdCallbacks cannot be null!");
-		Spil instance = Spil.getInstance();
-		// TODO we have more events in the delegate, we probably need to keep an instance for other callbacks
-		instance.setDelegate(new SpilDelegateAdapter(){
-			@Override public void adAvailable (String type) {
-				adCallbacks.adAvailable(type);
-			}
-
-			@Override public void adNotAvailable (String type) {
-				adCallbacks.adNotAvailable(type);
-			}
-
-			@Override public void adStart (String type) {
-				adCallbacks.adStart();
-			}
-
-			@Override public void adFinished (String type, String reason, String reward, String network) {
-				// TODO what do we do with the rest of the stuff?
-				adCallbacks.adFinished(type);
-			}
-		});
+		if (adCallbacks == null)
+			throw new AssertionError("SpilAdCallbacks cannot be null!");
+		initDelegate();
+		delegate.adCallbacks = adCallbacks;
 	}
 
+	private void initDelegate () {
+		if (delegate == null) {
+			delegate = new SpilDelegate();
+			Spil instance = Spil.getInstance();
+			instance.setDelegate(delegate);
+		}
+	}
+
+	@Override public void showRewardVideo () {
+		Spil.playRewardVideo();
+	}
+
+	@Override public void showMoreApps () {
+		Spil.showMoreApps();
+	}
 
 	@Override public void devRequestAd (String provider, String adType, boolean parentalGate) {
 		Spil.devRequestAd(provider, adType, parentalGate);
 	}
 
+	// TODO does this dev stuff even work?
 	@Override public void devShowRewardVideo (String provider) {
 		Spil.devShowRewardVideo(provider);
 	}
@@ -177,5 +218,53 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 
 	public void didReceiveRemoteNotification(UIApplication application, UIRemoteNotification userInfo) {
 		Spil.didReceiveRemoteNotification(application, userInfo.getDictionary());
+	}
+
+	private static class SpilDelegate extends SpilDelegateAdapter {
+		SpilAdCallbacks adCallbacks;
+
+		@Override public void adAvailable (String type) {
+			if (adCallbacks != null) adCallbacks.adAvailable(type);
+		}
+
+		@Override public void adNotAvailable (String type) {
+			if (adCallbacks != null) adCallbacks.adNotAvailable(type);
+		}
+
+		@Override public void adStart () {
+			if (adCallbacks != null) adCallbacks.adStart();
+		}
+
+		@Override public void adFinished (String type, String reason, String reward, String network) {
+			if (adCallbacks != null) adCallbacks.adFinished(type);
+		}
+
+		@Override public void notificationReward (NSDictionary<?, ?> reward) {
+
+		}
+
+		@Override public void packagesLoaded () {
+
+		}
+
+		@Override public void spilGameDataAvailable () {
+
+		}
+
+		@Override public void spilGameDataError (String message) {
+
+		}
+
+		@Override public void playerDataAvailable () {
+
+		}
+
+		@Override public void playerDataError (String message) {
+
+		}
+
+		@Override public void playerDataUpdated (String reason) {
+
+		}
 	}
 }

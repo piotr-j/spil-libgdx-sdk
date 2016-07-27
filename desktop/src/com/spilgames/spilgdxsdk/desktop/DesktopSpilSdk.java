@@ -1,6 +1,7 @@
 package com.spilgames.spilgdxsdk.desktop;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.spilgames.spilgdxsdk.*;
 
@@ -11,10 +12,15 @@ import com.spilgames.spilgdxsdk.*;
  */
 public class DesktopSpilSdk implements SpilSdk {
 	private final static String TAG = DesktopSpilSdk.class.getSimpleName();
-	private ObjectMap<String, String> config = new ObjectMap<>();
+	private JsonValue config = new JsonValue(JsonValue.ValueType.object);
 
 	public DesktopSpilSdk() {
-		config.put("dummyKey", "dummyData");
+		config.child = new JsonValue("dummyData");
+		config.child.name = "dummyKey";
+	}
+
+	public void setConfig(JsonValue config) {
+		this.config = config;
 	}
 
 	@Override public SpilSdkType getBackendType () {
@@ -57,12 +63,8 @@ public class DesktopSpilSdk implements SpilSdk {
 		Gdx.app.log(TAG, "onDestroy");
 	}
 
-	@Override public ObjectMap<String, String> getConfigAll () {
+	@Override public JsonValue getConfig () {
 		return config;
-	}
-
-	@Override public String getConfigValue (String key) {
-		return config.get(key, null);
 	}
 
 	@Override public void startChartboost (String appId, String appSignature) {
@@ -75,6 +77,14 @@ public class DesktopSpilSdk implements SpilSdk {
 
 	@Override public void startDFP (String adUnitId) {
 		Gdx.app.log(TAG, "startDFP ("+adUnitId+")");
+	}
+
+	@Override public void showMoreApps () {
+		Gdx.app.log(TAG, "showMoreApps");
+	}
+
+	@Override public void showRewardVideo () {
+		Gdx.app.log(TAG, "showRewardVideo");
 	}
 
 	@Override public void setSpilAdCallbacks (SpilAdCallbacks adCallbacks) {

@@ -1,5 +1,6 @@
 package com.spilgames.spilgdxsdk;
 
+import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.ObjectMap;
 
 /**
@@ -21,8 +22,7 @@ public interface SpilSdk {
 	void trackEvent(SpilEvent event);
 	void trackEvent(SpilEvent event, SpilEventActionListener listener);
 
-	ObjectMap<String, String> getConfigAll();
-	String getConfigValue(String key);
+	JsonValue getConfig ();
 
 	// TODO do we want those?
 	void onCreate ();
@@ -36,6 +36,8 @@ public interface SpilSdk {
 	void startChartboost (String appId, String appSignature);
 	void startFyber (String appId, String token);
 	void startDFP (String adUnitId);
+	void showRewardVideo ();
+	void showMoreApps ();
 
 	void registerDevice(String device);
 

@@ -1,6 +1,7 @@
 package com.spilgames.spilgdxsdk.html;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.spilgames.spilgdxsdk.*;
 
@@ -50,11 +51,7 @@ public class HtmlSpilSdk implements SpilSdk {
 
 	}
 
-	@Override public ObjectMap<String, String> getConfigAll () {
-		return null;
-	}
-
-	@Override public String getConfigValue (String key) {
+	@Override public JsonValue getConfig () {
 		return null;
 	}
 
@@ -68,6 +65,14 @@ public class HtmlSpilSdk implements SpilSdk {
 
 	@Override public void startDFP (String adUnitId) {
 		Gdx.app.log(TAG, "startDFP ("+adUnitId+")");
+	}
+
+	@Override public void showMoreApps () {
+
+	}
+
+	@Override public void showRewardVideo () {
+
 	}
 
 	@Override public void setSpilAdCallbacks (SpilAdCallbacks adCallbacks) {

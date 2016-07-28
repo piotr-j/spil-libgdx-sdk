@@ -71,6 +71,8 @@ project(":android") {
 //        compile name: 'spilSDK-2.1.0'
         // note: sp we just do this, that way jars are not added to the pom
         compile fileTree(dir: 'libs', include: '*.jar')
+
+        compile 'com.google.android.gms:play-services-ads:9.2.0'
         // note; apparently, its not feasible to bundle the aar inside our own aar, so we need to distribute both
 //        compile(name:'aartestlib-debug', ext:'aar')
     }

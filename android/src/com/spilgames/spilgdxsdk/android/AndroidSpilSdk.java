@@ -158,12 +158,32 @@ public class AndroidSpilSdk implements SpilSdk {
 	}
 
 	@Override public JsonValue getConfig () {
-		String configAll = instance.getConfigAll();
-		if (configAll == null) return null;
+		String data = instance.getConfigAll();
+		return tryParse(data);
+	}
+
+	@Override public void requestPackages () {
+		instance.requestPackages();
+	}
+
+	@Override public JsonValue getAllPackages () {
+		return tryParse(instance.getAllPackages());
+	}
+
+	@Override public JsonValue getPackage (String packageId) {
+		return tryParse(instance.getPackage(packageId));
+	}
+
+	@Override public JsonValue getPromotion (String packageId) {
+		return tryParse(instance.getPromotion(packageId));
+	}
+
+	private JsonValue tryParse (String data) {
+		if (data == null) return null;
 		try {
-			return new JsonReader().parse(configAll);
+			return new JsonReader().parse(data);
 		} catch (Exception ex) {
-			Gdx.app.error(TAG, "Failed to parse config data ", ex);
+			Gdx.app.error(TAG, "Failed to parse json data ", ex);
 		}
 		return null;
 	}

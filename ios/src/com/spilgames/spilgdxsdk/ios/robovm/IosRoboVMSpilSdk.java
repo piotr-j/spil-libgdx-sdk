@@ -102,14 +102,38 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 	}
 
 	@Override public JsonValue getConfig () {
-		NSDictionary<?, ?> rawConfig = Spil.getConfig();
-		if (rawConfig == null) return null;
-		NSString jsonString = JsonUtil.convertObjectToJson(rawConfig);
+		return toJson(Spil.getConfig());
+	}
+
+	@Override public void requestPackages () {
+		Spil.requestPackages();
+	}
+
+	@Override public JsonValue getPromotion (String packageId) {
+		return toJson(Spil.getPromotionByID(packageId));
+	}
+
+	@Override public JsonValue getPackage (String packageId) {
+		return toJson(Spil.getPackageByID(packageId));
+	}
+
+	@Override public JsonValue getAllPackages () {
+		return toJson(Spil.getAllPackages());
+	}
+
+	// no android equivalent
+	public JsonValue getAllPromotions () {
+		return toJson(Spil.getAllPromotions());
+	}
+
+	private JsonValue toJson (NSObject data) {
+		if (data == null) return null;
+		NSString jsonString = JsonUtil.convertObjectToJson(data);
 		if (jsonString == null) return null;
 		try {
 			return new JsonReader().parse(jsonString.toString());
 		} catch (Exception ex) {
-			Gdx.app.error(TAG, "Failed to parse config data ", ex);
+			Gdx.app.error(TAG, "Failed to parse json data ", ex);
 		}
 		return null;
 	}

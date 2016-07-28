@@ -55,6 +55,25 @@ public class HtmlSpilSdk implements SpilSdk {
 		return null;
 	}
 
+	@Override public void requestPackages () {
+		Gdx.app.log(TAG, "requestPackages");
+	}
+
+	@Override public JsonValue getPromotion (String packageId) {
+		Gdx.app.log(TAG, "getPromotion");
+		return null;
+	}
+
+	@Override public JsonValue getPackage (String packageId) {
+		Gdx.app.log(TAG, "getPackage");
+		return null;
+	}
+
+	@Override public JsonValue getAllPackages () {
+		Gdx.app.log(TAG, "getAllPackages");
+		return null;
+	}
+
 	@Override public void startChartboost (String appId, String appSignature) {
 
 	}

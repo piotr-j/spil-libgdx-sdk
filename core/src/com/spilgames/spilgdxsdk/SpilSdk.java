@@ -43,6 +43,19 @@ public interface SpilSdk {
 
 	void setSpilAdCallbacks(SpilAdCallbacks adCallbacks);
 
+	// packages
+
+	void requestPackages();
+
+	JsonValue getAllPackages();
+
+	JsonValue getPackage(String packageId);
+
+	JsonValue getPromotion(String packageId);
+
+
+	// wallet
+
 	// dev
 	void devRequestAd(String provider, String adType, boolean parentalGate);
 	void devShowRewardVideo (String provider);

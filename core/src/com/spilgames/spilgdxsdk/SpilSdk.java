@@ -53,6 +53,7 @@ public interface SpilSdk {
 
 	JsonValue getPromotion(String packageId);
 
+	void setSpilRewardListener(SpilRewardListener rewardListener);
 
 	// wallet
 

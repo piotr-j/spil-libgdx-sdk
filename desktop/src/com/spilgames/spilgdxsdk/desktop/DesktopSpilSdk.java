@@ -2,6 +2,7 @@ package com.spilgames.spilgdxsdk.desktop;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.JsonWriter;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.spilgames.spilgdxsdk.*;
 
@@ -41,6 +42,10 @@ public class DesktopSpilSdk implements SpilSdk {
 
 	@Override public void trackEvent (SpilEvent event, SpilEventActionListener listener) {
 		Gdx.app.log(TAG, "trackEvent ("+event+", "+listener+")");
+	}
+
+	@Override public void setSpilRewardListener (SpilRewardListener rewardListener) {
+		Gdx.app.log(TAG, "SpilRewardListener ("+rewardListener+")");
 	}
 
 	@Override public void onCreate () {

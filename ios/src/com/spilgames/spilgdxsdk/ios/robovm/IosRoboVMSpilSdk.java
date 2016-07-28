@@ -138,6 +138,11 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 		return null;
 	}
 
+	@Override public void setSpilRewardListener (SpilRewardListener rewardListener) {
+		initDelegate();
+		delegate.rewardListener = rewardListener;
+	}
+
 	@Override public void startChartboost (String appId, String appSignature) {
 		Gdx.app.log(TAG, "startChartboost ("+appId+", "+appSignature+")");
 	}
@@ -194,8 +199,9 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 		Spil.didReceiveRemoteNotification(application, userInfo.getDictionary());
 	}
 
-	private static class SpilDelegate extends SpilDelegateAdapter {
+	private class SpilDelegate extends SpilDelegateAdapter {
 		SpilAdCallbacks adCallbacks;
+		SpilRewardListener rewardListener;
 
 		@Override public void adAvailable (String type) {
 			if (adCallbacks != null) adCallbacks.adAvailable(type);
@@ -214,7 +220,7 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 		}
 
 		@Override public void notificationReward (NSDictionary<?, ?> reward) {
-
+			if (rewardListener != null) rewardListener.onRewardReceived(toJson(reward));
 		}
 
 		@Override public void packagesLoaded () {

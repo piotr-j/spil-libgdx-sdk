@@ -81,6 +81,18 @@ public class AndroidSpilSdk implements SpilSdk {
 		// does nothing on android
 	}
 
+	private SpilRewardListener rewardListener;
+	public void processNotification () {
+		String dara = instance.processNotification();
+		if (dara != null && rewardListener != null) {
+			rewardListener.onRewardReceived(tryParse(dara));
+		}
+	}
+
+	@Override public void setSpilRewardListener (SpilRewardListener rewardListener) {
+		this.rewardListener = rewardListener;
+	}
+
 	@Override public void trackEvent (SpilEvent event) {
 		trackEvent(event, null);
 	}
@@ -198,6 +210,10 @@ public class AndroidSpilSdk implements SpilSdk {
 
 	@Override public void onResume () {
 		instance.onResume();
+		// TODO do we want to call this or make the user do that?
+		if (rewardListener != null) {
+			processNotification();
+		}
 	}
 
 	@Override public void onPause () {

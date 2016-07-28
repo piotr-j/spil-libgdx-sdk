@@ -1,9 +1,5 @@
 <config>
   <!-- NOTE: this will be merged with implementing app config file -->
-  <forceLinkClasses>
-    <!--This is needed for reflection usage-->
-    <pattern>com.spilgames.spilgdxsdk.ios.robovm.*</pattern>
-  </forceLinkClasses>
   <libs>
       <lib>xml2</lib>
       <!-- this is needed for spil compilation, as we cant specify correct linker flag at this point in time-->

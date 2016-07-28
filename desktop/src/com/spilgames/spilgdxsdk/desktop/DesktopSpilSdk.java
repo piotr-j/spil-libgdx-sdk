@@ -83,6 +83,10 @@ public class DesktopSpilSdk implements SpilSdk {
 		Gdx.app.log(TAG, "startDFP ("+adUnitId+")");
 	}
 
+	@Override public boolean isAdProviderInitialized (String provider) {
+		return false;
+	}
+
 	@Override public void showMoreApps () {
 		Gdx.app.log(TAG, "showMoreApps");
 	}

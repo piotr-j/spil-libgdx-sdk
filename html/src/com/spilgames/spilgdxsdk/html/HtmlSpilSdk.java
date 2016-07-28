@@ -70,6 +70,10 @@ public class HtmlSpilSdk implements SpilSdk {
 		Gdx.app.log(TAG, "startDFP ("+adUnitId+")");
 	}
 
+	@Override public boolean isAdProviderInitialized (String provider) {
+		return false;
+	}
+
 	@Override public void showMoreApps () {
 
 	}

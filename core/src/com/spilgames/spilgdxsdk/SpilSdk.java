@@ -29,6 +29,9 @@ public interface SpilSdk {
 	void startChartboost (String appId, String appSignature);
 	void startFyber (String appId, String token);
 	void startDFP (String adUnitId);
+
+	boolean isAdProviderInitialized(String provider);
+
 	void showRewardVideo ();
 	void showMoreApps ();
 

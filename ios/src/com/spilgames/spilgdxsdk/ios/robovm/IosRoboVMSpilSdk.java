@@ -150,6 +150,10 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 		}
 	}
 
+	@Override public boolean isAdProviderInitialized (String provider) {
+		return Spil.isAdProviderInitialized(provider);
+	}
+
 	@Override public void showRewardVideo () {
 		Spil.playRewardVideo();
 	}

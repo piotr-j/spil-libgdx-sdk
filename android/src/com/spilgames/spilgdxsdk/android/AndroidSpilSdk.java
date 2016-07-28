@@ -5,9 +5,15 @@ import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
+import com.chartboost.sdk.Chartboost;
+import com.fyber.Fyber;
 import com.spilgames.spilgdxsdk.*;
+import com.spilgames.spilgdxsdk.SpilSdk;
+import com.spilgames.spilsdk.*;
 import com.spilgames.spilsdk.ads.NativeAdCallbacks;
 import com.spilgames.spilsdk.ads.OnAdsListener;
+import com.spilgames.spilsdk.ads.chartboost.ChartBoostUtil;
+import com.spilgames.spilsdk.ads.dfp.DFPUtil;
 import com.spilgames.spilsdk.events.Event;
 import com.spilgames.spilsdk.events.EventActionListener;
 import com.spilgames.spilsdk.events.response.ResponseEvent;
@@ -209,6 +215,21 @@ public class AndroidSpilSdk implements SpilSdk {
 				instance.startFyber(appId, token, null);
 			}
 		});
+	}
+
+	@Override public boolean isAdProviderInitialized (String provider) {
+		String clean = provider.trim().toLowerCase();
+		if (clean.equals("chartboost")) {
+			// no easy way to know, but wont explode when request ad is called
+			return true;
+		} else if (clean.equals("dfp")) {
+			// DFP is initialized when this is not null
+			return DFPUtil.getPublisherInterstitialAd() != null;
+		} else if (clean.equals("fyber")) {
+		// no easy way to know, but wont explode when request ad is called
+			return true;
+		}
+		return false;
 	}
 
 	@Override public void devRequestAd (final String provider, final String adType, final boolean parentalGate) {

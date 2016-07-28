@@ -179,11 +179,11 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 		Spil.start();
 	}
 
-	public void applicationDidBecomeActive (UIApplication application) {
+	public void didBecomeActive (UIApplication application) {
 		Spil.applicationDidBecomeActive(application);
 	}
 
-	public void applicationDidEnterBackground (UIApplication application) {
+	public void didEnterBackground (UIApplication application) {
 		Spil.applicationDidEnterBackground(application);
 	}
 

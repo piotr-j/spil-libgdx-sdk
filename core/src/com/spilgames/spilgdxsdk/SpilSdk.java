@@ -24,13 +24,6 @@ public interface SpilSdk {
 
 	JsonValue getConfig ();
 
-	// TODO do we want those?
-	void onCreate ();
-	void onStart ();
-	void onResume ();
-	void onPause ();
-	void onDestroy ();
-
 	// Ads
 	// TODO this is kind janky
 	void startChartboost (String appId, String appSignature);

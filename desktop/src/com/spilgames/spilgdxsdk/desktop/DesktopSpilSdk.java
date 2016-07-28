@@ -48,26 +48,6 @@ public class DesktopSpilSdk implements SpilSdk {
 		Gdx.app.log(TAG, "SpilRewardListener ("+rewardListener+")");
 	}
 
-	@Override public void onCreate () {
-		Gdx.app.log(TAG, "onCreate");
-	}
-
-	@Override public void onStart () {
-		Gdx.app.log(TAG, "onStart");
-	}
-
-	@Override public void onResume () {
-		Gdx.app.log(TAG, "onResume");
-	}
-
-	@Override public void onPause () {
-		Gdx.app.log(TAG, "onPause");
-	}
-
-	@Override public void onDestroy () {
-		Gdx.app.log(TAG, "onDestroy");
-	}
-
 	@Override public JsonValue getConfig () {
 		return config;
 	}

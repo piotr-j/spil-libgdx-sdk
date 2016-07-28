@@ -24,41 +24,6 @@ public class AndroidSpilSdk implements SpilSdk {
 			AndroidApplication app = (AndroidApplication)Gdx.app;
 
 			instance = com.spilgames.spilsdk.SpilSdk.getInstance(app);
-			// TODO double check if we can get this to work
-//			instance.setEnvironment(SpilEnvironment.STAGING);
-			// looks like this doesnt work as well as we would have hoped
-//			Application application = app.getApplication();
-			// since SpilSDK requires sdk >14, this should be fine
-//			application.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
-//				@Override public void onActivityCreated (Activity activity, Bundle bundle) {
-//					Log.d(TAG, "onActivityCreated");
-//					instance.onCreate();
-//				}
-//
-//				@Override public void onActivityStarted (Activity activity) {
-//					Log.d(TAG, "onActivityStarted");
-//					instance.onStart();
-//				}
-//
-//				@Override public void onActivityResumed (Activity activity) {
-//					Log.d(TAG, "onActivityResumed");
-//					instance.onResume();
-//				}
-//
-//				@Override public void onActivityPaused (Activity activity) {
-//					Log.d(TAG, "onActivityPaused");
-//					instance.onPause();
-//				}
-//
-//				@Override public void onActivityDestroyed (Activity activity) {
-//					Log.d(TAG, "onActivityDestroyed");
-//					instance.onDestroy();
-//				}
-//
-//				@Override public void onActivityStopped (Activity activity) {}
-//
-//				@Override public void onActivitySaveInstanceState (Activity activity, Bundle bundle) {}
-//			});
 		} else {
 			throw new AssertionError("Not running in android app?" + Gdx.app);
 		}
@@ -200,30 +165,6 @@ public class AndroidSpilSdk implements SpilSdk {
 		return null;
 	}
 
-	@Override public void onCreate () {
-		instance.onCreate();
-	}
-
-	@Override public void onStart () {
-		instance.onStart();
-	}
-
-	@Override public void onResume () {
-		instance.onResume();
-		// TODO do we want to call this or make the user do that?
-		if (rewardListener != null) {
-			processNotification();
-		}
-	}
-
-	@Override public void onPause () {
-		instance.onPause();
-	}
-
-	@Override public void onDestroy () {
-		instance.onDestroy();
-	}
-
 	@Override public void setSpilAdCallbacks (final SpilAdCallbacks adCallbacks) {
 		if (adCallbacks == null) throw new AssertionError("SpilAdCallbacks cannot be null.");
 		NativeAdCallbacks nativeAdCallbacks = new NativeAdCallbacks(new OnAdsListener() {
@@ -244,10 +185,6 @@ public class AndroidSpilSdk implements SpilSdk {
 			}
 		});
 		instance.setNativeAdCallbacks(nativeAdCallbacks);
-	}
-
-	public void onBackPressed () {
-		instance.onBackPressed();
 	}
 
 	@Override public void startChartboost (final String appId, final String appSignature) {
@@ -303,6 +240,34 @@ public class AndroidSpilSdk implements SpilSdk {
 
 	@Override public void showRewardVideo () {
 		instance.playVideo();
+	}
+
+	public void onCreate () {
+		instance.onCreate();
+	}
+
+	public void onStart () {
+		instance.onStart();
+	}
+
+	public void onResume () {
+		instance.onResume();
+		// TODO do we want to call this or make the user do that?
+		if (rewardListener != null) {
+			processNotification();
+		}
+	}
+
+	public void onPause () {
+		instance.onPause();
+	}
+
+	public void onDestroy () {
+		instance.onDestroy();
+	}
+
+	public void onBackPressed () {
+		instance.onBackPressed();
 	}
 
 	private void postUI(Runnable runnable) {

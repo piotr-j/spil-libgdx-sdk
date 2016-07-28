@@ -31,26 +31,6 @@ public class HtmlSpilSdk implements SpilSdk {
 
 	}
 
-	@Override public void onCreate () {
-
-	}
-
-	@Override public void onStart () {
-
-	}
-
-	@Override public void onResume () {
-
-	}
-
-	@Override public void onPause () {
-
-	}
-
-	@Override public void onDestroy () {
-
-	}
-
 	@Override public JsonValue getConfig () {
 		return null;
 	}

@@ -81,26 +81,6 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 		return params;
 	}
 
-	@Override public void onCreate () {
-		Spil.start();
-	}
-
-	@Override public void onStart () {
-
-	}
-
-	@Override public void onResume () {
-		Spil.applicationDidBecomeActive(UIApplication.getSharedApplication());
-	}
-
-	@Override public void onPause () {
-		Spil.applicationDidEnterBackground(UIApplication.getSharedApplication());
-	}
-
-	@Override public void onDestroy () {
-
-	}
-
 	@Override public JsonValue getConfig () {
 		return toJson(Spil.getConfig());
 	}
@@ -193,6 +173,18 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 
 	@Override public void devShowMoreApps (String provider) {
 		Spil.devShowMoreApps(provider);
+	}
+
+	public void onCreate () {
+		Spil.start();
+	}
+
+	public void applicationDidBecomeActive (UIApplication application) {
+		Spil.applicationDidBecomeActive(application);
+	}
+
+	public void applicationDidEnterBackground (UIApplication application) {
+		Spil.applicationDidEnterBackground(application);
 	}
 
 	public void didReceiveRemoteNotification(UIApplication application, UIRemoteNotification userInfo) {

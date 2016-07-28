@@ -96,6 +96,8 @@ public class Spil extends NSObject {
 	@Method(selector = "applicationDidBecomeActive:")
 	public static native void applicationDidBecomeActive(UIApplication application);
 
+	@Method(selector = "isAdProviderInitialized:")
+	public static native boolean isAdProviderInitialized(String identifier);
 
 	/**
 	 * Get the latest stored game configuration, typically a synchronized json object coming from the server.

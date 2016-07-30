@@ -5,14 +5,10 @@ import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
-import com.chartboost.sdk.Chartboost;
-import com.fyber.Fyber;
 import com.spilgames.spilgdxsdk.*;
 import com.spilgames.spilgdxsdk.SpilSdk;
-import com.spilgames.spilsdk.*;
 import com.spilgames.spilsdk.ads.NativeAdCallbacks;
 import com.spilgames.spilsdk.ads.OnAdsListener;
-import com.spilgames.spilsdk.ads.chartboost.ChartBoostUtil;
 import com.spilgames.spilsdk.ads.dfp.DFPUtil;
 import com.spilgames.spilsdk.events.Event;
 import com.spilgames.spilsdk.events.EventActionListener;
@@ -61,7 +57,7 @@ public class AndroidSpilSdk implements SpilSdk {
 	public void processNotification () {
 		String dara = instance.processNotification();
 		if (dara != null && rewardListener != null) {
-			rewardListener.onRewardReceived(tryParse(dara));
+			rewardListener.onRewardReceived(toJson(dara));
 		}
 	}
 
@@ -147,7 +143,7 @@ public class AndroidSpilSdk implements SpilSdk {
 
 	@Override public JsonValue getConfig () {
 		String data = instance.getConfigAll();
-		return tryParse(data);
+		return toJson(data);
 	}
 
 	@Override public void requestPackages () {
@@ -155,18 +151,18 @@ public class AndroidSpilSdk implements SpilSdk {
 	}
 
 	@Override public JsonValue getAllPackages () {
-		return tryParse(instance.getAllPackages());
+		return toJson(instance.getAllPackages());
 	}
 
 	@Override public JsonValue getPackage (String packageId) {
-		return tryParse(instance.getPackage(packageId));
+		return toJson(instance.getPackage(packageId));
 	}
 
 	@Override public JsonValue getPromotion (String packageId) {
-		return tryParse(instance.getPromotion(packageId));
+		return toJson(instance.getPromotion(packageId));
 	}
 
-	private JsonValue tryParse (String data) {
+	private JsonValue toJson (String data) {
 		if (data == null) return null;
 		try {
 			return new JsonReader().parse(data);
@@ -302,6 +298,42 @@ public class AndroidSpilSdk implements SpilSdk {
 				playerDataListener.playerDataError(SpilErrorCode.fromId(errorCodes.getId()));
 			}
 		}));
+	}
+
+	@Override public JsonValue getUserProfile () {
+		return toJson(instance.getUserProfile());
+	}
+
+	@Override public JsonValue getWallet () {
+		return toJson(instance.getWallet());
+	}
+
+	@Override public JsonValue getGameData () {
+		return toJson(instance.getSpilGameData());
+	}
+
+	@Override public JsonValue getInventory () {
+		return toJson(instance.getInventory());
+	}
+
+	@Override public void addCurrencyToWallet (int currencyId, int amount, String reason) {
+		instance.addCurrencyToWallet(currencyId, amount, reason);
+	}
+
+	@Override public void subtractCurrencyFromWallet (int currencyId, int amount, String reason) {
+		instance.subtractCurrencyFromWallet(currencyId, amount, reason);
+	}
+
+	@Override public void addItemToInventory (int itemId, int amount, String reason) {
+		instance.addItemToInventory(itemId, amount, reason);
+	}
+
+	@Override public void subtractItemFromInventory (int itemId, int amount, String reason) {
+		instance.subtractItemFromInventory(itemId, amount, reason);
+	}
+
+	@Override public void consumeBundle (int bundleId, String reason) {
+		instance.consumeBundle(bundleId, reason);
 	}
 
 	public void onCreate () {

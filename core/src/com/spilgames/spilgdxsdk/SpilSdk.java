@@ -5,6 +5,8 @@ import com.badlogic.gdx.utils.JsonValue;
 /**
  * Common interface for all backends
  *
+ * TODO comment the api
+ *
  * Created by PiotrJ on 01/07/16.
  */
 public interface SpilSdk {
@@ -55,6 +57,19 @@ public interface SpilSdk {
 	void requestGameData();
 	void setSpilGameDataListener(SpilGameDataListener gameDataListener);
 	void setSpilPlayerDataListener(SpilPlayerDataListener playerDataListener);
+
+	JsonValue getUserProfile();
+	JsonValue getWallet();
+	JsonValue getGameData();
+	JsonValue getInventory();
+
+	void addCurrencyToWallet(int currencyId, int amount, String reason);
+	void subtractCurrencyFromWallet(int currencyId, int amount, String reason);
+
+	void addItemToInventory(int itemId, int amount, String reason);
+	void subtractItemFromInventory(int itemId, int amount, String reason);
+
+	void consumeBundle(int bundleId, String reason);
 
 	// dev
 	void devRequestAd(String provider, String adType, boolean parentalGate);

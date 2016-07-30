@@ -220,6 +220,52 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 		delegate.gameDataListener = gameDataListener;
 	}
 
+	@Override public JsonValue getUserProfile () {
+		return toJson(Spil.getUserProfile());
+	}
+
+	@Override public JsonValue getWallet () {
+		return toJson(Spil.getWallet());
+	}
+
+	@Override public JsonValue getGameData () {
+		return toJson(Spil.getSpilGameData());
+	}
+
+	@Override public JsonValue getInventory () {
+		return toJson(Spil.getInventory());
+	}
+
+//	public String getShop () {
+//		// this is getGameData.get(shop)
+//		return Spil.getShop();
+//	}
+//
+//	public String getShopPromotions () {
+//		// this is getGameData.get(promotions)
+//		return Spil.getShopPromotions();
+//	}
+
+	@Override public void addCurrencyToWallet (int currencyId, int amount, String reason) {
+		Spil.addCurrencyToWallet(currencyId, amount, reason);
+	}
+
+	@Override public void subtractCurrencyFromWallet (int currencyId, int amount, String reason) {
+		Spil.subtractCurrencyFromWallet(currencyId, amount, reason);
+	}
+
+	@Override public void addItemToInventory (int itemId, int amount, String reason) {
+		Spil.addItemToInventory(itemId, amount, reason);
+	}
+
+	@Override public void subtractItemFromInventory (int itemId, int amount, String reason) {
+		Spil.subtractItemFromInventory(itemId, amount, reason);
+	}
+
+	@Override public void consumeBundle (int bundleId, String reason) {
+		Spil.consumeBundle(bundleId, reason);
+	}
+
 	private class SpilDelegate extends SpilDelegateAdapter {
 		SpilAdCallbacks adCallbacks;
 		SpilRewardListener rewardListener;

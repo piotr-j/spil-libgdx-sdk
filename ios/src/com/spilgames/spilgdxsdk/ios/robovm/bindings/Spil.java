@@ -219,7 +219,7 @@ public class Spil extends NSObject {
 	public static native String getShopPromotions();
 
 	@Method(selector = "addCurrencyToWallet:")
-	public static native void addCurrencyToWallet(int currencyId, int amount, String reason);//	+(void)addCurrencyToWallet:(int)currencyId withAmount:(int)amount withReason:(NSString*)reason;
+	public static native void addCurrencyToWallet(int currencyId, int amount, String reason);
 
 	@Method(selector = "subtractCurrencyFromWallet:")
 	public static native void subtractCurrencyFromWallet(int currencyId, int amount, String reason);

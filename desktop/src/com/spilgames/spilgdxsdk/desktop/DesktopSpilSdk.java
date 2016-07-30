@@ -130,4 +130,54 @@ public class DesktopSpilSdk implements SpilSdk {
 	@Override public void setSpilGameDataListener (SpilGameDataListener gameDataListener) {
 		Gdx.app.log(TAG, "setSpilGameDataListener ("+gameDataListener+")");
 	}
+
+	@Override public JsonValue getUserProfile () {
+		Gdx.app.log(TAG, "getUserProfile");
+		return null;
+	}
+
+	@Override public JsonValue getWallet () {
+		Gdx.app.log(TAG, "getWallet");
+		return null;
+	}
+
+	@Override public JsonValue getGameData () {
+		Gdx.app.log(TAG, "getGameData");
+		return null;
+	}
+
+	@Override public JsonValue getInventory () {
+		Gdx.app.log(TAG, "getInventory");
+		return null;
+	}
+
+//	@Override public String getShop () {
+//		Gdx.app.log(TAG, "getShop");
+//		return null;
+//	}
+//
+//	@Override public String getShopPromotions () {
+//		Gdx.app.log(TAG, "getShopPromotions");
+//		return null;
+//	}
+
+	@Override public void addCurrencyToWallet (int currencyId, int amount, String reason) {
+		Gdx.app.log(TAG, "addCurrencyToWallet (" +currencyId+", "+amount+", "+ reason+")");
+	}
+
+	@Override public void subtractCurrencyFromWallet (int currencyId, int amount, String reason) {
+		Gdx.app.log(TAG, "subtractCurrencyFromWallet (" +currencyId+", "+amount+", "+ reason+")");
+	}
+
+	@Override public void addItemToInventory (int itemId, int amount, String reason) {
+		Gdx.app.log(TAG, "addItemToInventory (" +itemId+", "+amount+", "+ reason+")");
+	}
+
+	@Override public void subtractItemFromInventory (int itemId, int amount, String reason) {
+		Gdx.app.log(TAG, "subtractItemFromInventory (" +itemId+", "+amount+", "+ reason+")");
+	}
+
+	@Override public void consumeBundle (int bundleId, String reason) {
+		Gdx.app.log(TAG, "consumeBundle (" +bundleId+", "+ reason+")");
+	}
 }

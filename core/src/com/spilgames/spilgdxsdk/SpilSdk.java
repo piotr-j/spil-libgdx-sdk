@@ -1,7 +1,6 @@
 package com.spilgames.spilgdxsdk;
 
 import com.badlogic.gdx.utils.JsonValue;
-import com.badlogic.gdx.utils.ObjectMap;
 
 /**
  * Common interface for all backends
@@ -52,6 +51,10 @@ public interface SpilSdk {
 	void setSpilRewardListener(SpilRewardListener rewardListener);
 
 	// wallet
+	void requestPlayerData();
+	void requestGameData();
+	void setSpilGameDataListener(SpilGameDataListener gameDataListener);
+	void setSpilPlayerDataListener(SpilPlayerDataListener playerDataListener);
 
 	// dev
 	void devRequestAd(String provider, String adType, boolean parentalGate);

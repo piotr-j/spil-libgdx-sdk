@@ -239,6 +239,7 @@ FOUNDATION_EXPORT const unsigned char SpilVersionString[];
 # pragma mark UserData
 
 +(void)requestPlayerData;
++(void)requestGameData;
 
 +(NSString*)getUserProfile;
 +(NSString*)getWallet;

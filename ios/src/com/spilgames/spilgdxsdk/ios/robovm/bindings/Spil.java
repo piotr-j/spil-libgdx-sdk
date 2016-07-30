@@ -196,6 +196,10 @@ public class Spil extends NSObject {
 	@Method(selector = "requestPlayerData")
 	public static native void requestPlayerData();
 
+	// NOTE this is not exposed in header for some reason, internally its 'requestGameData' event
+	@Method(selector = "requestGameData")
+	public static native void requestGameData();
+
 	@Method(selector = "getUserProfile")
 	public static native String getUserProfile();
 

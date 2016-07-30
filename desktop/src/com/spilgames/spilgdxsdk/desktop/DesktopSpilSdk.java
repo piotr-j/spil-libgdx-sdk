@@ -114,4 +114,20 @@ public class DesktopSpilSdk implements SpilSdk {
 	@Override public void devShowMoreApps (String provider) {
 		Gdx.app.log(TAG, "devShowMoreApps ("+provider+")");
 	}
+
+	@Override public void requestGameData () {
+		Gdx.app.log(TAG, "requestGameData");
+	}
+
+	@Override public void requestPlayerData () {
+		Gdx.app.log(TAG, "requestPlayerData)");
+	}
+
+	@Override public void setSpilPlayerDataListener (SpilPlayerDataListener playerDataListener) {
+		Gdx.app.log(TAG, "setSpilPlayerDataListener ("+playerDataListener+")");
+	}
+
+	@Override public void setSpilGameDataListener (SpilGameDataListener gameDataListener) {
+		Gdx.app.log(TAG, "setSpilGameDataListener ("+gameDataListener+")");
+	}
 }

@@ -17,6 +17,11 @@ import com.spilgames.spilsdk.ads.dfp.DFPUtil;
 import com.spilgames.spilsdk.events.Event;
 import com.spilgames.spilsdk.events.EventActionListener;
 import com.spilgames.spilsdk.events.response.ResponseEvent;
+import com.spilgames.spilsdk.gamedata.OnGameDataListener;
+import com.spilgames.spilsdk.gamedata.SpilGameDataCallbacks;
+import com.spilgames.spilsdk.playerdata.OnPlayerDataListener;
+import com.spilgames.spilsdk.playerdata.PlayerDataCallbacks;
+import com.spilgames.spilsdk.utils.error.ErrorCodes;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -261,6 +266,42 @@ public class AndroidSpilSdk implements SpilSdk {
 
 	@Override public void showRewardVideo () {
 		instance.playVideo();
+	}
+
+	@Override public void requestGameData () {
+		instance.requestGameData();
+	}
+
+	@Override public void requestPlayerData () {
+		instance.requestPlayerData();
+	}
+
+	@Override public void setSpilGameDataListener (final SpilGameDataListener gameDataListener) {
+		instance.setGameDataCallbacks(new SpilGameDataCallbacks(new OnGameDataListener() {
+			@Override public void GameDataAvailable () {
+				gameDataListener.gameDataAvailable();
+			}
+
+			@Override public void GameDataError (ErrorCodes errorCodes) {
+				gameDataListener.gameDataError(SpilErrorCode.fromId(errorCodes.getId()));
+			}
+		}));
+	}
+
+	@Override public void setSpilPlayerDataListener (final SpilPlayerDataListener playerDataListener) {
+		instance.setPlayerDataCallbacks(new PlayerDataCallbacks(new OnPlayerDataListener() {
+			@Override public void PlayerDataAvailable () {
+				playerDataListener.playerDataAvailable();
+			}
+
+			@Override public void PlayerDataUpdated (String reason) {
+				playerDataListener.playerDataUpdated(reason);
+			}
+
+			@Override public void PlayerDataError (ErrorCodes errorCodes) {
+				playerDataListener.playerDataError(SpilErrorCode.fromId(errorCodes.getId()));
+			}
+		}));
 	}
 
 	public void onCreate () {

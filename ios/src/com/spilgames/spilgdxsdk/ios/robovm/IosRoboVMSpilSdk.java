@@ -110,8 +110,13 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 		if (data == null) return null;
 		NSString jsonString = JsonUtil.convertObjectToJson(data);
 		if (jsonString == null) return null;
+		return toJson(jsonString.toString());
+	}
+
+	private JsonReader jsonReader = new JsonReader();
+	private JsonValue toJson (String data) {
 		try {
-			return new JsonReader().parse(jsonString.toString());
+			return jsonReader.parse(data);
 		} catch (Exception ex) {
 			Gdx.app.error(TAG, "Failed to parse json data ", ex);
 		}
@@ -195,9 +200,31 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 		Spil.didReceiveRemoteNotification(application, userInfo.getDictionary());
 	}
 
+	@Override public void requestGameData () {
+		// its there in .m but not in header
+		// it also is just an 'requestGameData' event, so we could do that?
+		Spil.requestGameData();
+	}
+
+	@Override public void requestPlayerData () {
+		Spil.requestPlayerData();
+	}
+
+	@Override public void setSpilPlayerDataListener (SpilPlayerDataListener playerDataListener) {
+		initDelegate();
+		delegate.playerDataListener = playerDataListener;
+	}
+
+	@Override public void setSpilGameDataListener (SpilGameDataListener gameDataListener) {
+		initDelegate();
+		delegate.gameDataListener = gameDataListener;
+	}
+
 	private class SpilDelegate extends SpilDelegateAdapter {
 		SpilAdCallbacks adCallbacks;
 		SpilRewardListener rewardListener;
+		SpilGameDataListener gameDataListener;
+		SpilPlayerDataListener playerDataListener;
 
 		@Override public void adAvailable (String type) {
 			if (adCallbacks != null) adCallbacks.adAvailable(type);
@@ -220,27 +247,43 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 		}
 
 		@Override public void packagesLoaded () {
-
+			// NOTE there is not equivalent on android side
 		}
 
 		@Override public void spilGameDataAvailable () {
-
+			if (gameDataListener != null) gameDataListener.gameDataAvailable();
 		}
 
 		@Override public void spilGameDataError (String message) {
-
+			if (gameDataListener != null) {
+				JsonValue value = toJson(message);
+				if (value == null) {
+					playerDataListener.playerDataError(SpilErrorCode.Invalid);
+				} else {
+					int id = value.getInt("id");
+					playerDataListener.playerDataError(SpilErrorCode.fromId(id));
+				}
+			}
 		}
 
 		@Override public void playerDataAvailable () {
-
+			if (playerDataListener != null) playerDataListener.playerDataAvailable();
 		}
 
 		@Override public void playerDataError (String message) {
-
+			if (playerDataListener != null) {
+				JsonValue value = toJson(message);
+				if (value == null) {
+					playerDataListener.playerDataError(SpilErrorCode.Invalid);
+				} else {
+					int id = value.getInt("id");
+					playerDataListener.playerDataError(SpilErrorCode.fromId(id));
+				}
+			}
 		}
 
 		@Override public void playerDataUpdated (String reason) {
-
+			if (playerDataListener != null) playerDataListener.playerDataUpdated(reason);
 		}
 	}
 }

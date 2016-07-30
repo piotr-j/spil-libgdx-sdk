@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
 import com.spilgames.spilgdxsdk.*;
 import com.spilgames.spilgdxsdk.SpilSdk;
+import com.spilgames.spilsdk.SpilEnvironment;
 import com.spilgames.spilsdk.ads.NativeAdCallbacks;
 import com.spilgames.spilsdk.ads.OnAdsListener;
 import com.spilgames.spilsdk.ads.dfp.DFPUtil;
@@ -50,7 +51,11 @@ public class AndroidSpilSdk implements SpilSdk {
 	}
 
 	@Override public void setDebug (boolean debug) {
-		// does nothing on android
+		if (debug) {
+			instance.setEnvironment(SpilEnvironment.PRODUCTION);
+		} else {
+			instance.setEnvironment(SpilEnvironment.PRODUCTION);
+		}
 	}
 
 	private SpilRewardListener rewardListener;

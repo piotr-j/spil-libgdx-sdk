@@ -218,13 +218,13 @@ public class Spil extends NSObject {
 	@Method(selector = "getShopPromotions")
 	public static native String getShopPromotions();
 
-	@Method(selector = "addCurrencyToWallet:")
+	@Method(selector = "addCurrencyToWallet:withAmount:withReason:")
 	public static native void addCurrencyToWallet(int currencyId, int amount, String reason);
 
-	@Method(selector = "subtractCurrencyFromWallet:")
+	@Method(selector = "subtractCurrencyFromWallet:withAmount:withReason:")
 	public static native void subtractCurrencyFromWallet(int currencyId, int amount, String reason);
 
-	@Method(selector = "addItemToInventory:withAmount:withReason:")
+	@Method(selector = "addItemToInventory:withAmount:withReason::withAmount:withReason:")
 	public static native void addItemToInventory(int itemId, int amount, String reason);
 
 	@Method(selector = "subtractItemFromInventory:withAmount:withReason:")

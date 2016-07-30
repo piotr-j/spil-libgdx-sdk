@@ -44,6 +44,6 @@ public enum SpilErrorCode {
 
 	public static SpilErrorCode fromId(int id) {
 		if (id < 1 || id > 11) return Invalid;
-		return all[id];
+		return all[id-1];
 	}
 }

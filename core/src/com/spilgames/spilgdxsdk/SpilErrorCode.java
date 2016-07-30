@@ -4,6 +4,7 @@ package com.spilgames.spilgdxsdk;
  * Created by PiotrJ on 29/07/16.
  */
 public enum SpilErrorCode {
+	Invalid(-1, "Unknown", "Unknown error id"),
 	LoadFailed(1, "LoadFailed", "Data container is empty!"),
 	ItemNotFound(2, "ItemNotFound", "Item does not exist!"),
 	CurrencyNotFound(3, "CurrencyNotFound", "Currency does not exist!"),
@@ -14,8 +15,7 @@ public enum SpilErrorCode {
 	ItemAmountToLow(8, "ItemAmountToLow", "Could not remove item as amount is too low!"),
 	CurrencyOperation(9, "CurrencyOperation", "Error updating wallet!"),
 	ItemOperation(10, "ItemOperation", "Error updating item to player inventory!"),
-	BundleOperation(11, "BundleOperation", "Error adding bundle to player inventory!"),
-	Invalid(-1, "Unknown", "Unknown error id")
+	BundleOperation(11, "BundleOperation", "Error adding bundle to player inventory!")
 	;
 
 	private int id;
@@ -44,6 +44,6 @@ public enum SpilErrorCode {
 
 	public static SpilErrorCode fromId(int id) {
 		if (id < 1 || id > 11) return Invalid;
-		return all[id-1];
+		return all[id];
 	}
 }

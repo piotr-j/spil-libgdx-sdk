@@ -178,7 +178,10 @@ public class AndroidSpilSdk implements SpilSdk {
 	}
 
 	@Override public void setSpilAdCallbacks (final SpilAdCallbacks adCallbacks) {
-		if (adCallbacks == null) throw new AssertionError("SpilAdCallbacks cannot be null.");
+		if (adCallbacks == null) {
+			instance.setNativeAdCallbacks(null);
+			return;
+		}
 		NativeAdCallbacks nativeAdCallbacks = new NativeAdCallbacks(new OnAdsListener() {
 			@Override public void AdAvailable (String type) {
 				adCallbacks.adAvailable(type);
@@ -232,7 +235,7 @@ public class AndroidSpilSdk implements SpilSdk {
 			// DFP is initialized when this is not null
 			return DFPUtil.getPublisherInterstitialAd() != null;
 		} else if (clean.equals("fyber")) {
-		// no easy way to know, but wont explode when request ad is called
+			// no easy way to know, but wont explode when request ad is called
 			return true;
 		}
 		return false;
@@ -278,6 +281,10 @@ public class AndroidSpilSdk implements SpilSdk {
 	}
 
 	@Override public void setSpilGameDataListener (final SpilGameDataListener gameDataListener) {
+		if (gameDataListener == null) {
+			instance.setGameDataCallbacks(null);
+			return;
+		}
 		instance.setGameDataCallbacks(new SpilGameDataCallbacks(new OnGameDataListener() {
 			@Override public void GameDataAvailable () {
 				gameDataListener.gameDataAvailable();
@@ -290,6 +297,10 @@ public class AndroidSpilSdk implements SpilSdk {
 	}
 
 	@Override public void setSpilPlayerDataListener (final SpilPlayerDataListener playerDataListener) {
+		if (playerDataListener == null) {
+			instance.setPlayerDataCallbacks(null);
+			return;
+		}
 		instance.setPlayerDataCallbacks(new PlayerDataCallbacks(new OnPlayerDataListener() {
 			@Override public void PlayerDataAvailable () {
 				playerDataListener.playerDataAvailable();

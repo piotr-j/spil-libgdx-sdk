@@ -140,9 +140,7 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 		Gdx.app.log(TAG, "startDFP ("+adUnitId+")");
 	}
 
-	@Override public void setSpilAdCallbacks (final SpilAdCallbacks adCallbacks) {
-		if (adCallbacks == null)
-			throw new AssertionError("SpilAdCallbacks cannot be null!");
+	@Override public void setSpilAdCallbacks (SpilAdCallbacks adCallbacks) {
 		initDelegate();
 		delegate.adCallbacks = adCallbacks;
 	}
@@ -293,7 +291,7 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 		}
 
 		@Override public void packagesLoaded () {
-			// NOTE there is not equivalent on android side
+			// NOTE there is no equivalent on android side
 		}
 
 		@Override public void spilGameDataAvailable () {

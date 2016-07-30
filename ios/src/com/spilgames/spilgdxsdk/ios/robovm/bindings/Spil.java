@@ -224,7 +224,7 @@ public class Spil extends NSObject {
 	@Method(selector = "subtractCurrencyFromWallet:withAmount:withReason:")
 	public static native void subtractCurrencyFromWallet(int currencyId, int amount, String reason);
 
-	@Method(selector = "addItemToInventory:withAmount:withReason::withAmount:withReason:")
+	@Method(selector = "addItemToInventory:withAmount:withReason:")
 	public static native void addItemToInventory(int itemId, int amount, String reason);
 
 	@Method(selector = "subtractItemFromInventory:withAmount:withReason:")

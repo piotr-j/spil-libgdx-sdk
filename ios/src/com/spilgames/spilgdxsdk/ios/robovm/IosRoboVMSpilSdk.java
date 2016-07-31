@@ -28,10 +28,6 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 		return SpilSdkType.IOS_ROBOVM;
 	}
 
-	@Override public void registerDevice (String projectID) {
-		// does nothing on ios
-	}
-
 	@Override public void setDebug (boolean debug) {
 		Spil.debug(debug);
 	}

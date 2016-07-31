@@ -31,9 +31,13 @@ public interface SpilSdk {
 	void showRewardVideo ();
 	void showMoreApps ();
 
-	void registerDevice(String device);
-
 	void setSpilAdCallbacks(SpilAdCallbacks adCallbacks);
+
+	// ads dev
+	void devRequestAd(String provider, String adType, boolean parentalGate);
+	void devShowRewardVideo (String provider);
+	void devShowInterstitial(String provider);
+	void devShowMoreApps (String provider);
 
 	// packages
 
@@ -65,10 +69,4 @@ public interface SpilSdk {
 	void subtractItemFromInventory(int itemId, int amount, String reason);
 
 	void consumeBundle(int bundleId, String reason);
-
-	// dev
-	void devRequestAd(String provider, String adType, boolean parentalGate);
-	void devShowRewardVideo (String provider);
-	void devShowInterstitial(String provider);
-	void devShowMoreApps (String provider);
 }

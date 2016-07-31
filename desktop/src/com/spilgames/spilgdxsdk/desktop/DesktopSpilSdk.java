@@ -28,10 +28,6 @@ public class DesktopSpilSdk implements SpilSdk {
 		return SpilSdkType.DESKTOP;
 	}
 
-	@Override public void registerDevice (String projectID) {
-		Gdx.app.log(TAG, "registerDevice ("+projectID+")");
-	}
-
 	@Override public void setDebug (boolean debug) {
 		Gdx.app.log(TAG, "setDebug ("+debug+")");
 	}

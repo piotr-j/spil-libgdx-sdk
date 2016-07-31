@@ -42,7 +42,7 @@ public class AndroidSpilSdk implements SpilSdk {
 		return instance;
 	}
 
-	@Override public void registerDevice (String projectID) {
+	public void registerDevice (String projectID) {
 		instance.registerDevice(projectID);
 	}
 

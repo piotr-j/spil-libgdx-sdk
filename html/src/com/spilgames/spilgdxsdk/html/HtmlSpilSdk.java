@@ -15,10 +15,6 @@ public class HtmlSpilSdk implements SpilSdk {
 		return SpilSdkType.HTML;
 	}
 
-	@Override public void registerDevice (String projectID) {
-		Gdx.app.log(TAG, "registerDevice ("+projectID+")");
-	}
-
 	@Override public void setDebug (boolean debug) {
 
 	}

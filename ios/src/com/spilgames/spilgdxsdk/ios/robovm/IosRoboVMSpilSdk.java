@@ -128,18 +128,6 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 		delegate.rewardListener = rewardListener;
 	}
 
-	@Override public void startChartboost (String appId, String appSignature) {
-		Gdx.app.log(TAG, "startChartboost ("+appId+", "+appSignature+")");
-	}
-
-	@Override public void startFyber (String appId, String token) {
-		Gdx.app.log(TAG, "startFyber ("+appId+", "+token+")");
-	}
-
-	@Override public void startDFP (String adUnitId) {
-		Gdx.app.log(TAG, "startDFP ("+adUnitId+")");
-	}
-
 	@Override public void setSpilAdCallbacks (SpilAdCallbacks adCallbacks) {
 		initDelegate();
 		delegate.adCallbacks = adCallbacks;

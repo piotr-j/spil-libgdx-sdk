@@ -26,11 +26,6 @@ public interface SpilSdk {
 	JsonValue getConfig ();
 
 	// Ads
-	// TODO this is kind janky
-	void startChartboost (String appId, String appSignature);
-	void startFyber (String appId, String token);
-	void startDFP (String adUnitId);
-
 	boolean isAdProviderInitialized(String provider);
 
 	void showRewardVideo ();

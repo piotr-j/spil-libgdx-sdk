@@ -58,18 +58,6 @@ public class HtmlSpilSdk implements SpilSdk {
 		return null;
 	}
 
-	@Override public void startChartboost (String appId, String appSignature) {
-
-	}
-
-	@Override public void startFyber (String appId, String token) {
-		Gdx.app.log(TAG, "startFyber ("+appId+", "+token+")");
-	}
-
-	@Override public void startDFP (String adUnitId) {
-		Gdx.app.log(TAG, "startDFP ("+adUnitId+")");
-	}
-
 	@Override public boolean isAdProviderInitialized (String provider) {
 		return false;
 	}

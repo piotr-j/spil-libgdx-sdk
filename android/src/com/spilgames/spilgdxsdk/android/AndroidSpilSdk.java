@@ -202,7 +202,7 @@ public class AndroidSpilSdk implements SpilSdk {
 		instance.setNativeAdCallbacks(nativeAdCallbacks);
 	}
 
-	@Override public void startChartboost (final String appId, final String appSignature) {
+	public void startChartboost (final String appId, final String appSignature) {
 		postUI(new Runnable() {
 			@Override public void run () {
 				instance.setupChartBoost(appId, appSignature);
@@ -210,7 +210,7 @@ public class AndroidSpilSdk implements SpilSdk {
 		});
 	}
 
-	@Override public void startDFP (final String adUnitId) {
+	public void startDFP (final String adUnitId) {
 		postUI(new Runnable() {
 			@Override public void run () {
 				instance.startDFP(adUnitId, null);
@@ -218,7 +218,7 @@ public class AndroidSpilSdk implements SpilSdk {
 		});
 	}
 
-	@Override public void startFyber (final String appId, final String token) {
+	public void startFyber (final String appId, final String token) {
 		postUI(new Runnable() {
 			@Override public void run () {
 				instance.startFyber(appId, token, null);

@@ -27,6 +27,14 @@ public class HtmlSpilSdk implements SpilSdk {
 
 	}
 
+	@Override public void requestMoreApps () {
+
+	}
+
+	@Override public void requestRewardVideo () {
+
+	}
+
 	@Override public JsonValue getConfig () {
 		return null;
 	}

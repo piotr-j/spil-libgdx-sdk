@@ -141,6 +141,15 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 		return Spil.isAdProviderInitialized(provider);
 	}
 
+	@Override public void requestMoreApps () {
+		// same as android
+		Spil.devRequestAd("ChartBoost", "moreApps", false);
+	}
+
+	@Override public void requestRewardVideo () {
+		Spil.trackEvent("requestRewardVideo");
+	}
+
 	@Override public void showRewardVideo () {
 		Spil.playRewardVideo();
 	}

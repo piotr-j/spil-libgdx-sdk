@@ -28,6 +28,14 @@ public class DesktopSpilSdk implements SpilSdk {
 		return SpilSdkType.DESKTOP;
 	}
 
+	@Override public void requestMoreApps () {
+		Gdx.app.log(TAG, "requestMoreApps");
+	}
+
+	@Override public void requestRewardVideo () {
+		Gdx.app.log(TAG, "requestRewardVideo");
+	}
+
 	@Override public void setDebug (boolean debug) {
 		Gdx.app.log(TAG, "setDebug ("+debug+")");
 	}

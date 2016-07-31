@@ -28,6 +28,9 @@ public interface SpilSdk {
 	// Ads
 	boolean isAdProviderInitialized(String provider);
 
+	void requestRewardVideo ();
+	void requestMoreApps ();
+
 	void showRewardVideo ();
 	void showMoreApps ();
 

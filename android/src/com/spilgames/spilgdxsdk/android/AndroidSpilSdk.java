@@ -226,6 +226,14 @@ public class AndroidSpilSdk implements SpilSdk {
 		});
 	}
 
+	@Override public void requestRewardVideo () {
+		instance.requestRewardVideo();
+	}
+
+	@Override public void requestMoreApps () {
+		instance.requestMoreApps();
+	}
+
 	@Override public boolean isAdProviderInitialized (String provider) {
 		String clean = provider.trim().toLowerCase();
 		if (clean.equals("chartboost")) {

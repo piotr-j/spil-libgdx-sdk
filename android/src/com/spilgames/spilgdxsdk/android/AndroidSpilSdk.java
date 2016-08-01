@@ -37,13 +37,12 @@ public class AndroidSpilSdk implements SpilSdk {
 		}
 	}
 
-	// TODO we probably dont need that once stuff works
-	public com.spilgames.spilsdk.SpilSdk getInstance () {
-		return instance;
-	}
-
 	public void registerDevice (String projectID) {
 		instance.registerDevice(projectID);
+	}
+
+	public void setPluginInformation (String pluginName, String pluginVersion) {
+		instance.setPluginInformation(pluginName, pluginVersion);
 	}
 
 	@Override public SpilSdkType getBackendType () {

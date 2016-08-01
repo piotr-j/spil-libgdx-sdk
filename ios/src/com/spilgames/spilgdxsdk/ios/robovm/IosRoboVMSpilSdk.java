@@ -1,6 +1,7 @@
 package com.spilgames.spilgdxsdk.ios.robovm;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.backends.iosrobovm.IOSApplication;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.spilgames.spilgdxsdk.*;
@@ -20,7 +21,7 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 	private final static String TAG = IosRoboVMSpilSdk.class.getSimpleName();
 
 	private SpilDelegate delegate;
-	public IosRoboVMSpilSdk (IOSLauncher launcher){
+	public IosRoboVMSpilSdk (IOSApplication.Delegate delegate){
 
 	}
 

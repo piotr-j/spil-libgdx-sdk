@@ -1,5 +1,6 @@
 package com.spilgames.spilgdxsdk.android;
 
+import android.support.annotation.NonNull;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.utils.JsonReader;
@@ -385,6 +386,11 @@ public class AndroidSpilSdk implements SpilSdk {
 
 	public void onBackPressed () {
 		instance.onBackPressed();
+	}
+
+	public void onRequestPermissionsResult (int requestCode, @NonNull String[] permissions,
+		@NonNull int[] grantResults) {
+		instance.onRequestPermissionsResult(requestCode, permissions, grantResults);
 	}
 
 	private void postUI(Runnable runnable) {

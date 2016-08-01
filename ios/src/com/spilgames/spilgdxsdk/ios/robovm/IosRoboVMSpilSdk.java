@@ -20,7 +20,7 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 	private final static String TAG = IosRoboVMSpilSdk.class.getSimpleName();
 
 	private SpilDelegate delegate;
-	public IosRoboVMSpilSdk (){
+	public IosRoboVMSpilSdk (IOSLauncher launcher){
 
 	}
 

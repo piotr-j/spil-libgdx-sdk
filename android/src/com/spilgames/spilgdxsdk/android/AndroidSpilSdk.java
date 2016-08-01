@@ -1,5 +1,6 @@
 package com.spilgames.spilgdxsdk.android;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplication;
@@ -28,14 +29,8 @@ public class AndroidSpilSdk implements SpilSdk {
 	private final static String TAG = AndroidSpilSdk.class.getSimpleName();
 
 	private com.spilgames.spilsdk.SpilSdk instance;
-	public AndroidSpilSdk () {
-		if (Gdx.app instanceof AndroidApplication) {
-			AndroidApplication app = (AndroidApplication)Gdx.app;
-
-			instance = com.spilgames.spilsdk.SpilSdk.getInstance(app);
-		} else {
-			throw new AssertionError("Not running in android app?" + Gdx.app);
-		}
+	public AndroidSpilSdk (Context context) {
+		instance = com.spilgames.spilsdk.SpilSdk.getInstance(context);
 	}
 
 	public void registerDevice (String projectID) {

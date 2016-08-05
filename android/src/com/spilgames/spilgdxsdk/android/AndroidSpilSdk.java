@@ -389,6 +389,11 @@ public class AndroidSpilSdk implements SpilSdk {
 	}
 
 	private void postUI(Runnable runnable) {
-		((AndroidApplication)Gdx.app).runOnUiThread(runnable);
+		// if app is not initialized, we should be on ui thread anyway
+		if (Gdx.app == null) {
+			runnable.run();
+		} else {
+			((AndroidApplication)Gdx.app).runOnUiThread(runnable);
+		}
 	}
 }

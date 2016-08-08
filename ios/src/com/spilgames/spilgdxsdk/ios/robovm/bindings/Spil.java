@@ -1,9 +1,6 @@
 package com.spilgames.spilgdxsdk.ios.robovm.bindings;
 
-import org.robovm.apple.foundation.NSArray;
-import org.robovm.apple.foundation.NSDictionary;
-import org.robovm.apple.foundation.NSObject;
-import org.robovm.apple.foundation.NSString;
+import org.robovm.apple.foundation.*;
 import org.robovm.apple.uikit.UIApplication;
 import org.robovm.objc.annotation.Block;
 import org.robovm.objc.annotation.Method;
@@ -124,6 +121,12 @@ public class Spil extends NSObject {
 	 */
 	@Method(selector = "application:didReceiveRemoteNotification:")
 	public static native void didReceiveRemoteNotification(UIApplication application, NSDictionary userInfo);
+
+	@Method(selector = "didRegisterForRemoteNotificationsWithDeviceToken:")
+	public static native void didRegisterForRemoteNotificationsWithDeviceToken(NSData deviceToken);
+
+	@Method(selector = "registerPushNotifications")
+	public static native void registerPushNotifications();
 
 	@Method(selector = "devRequestAd:withAdType:withParentalGate:")
 	public static native void devRequestAd(String adProvider, String adType, boolean parentalGate);

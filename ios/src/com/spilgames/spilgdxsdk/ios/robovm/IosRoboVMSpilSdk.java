@@ -192,6 +192,14 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 		Spil.didReceiveRemoteNotification(application, userInfo.getDictionary());
 	}
 
+	public void registerPushNotifications() {
+		Spil.registerPushNotifications();
+	}
+
+	public void didRegisterForRemoteNotifications(NSData deviceToken) {
+		Spil.didRegisterForRemoteNotificationsWithDeviceToken(deviceToken);
+	}
+
 	@Override public void requestGameData () {
 		// its there in .m but not in header
 		// it also is just an 'requestGameData' event, so we could do that?

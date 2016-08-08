@@ -1,5 +1,7 @@
 package com.spilgames.spilgdxsdk;
 
+import com.badlogic.gdx.utils.JsonValue;
+
 /**
  * Created by PiotrJ on 19/07/16.
  */
@@ -10,5 +12,5 @@ public interface SpilAdCallbacks {
 
 	void adStart();
 
-	void adFinished (String type);
+	void adFinished (JsonValue response);
 }

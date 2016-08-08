@@ -190,8 +190,8 @@ public class AndroidSpilSdk implements SpilSdk {
 				adCallbacks.adStart();
 			}
 
-			@Override public void AdFinished (String type) {
-				adCallbacks.adFinished(type);
+			@Override public void AdFinished (String response) {
+				adCallbacks.adFinished(toJson(response));
 			}
 		});
 		instance.setNativeAdCallbacks(nativeAdCallbacks);

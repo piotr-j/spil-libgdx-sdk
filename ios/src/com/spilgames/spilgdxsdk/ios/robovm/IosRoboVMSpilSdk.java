@@ -2,8 +2,10 @@ package com.spilgames.spilgdxsdk.ios.robovm;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.iosrobovm.IOSApplication;
+import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.JsonWriter;
 import com.spilgames.spilgdxsdk.*;
 import com.spilgames.spilgdxsdk.ios.robovm.bindings.Spil;
 import com.spilgames.spilgdxsdk.ios.robovm.bindings.SpilDelegateAdapter;
@@ -13,6 +15,7 @@ import org.robovm.apple.uikit.UIApplication;
 import org.robovm.apple.uikit.UIRemoteNotification;
 import org.robovm.objc.block.VoidBlock1;
 
+import java.io.StringWriter;
 
 /**
  * Created by PiotrJ on 01/07/16.
@@ -285,7 +288,27 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 		}
 
 		@Override public void adFinished (String type, String reason, String reward, String network) {
-			if (adCallbacks != null) adCallbacks.adFinished(type);
+			if (adCallbacks != null) {
+				JsonValue root = new JsonValue(JsonValue.ValueType.object);
+				JsonValue typeValue = new JsonValue(type);
+				typeValue.name = "type";
+				JsonValue reasonValue = new JsonValue(reason);
+				reasonValue.name = "reason";
+				JsonValue networkValue = new JsonValue(network);
+				networkValue.name = "network";
+				root.child = typeValue;
+				typeValue.next = reasonValue;
+				reasonValue.prev = typeValue;
+				reasonValue.next = networkValue;
+				if (reward != null) {
+					JsonValue rewardValue = new JsonValue(reward);
+					rewardValue.name = "reward";
+					networkValue.prev = rewardValue;
+					networkValue.next = rewardValue;
+					rewardValue.prev = networkValue;
+				}
+				adCallbacks.adFinished(root);
+			}
 		}
 
 		@Override public void notificationReward (NSDictionary<?, ?> reward) {

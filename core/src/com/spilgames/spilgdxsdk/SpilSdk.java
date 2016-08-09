@@ -34,7 +34,7 @@ public interface SpilSdk {
 	void showRewardVideo ();
 	void showMoreApps ();
 
-	void setSpilAdCallbacks(SpilAdCallbacks adCallbacks);
+	void setSpilAdListener (SpilAdListener adListener);
 
 	// ads dev
 	void devRequestAd(String provider, String adType, boolean parentalGate);

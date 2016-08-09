@@ -177,7 +177,7 @@ public class AndroidSpilSdk implements SpilSdk {
 		return null;
 	}
 
-	@Override public void setSpilAdCallbacks (final SpilAdCallbacks adCallbacks) {
+	@Override public void setSpilAdListener (final SpilAdListener adCallbacks) {
 		if (adCallbacks == null) {
 			instance.setNativeAdCallbacks(null);
 			return;

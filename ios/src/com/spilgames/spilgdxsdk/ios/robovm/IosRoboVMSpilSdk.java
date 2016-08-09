@@ -2,10 +2,8 @@ package com.spilgames.spilgdxsdk.ios.robovm;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.iosrobovm.IOSApplication;
-import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
-import com.badlogic.gdx.utils.JsonWriter;
 import com.spilgames.spilgdxsdk.*;
 import com.spilgames.spilgdxsdk.ios.robovm.bindings.Spil;
 import com.spilgames.spilgdxsdk.ios.robovm.bindings.SpilDelegateAdapter;
@@ -14,8 +12,6 @@ import org.robovm.apple.foundation.*;
 import org.robovm.apple.uikit.UIApplication;
 import org.robovm.apple.uikit.UIRemoteNotification;
 import org.robovm.objc.block.VoidBlock1;
-
-import java.io.StringWriter;
 
 /**
  * Created by PiotrJ on 01/07/16.
@@ -132,7 +128,7 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 		delegate.rewardListener = rewardListener;
 	}
 
-	@Override public void setSpilAdCallbacks (SpilAdCallbacks adCallbacks) {
+	@Override public void setSpilAdListener (SpilAdListener adCallbacks) {
 		initDelegate();
 		delegate.adCallbacks = adCallbacks;
 	}
@@ -274,7 +270,7 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 	}
 
 	private class SpilDelegate extends SpilDelegateAdapter {
-		SpilAdCallbacks adCallbacks;
+		SpilAdListener adCallbacks;
 		SpilRewardListener rewardListener;
 		SpilGameDataListener gameDataListener;
 		SpilPlayerDataListener playerDataListener;

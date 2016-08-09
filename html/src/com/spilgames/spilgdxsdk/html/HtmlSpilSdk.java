@@ -2,7 +2,6 @@ package com.spilgames.spilgdxsdk.html;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.JsonValue;
-import com.badlogic.gdx.utils.ObjectMap;
 import com.spilgames.spilgdxsdk.*;
 
 /**
@@ -78,7 +77,7 @@ public class HtmlSpilSdk implements SpilSdk {
 
 	}
 
-	@Override public void setSpilAdCallbacks (SpilAdCallbacks adCallbacks) {
+	@Override public void setSpilAdListener (SpilAdListener adCallbacks) {
 
 	}
 

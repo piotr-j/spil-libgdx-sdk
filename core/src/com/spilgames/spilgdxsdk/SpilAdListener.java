@@ -5,7 +5,7 @@ import com.badlogic.gdx.utils.JsonValue;
 /**
  * Created by PiotrJ on 19/07/16.
  */
-public interface SpilAdCallbacks {
+public interface SpilAdListener {
 	void adAvailable (String type);
 
 	void adNotAvailable (String type);

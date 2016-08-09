@@ -100,8 +100,8 @@ public class DesktopSpilSdk implements SpilSdk {
 		log(TAG, "showRewardVideo");
 	}
 
-	@Override public void setSpilAdCallbacks (SpilAdCallbacks adCallbacks) {
-		log(TAG, "setSpilAdCallbacks ("+adCallbacks+")");
+	@Override public void setSpilAdListener (SpilAdListener adCallbacks) {
+		log(TAG, "setSpilAdListener ("+adCallbacks+")");
 	}
 
 	@Override public void devRequestAd (String provider, String adType, boolean parentalGate) {

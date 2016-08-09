@@ -234,3 +234,94 @@ public class DesktopLauncher {
 ```
 
 See sample gdx application for details
+
+
+## Usage examples
+
+All examples assume that you have an SpilGDXSdk instance available
+
+### Event Tracking
+
+To track an event, use the following code:
+```
+    SpilEvent spilEvent = new SpilEvent();
+    event.setName("testEvent");
+    spilSdk.trackEvent(spilEvent, new SpilEventActionListener() {
+        @Override public void onResponse (SpilResponseEvent response) {
+            // handle response    
+        }
+    });
+```
+
+The context variable represents the current Activity Context.
+The eventActionListener is usually null unless you specifically need to listen to a response event. All important response events are handled by the SDK.
+
+You can also add custom data to the event by calling:
+```
+    event.addCustomData("testKey", "testData");
+```
+
+In most cases additional custom events are required to be implemented such as:
+
+IAP
+
+| Event types     | Required Parameters          | Note  | 
+| --------------- | ---------------------------- | ---- |
+| iapPurchased	  | skuId, transactionId, purchaseDate ||
+| iapRestored	  | skuId, originalTransactionId, original PurchaseDate | |
+| iapFailed	error | skuId | |
+	
+	
+The parameters are explained below:
+
+- skuId (string) – The product identifier of the item that was purchased
+- transactionId (string) – The transaction identifier of the item that was purchased (also called orderId)
+- purchaseDate (string) – The date and time that the item was purchased
+- originalTransactionId (string) – For a transaction that restores a previous transaction, the transaction identifier of the original transaction. Otherwise, identical to the transaction identifier
+- originalPurchaseDate (string) – For a transaction that restores a previous transaction, the date of the original transaction
+- error (string) – Error description or error code
+
+**Important note for tracking In-app Purchases on Android**
+
+We simplified the tracking of In-app purchases for you. Once you send an “iapPurchased” we alter the data with the price and currency values.
+In order to do this we ask you to define the **“googleIAPKey”** in the Spil **“defaultGameConfig.json”**.
+You can see [this page](http://www.spilgames.com/developers/integration/unity/implementing-spil-sdk/spil-sdk-game-config/) to understand more about the Spil’s default config feature.
+
+**USER BEHAVIOUR**
+
+| Event types | Required Parameters | Optional | Note |
+| --- | --- | --- | --- |
+| walletUpdate | walletValue, itemValue, source, item, category ||| 		
+| milestoneAchieved | name |||
+| levelStart | level |||
+| levelComplete | level | score, stars, turns || 	
+| levelFailed | level | score, turns||
+| playerDies | level ||| 
+		
+**The parameters are explained below:**
+
+- walletValue (int) – The new wallet value after subtracting the item value. E.g coins
+- itemValue (int) – The value of the item consumed. E.g. coins. (note: This property can also be negative, for example if a user spends coins, the itemValue can be -100)
+- source (int) – 0 == premium
+- item (string) – item id or sku
+- category (int) – 0 = Consumable, 1 = Booster, 2 = Permanent
+- name (string) – name of the milestone
+- level (string) – name of the level
+- score (int) – The final score the player achieves at the end of the level
+- stars (int) – The # of stars (or any other rating system) the player achieves at the end of the level
+- turns (int) – The # of moves/turns taken to complete the level
+
+### Game Config
+
+### Advertisement
+
+### Push Notifications
+
+### User ID
+
+### Wallet, Shop & Inventory
+
+
+
+
+

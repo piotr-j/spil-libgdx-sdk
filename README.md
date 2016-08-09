@@ -243,22 +243,22 @@ All examples assume that you have an SpilGDXSdk instance available
 ### Event Tracking
 
 To track an event, use the following code:
-```
-    SpilEvent spilEvent = new SpilEvent();
-    event.setName("testEvent");
-    spilSdk.trackEvent(spilEvent, new SpilEventActionListener() {
-        @Override public void onResponse (SpilResponseEvent response) {
-            // handle response    
-        }
-    });
+```java
+SpilEvent spilEvent = new SpilEvent();
+event.setName("testEvent");
+spilSdk.trackEvent(spilEvent, new SpilEventActionListener() {
+    @Override public void onResponse (SpilResponseEvent response) {
+        // handle response    
+    }
+});
 ```
 
 The context variable represents the current Activity Context.
 The eventActionListener is usually null unless you specifically need to listen to a response event. All important response events are handled by the SDK.
 
 You can also add custom data to the event by calling:
-```
-    event.addCustomData("testKey", "testData");
+```java
+event.addCustomData("testKey", "testData");
 ```
 
 In most cases additional custom events are required to be implemented such as:

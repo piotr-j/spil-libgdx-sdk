@@ -19,6 +19,10 @@ public class HtmlSpilSdk implements SpilSdk {
 
 	}
 
+	@Override public String getSpilUID () {
+		return "";
+	}
+
 	@Override public void trackEvent (SpilEvent event) {
 
 	}

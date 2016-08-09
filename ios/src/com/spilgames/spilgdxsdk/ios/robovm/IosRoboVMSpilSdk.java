@@ -36,6 +36,10 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 		Spil.debug(debug);
 	}
 
+	@Override public String getSpilUID () {
+		return "";
+	}
+
 	@Override public void trackEvent (SpilEvent event) {
 		Spil.trackEvent(event.getName(), buildParams(event));
 	}

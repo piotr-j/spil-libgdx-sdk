@@ -72,4 +72,6 @@ public interface SpilSdk {
 	void subtractItemFromInventory(int itemId, int amount, String reason);
 
 	void consumeBundle(int bundleId, String reason);
+
+	String getSpilUID();
 }

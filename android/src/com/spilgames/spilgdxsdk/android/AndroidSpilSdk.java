@@ -65,6 +65,10 @@ public class AndroidSpilSdk implements SpilSdk {
 		this.rewardListener = rewardListener;
 	}
 
+	@Override public String getSpilUID () {
+		return instance.getSpilUID();
+	}
+
 	@Override public void trackEvent (SpilEvent event) {
 		trackEvent(event, null);
 	}
@@ -143,6 +147,7 @@ public class AndroidSpilSdk implements SpilSdk {
 
 	@Override public JsonValue getConfig () {
 		String data = instance.getConfigAll();
+		instance.getSpilUID();
 		return toJson(data);
 	}
 

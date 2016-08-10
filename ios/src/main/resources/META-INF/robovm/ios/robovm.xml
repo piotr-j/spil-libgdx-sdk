@@ -50,5 +50,8 @@
     <framework>Fyber_AppLovin</framework>
     <framework>Fyber_UnityAds</framework>
     <framework>GoogleMobileAds</framework>
+    <framework>AdjustSDK</framework>
+    <framework>ZendeskSDK</framework>
+    <framework>ZendeskProviderSDK</framework>
   </frameworks>
 </config>

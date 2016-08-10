@@ -33,11 +33,15 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 	}
 
 	@Override public String getSpilUserID () {
-		return Spil.getSpilUserID().toString();
+		NSString value = Spil.getSpilUserID();
+		if (value == null) return null;
+		return value.toString();
 	}
 
 	@Override public String getUserID () {
-		return Spil.getUserID().toString();
+		NSString value = Spil.getUserID();
+		if (value == null) return null;
+		return value.toString();
 	}
 
 	@Override public void setUserID (String providerId, String userId) {

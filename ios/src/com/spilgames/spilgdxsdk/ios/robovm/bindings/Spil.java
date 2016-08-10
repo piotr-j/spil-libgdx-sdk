@@ -27,13 +27,13 @@ public class Spil extends NSObject {
 	@Property(selector = "setDelegate:", strongRef = true)
 	public native void setDelegate(SpilDelegate delegate);
 
-	@Method(selector = "getSpilUserID")
+	@Method(selector = "getSpilUserId")
 	public static native NSString getSpilUserID();
 
-	@Method(selector = "getUserID")
+	@Method(selector = "getUserId")
 	public static native NSString getUserID();
 
-	@Method(selector = "setUserID:forProviderId:")
+	@Method(selector = "setUserId:forProviderId:")
 	public static native void setUserID(String userId, String providerId);
 
 	/**

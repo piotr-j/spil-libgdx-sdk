@@ -73,5 +73,7 @@ public interface SpilSdk {
 
 	void consumeBundle(int bundleId, String reason);
 
-	String getSpilUID();
+	String getSpilUserID();
+    String getUserID();
+    void setUserID(String providerId, String userId);
 }

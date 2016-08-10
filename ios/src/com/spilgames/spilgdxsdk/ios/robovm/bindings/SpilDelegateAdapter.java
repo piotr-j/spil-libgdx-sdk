@@ -29,8 +29,8 @@ public class SpilDelegateAdapter extends NSObject implements SpilDelegate {
 
 	}
 
-	@NotImplemented("notificationReward:")
-	@Override public void notificationReward (NSDictionary<?, ?> reward) {
+	@NotImplemented("grantReward:")
+	@Override public void grantReward (NSDictionary<?, ?> reward) {
 
 	}
 

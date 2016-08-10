@@ -32,8 +32,8 @@ public interface SpilDelegate extends NSObjectProtocol {
 	void adFinished(String type, String reason, String reward, String network);
 
 	// Notification events
-	@Method(selector = "notificationReward:")
-	void notificationReward(NSDictionary<?, ?> reward);
+	@Method(selector = "grantReward:")
+	void grantReward(NSDictionary<?, ?> reward);
 
 	// Package events
 	@Method(selector = "packagesLoaded")

@@ -448,7 +448,7 @@ The payload value is returned as a JsonValue.
 
 When a user contacts Spil customer support he/she may be asked for a Spil user id. Spil currently does not require registration for users and so cannot link an email to a Spil user id. All users are essentially guest users and thus have an anonymous user-id. For Android the developer should show the Spil user id in-game, for instance in a settings screen. For iOS this is not required, the user can find the Spil user id outside of the game.
 
-The Spil user id can be obtained by calling the `instance.getSpilUID();` method of the SpilSDK. This works for the Android SpilSDK, other backends return empty String.
+The Spil user id can be obtained by calling the `instance.getSpilUserID();` method of the SpilSDK. This works for the Android SpilSDK, other backends return empty String.
 
 ### Wallet, Shop & Inventory
 

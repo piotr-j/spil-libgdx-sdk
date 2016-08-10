@@ -18,8 +18,16 @@ public class HtmlSpilSdk implements SpilSdk {
 
 	}
 
-	@Override public String getSpilUID () {
+	@Override public String getSpilUserID () {
 		return "";
+	}
+
+	@Override public String getUserID() {
+		return "";
+	}
+
+	@Override public void setUserID(String providerId, String userId) {
+
 	}
 
 	@Override public void trackEvent (SpilEvent event) {

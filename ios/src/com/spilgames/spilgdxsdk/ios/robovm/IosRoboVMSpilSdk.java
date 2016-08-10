@@ -29,11 +29,19 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 	}
 
 	@Override public void setDebug (boolean debug) {
-		Spil.debug(debug);
+		Spil.setAdvancedLoggingEnabled(debug);
 	}
 
-	@Override public String getSpilUID () {
-		return "";
+	@Override public String getSpilUserID () {
+		return Spil.getSpilUserID().toString();
+	}
+
+	@Override public String getUserID () {
+		return Spil.getUserID().toString();
+	}
+
+	@Override public void setUserID (String providerId, String userId) {
+		Spil.setUserID(userId, providerId);
 	}
 
 	@Override public void trackEvent (SpilEvent event) {
@@ -311,7 +319,7 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 			}
 		}
 
-		@Override public void notificationReward (NSDictionary<?, ?> reward) {
+		@Override public void grantReward (NSDictionary<?, ?> reward) {
 			if (rewardListener != null) rewardListener.onRewardReceived(toJson(reward));
 		}
 

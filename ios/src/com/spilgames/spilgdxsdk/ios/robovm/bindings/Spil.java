@@ -27,13 +27,22 @@ public class Spil extends NSObject {
 	@Property(selector = "setDelegate:", strongRef = true)
 	public native void setDelegate(SpilDelegate delegate);
 
+	@Method(selector = "getSpilUserID")
+	public static native NSString getSpilUserID();
+
+	@Method(selector = "getUserID")
+	public static native NSString getUserID();
+
+	@Method(selector = "setUserID:forProviderId:")
+	public static native void setUserID(String userId, String providerId);
+
 	/**
-	 *  Show debug logs
+	 *  Show advanced logs
 	 *
-	 *  @param debugEnabled Enables or disables the debug logs printed
+	 *  @param advancedLoggingEnabled Enables or disables the advanced logs printed
 	 */
-	@Method(selector = "debug:")
-	public static native void debug(boolean debugEnabled);
+	@Method(selector = "setAdvancedLoggingEnabled:")
+	public static native void setAdvancedLoggingEnabled(boolean advancedLoggingEnabled);
 
 	/**
 	 *  Initiates the API

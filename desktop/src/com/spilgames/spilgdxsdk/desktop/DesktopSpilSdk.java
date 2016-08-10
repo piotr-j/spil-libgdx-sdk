@@ -49,8 +49,16 @@ public class DesktopSpilSdk implements SpilSdk {
 		log(TAG, "setDebug ("+debug+")");
 	}
 
-	@Override public String getSpilUID () {
+	@Override public String getSpilUserID () {
 		return "";
+	}
+
+	@Override public String getUserID() {
+		return "";
+	}
+
+	@Override public void setUserID(String providerId, String userId) {
+
 	}
 
 	@Override public void trackEvent (SpilEvent event) {

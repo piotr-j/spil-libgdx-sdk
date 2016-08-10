@@ -10,7 +10,7 @@ import com.badlogic.gdx.utils.JsonWriter;
 import com.spilgames.spilgdxsdk.*;
 import com.spilgames.spilgdxsdk.SpilSdk;
 import com.spilgames.spilsdk.SpilEnvironment;
-import com.spilgames.spilsdk.ads.NativeAdCallbacks;
+import com.spilgames.spilsdk.ads.AdCallbacks;
 import com.spilgames.spilsdk.ads.OnAdsListener;
 import com.spilgames.spilsdk.ads.dfp.DFPUtil;
 import com.spilgames.spilsdk.events.Event;
@@ -20,6 +20,8 @@ import com.spilgames.spilsdk.gamedata.OnGameDataListener;
 import com.spilgames.spilsdk.gamedata.SpilGameDataCallbacks;
 import com.spilgames.spilsdk.playerdata.OnPlayerDataListener;
 import com.spilgames.spilsdk.playerdata.PlayerDataCallbacks;
+import com.spilgames.spilsdk.pushnotifications.NotificationDataCallbacks;
+import com.spilgames.spilsdk.pushnotifications.OnNotificationListener;
 import com.spilgames.spilsdk.utils.error.ErrorCodes;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -53,16 +55,16 @@ public class AndroidSpilSdk implements SpilSdk {
 		}
 	}
 
-	private SpilRewardListener rewardListener;
-	public void processNotification () {
-		String dara = instance.processNotification();
-		if (dara != null && rewardListener != null) {
-			rewardListener.onRewardReceived(toJson(dara));
+	@Override public void setSpilNotificationDataListener (final SpilNotificationDataListener notificationDataListener) {
+		if (notificationDataListener == null) {
+			instance.setNotificationDataCallbacks(null);
+		} else {
+			instance.setNotificationDataCallbacks(new NotificationDataCallbacks(new OnNotificationListener() {
+				@Override public void onNotificationReceived (String notification) {
+					notificationDataListener.onRewardReceived(toJson(notification));
+				}
+			}));
 		}
-	}
-
-	@Override public void setSpilRewardListener (SpilRewardListener rewardListener) {
-		this.rewardListener = rewardListener;
 	}
 
 	@Override public String getSpilUserID () {
@@ -70,11 +72,11 @@ public class AndroidSpilSdk implements SpilSdk {
 	}
 
 	@Override public String getUserID () {
-		return ""; // TODO
+		return instance.getUserId();
 	}
 
 	@Override public void setUserID (String providerId, String userId) {
-		 // TODO
+		 instance.setUserId(providerId, userId);
 	}
 
 	@Override public void trackEvent (SpilEvent event) {
@@ -187,10 +189,10 @@ public class AndroidSpilSdk implements SpilSdk {
 
 	@Override public void setSpilAdListener (final SpilAdListener adCallbacks) {
 		if (adCallbacks == null) {
-			instance.setNativeAdCallbacks(null);
+			AdCallbacks.getInstance().setAdsListener(null);
 			return;
 		}
-		NativeAdCallbacks nativeAdCallbacks = new NativeAdCallbacks(new OnAdsListener() {
+		AdCallbacks.getInstance().setAdsListener(new OnAdsListener() {
 			@Override public void AdAvailable (String type) {
 				adCallbacks.adAvailable(type);
 			}
@@ -207,7 +209,6 @@ public class AndroidSpilSdk implements SpilSdk {
 				adCallbacks.adFinished(toJson(response));
 			}
 		});
-		instance.setNativeAdCallbacks(nativeAdCallbacks);
 	}
 
 	public void startChartboost (final String appId, final String appSignature) {
@@ -249,7 +250,7 @@ public class AndroidSpilSdk implements SpilSdk {
 			return true;
 		} else if (clean.equals("dfp")) {
 			// DFP is initialized when this is not null
-			return DFPUtil.getPublisherInterstitialAd() != null;
+			return DFPUtil.getInstance().getPublisherInterstitialAd() != null;
 		} else if (clean.equals("fyber")) {
 			// no easy way to know, but wont explode when request ad is called
 			return true;
@@ -322,8 +323,8 @@ public class AndroidSpilSdk implements SpilSdk {
 				playerDataListener.playerDataAvailable();
 			}
 
-			@Override public void PlayerDataUpdated (String reason) {
-				playerDataListener.playerDataUpdated(reason);
+			@Override public void PlayerDataUpdated (String reason, String updatedData) {
+				playerDataListener.playerDataUpdated(reason, toJson(updatedData));
 			}
 
 			@Override public void PlayerDataError (ErrorCodes errorCodes) {
@@ -378,10 +379,6 @@ public class AndroidSpilSdk implements SpilSdk {
 
 	public void onResume () {
 		instance.onResume();
-		// TODO do we want to call this or make the user do that?
-		if (rewardListener != null) {
-			processNotification();
-		}
 	}
 
 	public void onPause () {

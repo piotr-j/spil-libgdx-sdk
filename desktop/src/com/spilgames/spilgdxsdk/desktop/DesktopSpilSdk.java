@@ -69,7 +69,7 @@ public class DesktopSpilSdk implements SpilSdk {
 		log(TAG, "trackEvent ("+event+", "+listener+")");
 	}
 
-	@Override public void setSpilRewardListener (SpilRewardListener rewardListener) {
+	@Override public void setSpilNotificationDataListener (SpilNotificationDataListener rewardListener) {
 		log(TAG, "SpilRewardListener ("+rewardListener+")");
 	}
 

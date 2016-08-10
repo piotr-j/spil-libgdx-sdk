@@ -54,7 +54,7 @@ public class HtmlSpilSdk implements SpilSdk {
 		Gdx.app.log(TAG, "requestPackages");
 	}
 
-	@Override public void setSpilRewardListener (SpilRewardListener rewardListener) {
+	@Override public void setSpilNotificationDataListener (SpilNotificationDataListener rewardListener) {
 		Gdx.app.log(TAG, "SpilRewardListener ("+rewardListener+")");
 	}
 

@@ -135,14 +135,14 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 		return null;
 	}
 
-	@Override public void setSpilRewardListener (SpilRewardListener rewardListener) {
+	@Override public void setSpilNotificationDataListener (SpilNotificationDataListener rewardListener) {
 		initDelegate();
-		delegate.rewardListener = rewardListener;
+		delegate.notificationDataListener = rewardListener;
 	}
 
 	@Override public void setSpilAdListener (SpilAdListener adCallbacks) {
 		initDelegate();
-		delegate.adCallbacks = adCallbacks;
+		delegate.adListener = adCallbacks;
 	}
 
 	private void initDelegate () {
@@ -251,16 +251,6 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 		return toJson(Spil.getInventory());
 	}
 
-//	public String getShop () {
-//		// this is getGameData.get(shop)
-//		return Spil.getShop();
-//	}
-//
-//	public String getShopPromotions () {
-//		// this is getGameData.get(promotions)
-//		return Spil.getShopPromotions();
-//	}
-
 	@Override public void addCurrencyToWallet (int currencyId, int amount, String reason) {
 		Spil.addCurrencyToWallet(currencyId, amount, reason);
 	}
@@ -282,25 +272,25 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 	}
 
 	private class SpilDelegate extends SpilDelegateAdapter {
-		SpilAdListener adCallbacks;
-		SpilRewardListener rewardListener;
+		SpilAdListener adListener;
+		SpilNotificationDataListener notificationDataListener;
 		SpilGameDataListener gameDataListener;
 		SpilPlayerDataListener playerDataListener;
 
 		@Override public void adAvailable (String type) {
-			if (adCallbacks != null) adCallbacks.adAvailable(type);
+			if (adListener != null) adListener.adAvailable(type);
 		}
 
 		@Override public void adNotAvailable (String type) {
-			if (adCallbacks != null) adCallbacks.adNotAvailable(type);
+			if (adListener != null) adListener.adNotAvailable(type);
 		}
 
 		@Override public void adStart () {
-			if (adCallbacks != null) adCallbacks.adStart();
+			if (adListener != null) adListener.adStart();
 		}
 
 		@Override public void adFinished (String type, String reason, String reward, String network) {
-			if (adCallbacks != null) {
+			if (adListener != null) {
 				JsonValue root = new JsonValue(JsonValue.ValueType.object);
 				JsonValue typeValue = new JsonValue(type);
 				typeValue.name = "type";
@@ -319,12 +309,12 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 					networkValue.next = rewardValue;
 					rewardValue.prev = networkValue;
 				}
-				adCallbacks.adFinished(root);
+				adListener.adFinished(root);
 			}
 		}
 
 		@Override public void grantReward (NSDictionary<?, ?> reward) {
-			if (rewardListener != null) rewardListener.onRewardReceived(toJson(reward));
+			if (notificationDataListener != null) notificationDataListener.onRewardReceived(toJson(reward));
 		}
 
 		@Override public void packagesLoaded () {
@@ -363,8 +353,8 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 			}
 		}
 
-		@Override public void playerDataUpdated (String reason) {
-			if (playerDataListener != null) playerDataListener.playerDataUpdated(reason);
+		@Override public void playerDataUpdated (String reason, String updatedData) {
+			if (playerDataListener != null) playerDataListener.playerDataUpdated(reason, toJson(updatedData));
 		}
 	}
 }

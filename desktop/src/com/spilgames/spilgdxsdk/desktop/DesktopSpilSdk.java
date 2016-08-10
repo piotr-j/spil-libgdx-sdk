@@ -77,6 +77,10 @@ public class DesktopSpilSdk implements SpilSdk {
 		return null;
 	}
 
+	@Override public void setSpilConfigLDataListener (SpilConfigDataListener listener) {
+		log(TAG, "setSpilConfigLDataListener ("+listener+")");
+	}
+
 	@Override public void requestPackages () {
 		log(TAG, "requestPackages");
 	}

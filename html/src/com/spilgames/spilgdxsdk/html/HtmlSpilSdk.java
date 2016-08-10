@@ -50,6 +50,10 @@ public class HtmlSpilSdk implements SpilSdk {
 		return null;
 	}
 
+	@Override public void setSpilConfigLDataListener (SpilConfigDataListener listener) {
+		Gdx.app.log(TAG, "setSpilConfigLDataListener ("+listener+")");
+	}
+
 	@Override public void requestPackages () {
 		Gdx.app.log(TAG, "requestPackages");
 	}

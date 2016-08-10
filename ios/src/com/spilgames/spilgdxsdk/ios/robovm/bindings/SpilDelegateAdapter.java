@@ -63,4 +63,9 @@ public class SpilDelegateAdapter extends NSObject implements SpilDelegate {
 	@Override public void playerDataUpdated (String reason, String updatedData) {
 
 	}
+
+	@NotImplemented("configDataUpdated")
+	@Override public void configUpdated () {
+
+	}
 }

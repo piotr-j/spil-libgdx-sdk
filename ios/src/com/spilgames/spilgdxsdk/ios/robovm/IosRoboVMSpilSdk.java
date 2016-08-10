@@ -97,6 +97,11 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 		return toJson(Spil.getConfig());
 	}
 
+	@Override public void setSpilConfigLDataListener (SpilConfigDataListener listener) {
+		initDelegate();
+		delegate.configDataListener = listener;
+	}
+
 	@Override public void requestPackages () {
 		Spil.requestPackages();
 	}
@@ -276,6 +281,7 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 		SpilNotificationDataListener notificationDataListener;
 		SpilGameDataListener gameDataListener;
 		SpilPlayerDataListener playerDataListener;
+		SpilConfigDataListener configDataListener;
 
 		@Override public void adAvailable (String type) {
 			if (adListener != null) adListener.adAvailable(type);
@@ -355,6 +361,10 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 
 		@Override public void playerDataUpdated (String reason, String updatedData) {
 			if (playerDataListener != null) playerDataListener.playerDataUpdated(reason, toJson(updatedData));
+		}
+
+		@Override public void configUpdated () {
+			if (configDataListener != null) configDataListener.configDataUpdated();
 		}
 	}
 }

@@ -13,6 +13,8 @@ import com.spilgames.spilsdk.SpilEnvironment;
 import com.spilgames.spilsdk.ads.AdCallbacks;
 import com.spilgames.spilsdk.ads.OnAdsListener;
 import com.spilgames.spilsdk.ads.dfp.DFPUtil;
+import com.spilgames.spilsdk.config.ConfigDataCallbacks;
+import com.spilgames.spilsdk.config.OnConfigDataListener;
 import com.spilgames.spilsdk.events.Event;
 import com.spilgames.spilsdk.events.EventActionListener;
 import com.spilgames.spilsdk.events.response.ResponseEvent;
@@ -49,7 +51,7 @@ public class AndroidSpilSdk implements SpilSdk {
 
 	@Override public void setDebug (boolean debug) {
 		if (debug) {
-			instance.setEnvironment(SpilEnvironment.PRODUCTION);
+			instance.setEnvironment(SpilEnvironment.STAGING);
 		} else {
 			instance.setEnvironment(SpilEnvironment.PRODUCTION);
 		}
@@ -159,6 +161,18 @@ public class AndroidSpilSdk implements SpilSdk {
 		String data = instance.getConfigAll();
 		instance.getSpilUID(); // TODO change to getSpilUserID()
 		return toJson(data);
+	}
+
+	@Override public void setSpilConfigLDataListener (final SpilConfigDataListener listener) {
+		if (listener == null) {
+			instance.setConfigDataCallbacks(null);
+		} else {
+			instance.setConfigDataCallbacks(new ConfigDataCallbacks(new OnConfigDataListener() {
+				@Override public void ConfigDataUpdated () {
+					listener.configDataUpdated();
+				}
+			}));
+		}
 	}
 
 	@Override public void requestPackages () {

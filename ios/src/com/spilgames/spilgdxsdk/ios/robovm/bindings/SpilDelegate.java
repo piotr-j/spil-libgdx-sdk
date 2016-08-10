@@ -46,6 +46,9 @@ public interface SpilDelegate extends NSObjectProtocol {
 	@Method(selector = "spilGameDataError:")
 	void spilGameDataError(String message);
 
+	@Method(selector = "configDataUpdated")
+	void configUpdated();
+
 	// Player data events
 	@Method(selector = "playerDataAvailable")
 	void playerDataAvailable();

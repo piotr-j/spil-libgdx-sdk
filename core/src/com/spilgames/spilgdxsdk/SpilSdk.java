@@ -24,6 +24,7 @@ public interface SpilSdk {
 	void trackEvent(SpilEvent event, SpilEventActionListener listener);
 
 	JsonValue getConfig ();
+	void setSpilConfigLDataListener (SpilConfigDataListener listener);
 
 	// Ads
 	boolean isAdProviderInitialized(String provider);
@@ -74,6 +75,6 @@ public interface SpilSdk {
 	void consumeBundle(int bundleId, String reason);
 
 	String getSpilUserID();
-    String getUserID();
-    void setUserID(String providerId, String userId);
+	String getUserID();
+	void setUserID(String providerId, String userId);
 }

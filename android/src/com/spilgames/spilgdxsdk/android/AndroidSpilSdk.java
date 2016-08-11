@@ -31,10 +31,71 @@ import org.json.JSONObject;
 
 public class AndroidSpilSdk implements SpilSdk {
 	private final static String TAG = AndroidSpilSdk.class.getSimpleName();
-
+	private MyOnConfigDataListener configListener;
+	private MyOnPlayerDataListener playerListener;
+	private MySpilGameDataCallbacks gameListener;
+	private MyOnAdsListener adListener;
 	private com.spilgames.spilsdk.SpilSdk instance;
+
 	public AndroidSpilSdk (Context context) {
+		com.spilgames.spilsdk.SpilSdk.resetContext();
 		instance = com.spilgames.spilsdk.SpilSdk.getInstance(context);
+		instance.setConfigDataCallbacks(new ConfigDataCallbacks(configListener = new MyOnConfigDataListener()));
+		instance.setPlayerDataCallbacks(new PlayerDataCallbacks(playerListener = new MyOnPlayerDataListener()));
+		instance.setGameDataCallbacks(new SpilGameDataCallbacks(gameListener = new MySpilGameDataCallbacks()));
+		instance.setNativeAdCallbacks(new AdCallbacks(adListener = new MyOnAdsListener()));
+	}
+
+	private static class MyOnConfigDataListener implements OnConfigDataListener {
+		SpilConfigDataListener listener;
+		@Override public void ConfigDataUpdated () {
+			if (listener != null) listener.configDataUpdated();
+		}
+	}
+
+	private static class MyOnPlayerDataListener implements OnPlayerDataListener {
+		SpilPlayerDataListener listener;
+		@Override public void PlayerDataAvailable () {
+			if (listener != null) listener.playerDataAvailable();
+		}
+
+		@Override public void PlayerDataUpdated (String reason, String updatedData) {
+			if (listener != null) listener.playerDataUpdated(reason, toJson(updatedData));
+		}
+
+		@Override public void PlayerDataError (ErrorCodes error) {
+			if (listener != null) listener.playerDataError(SpilErrorCode.fromId(error.getId()));
+		}
+	}
+
+	private static class MySpilGameDataCallbacks implements OnGameDataListener {
+		SpilGameDataListener listener;
+		@Override public void GameDataAvailable () {
+			if (listener != null) listener.gameDataAvailable();
+		}
+
+		@Override public void GameDataError (ErrorCodes error) {
+			if (listener != null) listener.gameDataError(SpilErrorCode.fromId(error.getId()));
+		}
+	}
+
+	private static class MyOnAdsListener implements OnAdsListener {
+		SpilAdListener listener;
+		@Override public void AdAvailable (String type) {
+			if (listener != null) listener.adAvailable(type);
+		}
+
+		@Override public void AdNotAvailable (String type) {
+			if (listener != null) listener.adNotAvailable(type);
+		}
+
+		@Override public void AdStart () {
+			if (listener != null) listener.adStart();
+		}
+
+		@Override public void AdFinished (String response) {
+			if (listener != null) listener.adFinished(toJson(response));
+		}
 	}
 
 	public void registerDevice (String projectID) {
@@ -163,16 +224,8 @@ public class AndroidSpilSdk implements SpilSdk {
 		return toJson(data);
 	}
 
-	@Override public void setSpilConfigLDataListener (final SpilConfigDataListener listener) {
-		if (listener == null) {
-			instance.setConfigDataCallbacks(null);
-		} else {
-			instance.setConfigDataCallbacks(new ConfigDataCallbacks(new OnConfigDataListener() {
-				@Override public void ConfigDataUpdated () {
-					listener.configDataUpdated();
-				}
-			}));
-		}
+	@Override public void setSpilConfigLDataListener (SpilConfigDataListener listener) {
+		configListener.listener = listener;
 	}
 
 	@Override public void requestPackages () {
@@ -191,7 +244,7 @@ public class AndroidSpilSdk implements SpilSdk {
 		return toJson(instance.getPromotion(packageId));
 	}
 
-	private JsonValue toJson (String data) {
+	private static JsonValue toJson (String data) {
 		if (data == null) return null;
 		try {
 			return new JsonReader().parse(data);
@@ -201,28 +254,8 @@ public class AndroidSpilSdk implements SpilSdk {
 		return null;
 	}
 
-	@Override public void setSpilAdListener (final SpilAdListener adCallbacks) {
-		if (adCallbacks == null) {
-			AdCallbacks.getInstance().setAdsListener(null);
-			return;
-		}
-		AdCallbacks.getInstance().setAdsListener(new OnAdsListener() {
-			@Override public void AdAvailable (String type) {
-				adCallbacks.adAvailable(type);
-			}
-
-			@Override public void AdNotAvailable (String type) {
-				adCallbacks.adNotAvailable(type);
-			}
-
-			@Override public void AdStart () {
-				adCallbacks.adStart();
-			}
-
-			@Override public void AdFinished (String response) {
-				adCallbacks.adFinished(toJson(response));
-			}
-		});
+	@Override public void setSpilAdListener (final SpilAdListener spilAdListener) {
+		adListener.listener = spilAdListener;
 	}
 
 	public void startChartboost (final String appId, final String appSignature) {
@@ -311,40 +344,12 @@ public class AndroidSpilSdk implements SpilSdk {
 		instance.requestPlayerData();
 	}
 
-	@Override public void setSpilGameDataListener (final SpilGameDataListener gameDataListener) {
-		if (gameDataListener == null) {
-			instance.setGameDataCallbacks(null);
-			return;
-		}
-		instance.setGameDataCallbacks(new SpilGameDataCallbacks(new OnGameDataListener() {
-			@Override public void GameDataAvailable () {
-				gameDataListener.gameDataAvailable();
-			}
-
-			@Override public void GameDataError (ErrorCodes errorCodes) {
-				gameDataListener.gameDataError(SpilErrorCode.fromId(errorCodes.getId()));
-			}
-		}));
+	@Override public void setSpilGameDataListener (SpilGameDataListener gameDataListener) {
+		gameListener.listener = gameDataListener;
 	}
 
-	@Override public void setSpilPlayerDataListener (final SpilPlayerDataListener playerDataListener) {
-		if (playerDataListener == null) {
-			instance.setPlayerDataCallbacks(null);
-			return;
-		}
-		instance.setPlayerDataCallbacks(new PlayerDataCallbacks(new OnPlayerDataListener() {
-			@Override public void PlayerDataAvailable () {
-				playerDataListener.playerDataAvailable();
-			}
-
-			@Override public void PlayerDataUpdated (String reason, String updatedData) {
-				playerDataListener.playerDataUpdated(reason, toJson(updatedData));
-			}
-
-			@Override public void PlayerDataError (ErrorCodes errorCodes) {
-				playerDataListener.playerDataError(SpilErrorCode.fromId(errorCodes.getId()));
-			}
-		}));
+	@Override public void setSpilPlayerDataListener (SpilPlayerDataListener playerDataListener) {
+		playerListener.listener = playerDataListener;
 	}
 
 	@Override public JsonValue getUserProfile () {

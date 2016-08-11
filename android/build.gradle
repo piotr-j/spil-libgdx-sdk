@@ -7,8 +7,8 @@ android {
 	buildToolsVersion "23.0.3"
 
 	defaultConfig {
-		// spil android sdk requires 16
-		minSdkVersion 16
+		// spil android sdk requires 17
+		minSdkVersion 17
 		targetSdkVersion 23
 		consumerProguardFiles 'proguard.txt'
 	}

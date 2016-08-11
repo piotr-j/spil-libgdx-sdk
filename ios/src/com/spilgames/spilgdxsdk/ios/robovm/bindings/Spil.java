@@ -116,8 +116,8 @@ public class Spil extends NSObject {
 	/**
 	 * Get a specific value from a particular key from the game configuration
 	 *
-	 *  of the key. Type must be NSString.
-	 * @return returns the object from a key, only first hiergy
+	 * @param key Key of the config value. Type must be NSString.
+	 * @return returns the object from a key, only first hierarchy
 	 */
 	@Method(selector = "getConfigValue:")
 	public static native NSString getConfigValue(String key);

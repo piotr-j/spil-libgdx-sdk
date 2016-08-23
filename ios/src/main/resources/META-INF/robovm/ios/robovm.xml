@@ -1,0 +1,54 @@
+<config>
+  <!-- NOTE: this will be merged with implementing app config file -->
+  <libs>
+      <lib>xml2</lib>
+      <!-- this is needed for spil compilation, as we cant specify correct linker flag at this point in time-->
+      <lib>libs/libUnityDummyUniversal.a</lib>
+  </libs>
+
+  <frameworks>
+    <!--Spil core stuff-->
+    <framework>Accounts</framework>
+    <framework>CoreTelephony</framework>
+    <framework>CoreGraphics</framework>
+    <framework>CoreLocation</framework>
+    <framework>CoreMedia</framework>
+    <framework>CoreData</framework>
+    <framework>CoreMotion</framework>
+    <framework>StoreKit</framework>
+    <framework>SystemConfiguration</framework>
+    <framework>MediaPlayer</framework>
+    <framework>AdSupport</framework>
+    <framework>QuartzCore</framework>
+    <framework>AudioToolbox</framework>
+    <framework>AVFoundation</framework>
+    <framework>EventKit</framework>
+    <framework>EventKitUI</framework>
+    <framework>MediaPlayer</framework>
+    <framework>MessageUI</framework>
+    <framework>WebKit</framework>
+    <framework>AssetsLibrary</framework>
+    <framework>MapKit</framework>
+    <framework>Twitter</framework>
+    <framework>Accounts</framework>
+    <framework>Social</framework>
+    <framework>StoreKit</framework>
+    <framework>SafariServices</framework>
+    <framework>CoreBluetooth</framework>
+
+    <!--Spil stuff-->
+    <!--
+    TODO we need to add these linker flags somehow...
+    -Wl,-U,_UnitySendMessage
+    -->
+    <!--<framework>Spil</framework>-->
+
+    <framework>Chartboost</framework>
+    <framework>MMAdSDK</framework>
+    <framework>FBAudienceNetwork</framework>
+    <framework>Fyber_AdColony</framework>
+    <framework>Fyber_AppLovin</framework>
+    <framework>Fyber_UnityAds</framework>
+    <framework>GoogleMobileAds</framework>
+  </frameworks>
+</config>

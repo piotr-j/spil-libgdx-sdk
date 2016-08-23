@@ -1,0 +1,38 @@
+{
+  "project_info": {
+    "project_number": "29590593309",
+    "project_id": "samplesdkapplication"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:95511039804:android:fe3ff4aed2c663ea",
+        "android_client_info": {
+          "package_name": "com.spilgames.samplesdkapplication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCme7Bkgh97jdRD7SvqgPOGB--eqV1frKY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-80207238-6"
+          }
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,10 @@
+{
+  "adjustToken": "ozq14osmze2o",
+  "adjustEnvironment": "sandbox",
+  "chartBoostAppId":"5776767a04b01608ac8cf156",
+  "chartBoostAppSignature":"bcbcf4357637263e7d10b147b3e58d139701b9cd",
+
+  "enemyhealth":{ "Bat":10, "Beardwoman":400, "Clown":35 },
+  "enemycoindrop":{ "Bat":1, "Beardwoman":7, "Clown":2 },
+  "WizardDamage":{ "Wizard1":25, "Wizard2":35 }
+}

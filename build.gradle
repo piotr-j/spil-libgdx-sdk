@@ -1,0 +1,201 @@
+ext {
+    GROUPID = 'com.spilgames.spilgdxsdk'
+    VERSION = '2.1.0'
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        jcenter()
+//        maven { url uri(System.getenv("INTEL_MULTI_OS_ENGINE_HOME") + "/gradle") }
+    }
+    dependencies {
+        classpath 'de.richsource.gradle.plugins:gwt-gradle-plugin:0.6'
+        classpath 'com.android.tools.build:gradle:2.1.0'
+//        classpath 'com.intel.gradle:moeGradlePlugin:1.1.0.final-1'
+//        classpath 'com.mobidevelop.robovm:robovm-gradle-plugin:2.1.0'
+        classpath 'com.mobidevelop.robovm:robovm-gradle-plugin:2.2.0-SNAPSHOT'
+
+//        classpath 'com.google.gms:google-services:3.0.0'
+    }
+}
+
+allprojects {
+    apply plugin: "eclipse"
+    apply plugin: "idea"
+
+    ext {
+        appName = 'spil-gdx-sdk'
+        gdxVersion = '1.9.3'
+        androidSDKVersion = '4.12.1'
+        roboVMVersion = '2.1.0'
+    }
+
+    repositories {
+        mavenCentral()
+        mavenLocal()
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+    }
+
+    group = GROUPID
+    version = VERSION
+}
+
+project(":android") {
+    configurations {
+        custom
+        compile.extendsFrom custom
+        natives
+    }
+
+    repositories {
+        flatDir {
+            // needed for aar's
+            dirs 'libs'
+        }
+    }
+
+    eclipse {
+        project {
+            name = appName + "-android"
+        }
+    }
+
+    dependencies {
+        compile project(':core')
+        compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
+        /* note: using compile adds the dependency to pom when and since its a local jar,
+          it cant be found and stuff fails in project that depends on this one */
+//        compile name: 'spilSDK-2.1.0'
+        // note: sp we just do this, that way jars are not added to the pom
+        compile fileTree(dir: 'libs', include: '*.jar')
+
+        compile 'com.google.android.gms:play-services-ads:9.2.0'
+        // note; apparently, its not feasible to bundle the aar inside our own aar, so we need to distribute both
+//        compile(name:'aartestlib-debug', ext:'aar')
+    }
+}
+
+
+project(":core") {
+    apply plugin: 'java'
+
+    apply from: '../publish.gradle'
+
+    configurations {
+        custom
+        compile.extendsFrom custom
+    }
+
+    eclipse {
+        project {
+            name = appName + "-core"
+        }
+    }
+
+    dependencies {
+        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
+    }
+}
+
+
+project(":desktop") {
+    apply plugin: 'java'
+
+    apply from: '../publish.gradle'
+
+    configurations {
+        custom
+        compile.extendsFrom custom
+    }
+
+    eclipse {
+        project {
+            name = appName + "-desktop"
+        }
+    }
+
+    dependencies {
+        compile project(':core')
+    }
+}
+
+
+project(":html") {
+    apply plugin: 'java'
+
+
+    apply from: '../publish.gradle'
+
+    configurations {
+        custom
+        compile.extendsFrom custom
+    }
+
+    eclipse {
+        project {
+            name = appName + "-html"
+        }
+    }
+
+    dependencies {
+        compile project(':core')
+    }
+
+    dependencies {
+        compile "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx:$gdxVersion:sources"
+        compile "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion:sources"
+    }
+}
+
+project(":ios") {
+    apply plugin: "java"
+    apply plugin: "robovm"
+
+    apply from: '../publish.gradle'
+    configurations {
+        custom
+        compile.extendsFrom custom
+
+        natives
+    }
+    dependencies {
+        compile project(":core")
+        compile "com.mobidevelop.robovm:robovm-rt:$roboVMVersion"
+        compile "com.mobidevelop.robovm:robovm-cocoatouch:$roboVMVersion"
+        compile "com.badlogicgames.gdx:gdx-backend-robovm:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-ios"
+    }
+}
+/*
+project(":ios-moe") {
+    apply plugin: 'java'
+    apply plugin: 'moe'
+
+    apply from: '../publish.gradle'
+
+    configurations {
+        custom
+        compile.extendsFrom custom
+        natives
+    }
+
+    eclipse {
+        project {
+            name = appName + "-ios-moe"
+        }
+    }
+
+    dependencies {
+        compile project(':core')
+        compile "com.badlogicgames.gdx:gdx-backend-moe:$gdxVersion"
+        natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-ios"
+
+        compile fileTree(dir:'libs', include:'*.jar')
+    }
+}
+*/
+

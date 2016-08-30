@@ -27,13 +27,22 @@ public class Spil extends NSObject {
 	@Property(selector = "setDelegate:", strongRef = true)
 	public native void setDelegate(SpilDelegate delegate);
 
+	@Method(selector = "getSpilUserId")
+	public static native NSString getSpilUserID();
+
+	@Method(selector = "getUserId")
+	public static native NSString getUserID();
+
+	@Method(selector = "setUserId:forProviderId:")
+	public static native void setUserID(String userId, String providerId);
+
 	/**
-	 *  Show debug logs
+	 *  Show advanced logs
 	 *
-	 *  @param debugEnabled Enables or disables the debug logs printed
+	 *  @param advancedLoggingEnabled Enables or disables the advanced logs printed
 	 */
-	@Method(selector = "debug:")
-	public static native void debug(boolean debugEnabled);
+	@Method(selector = "setAdvancedLoggingEnabled:")
+	public static native void setAdvancedLoggingEnabled(boolean advancedLoggingEnabled);
 
 	/**
 	 *  Initiates the API
@@ -107,8 +116,8 @@ public class Spil extends NSObject {
 	/**
 	 * Get a specific value from a particular key from the game configuration
 	 *
-	 *  of the key. Type must be NSString.
-	 * @return returns the object from a key, only first hiergy
+	 * @param key Key of the config value. Type must be NSString.
+	 * @return returns the object from a key, only first hierarchy
 	 */
 	@Method(selector = "getConfigValue:")
 	public static native NSString getConfigValue(String key);

@@ -28,11 +28,13 @@ extern "C" {
     
     // --- Push messages ---
     
+    void disableAutomaticRegisterForPushNotificationsNative();
+    
+    void registerForPushNotifications();
+    
     void setPushNotificationKey(const char* pushKey);
     
     void handlePushNotification(const char* notificationStringParams);
-    
-    void registerForPushNotifications(const char* obj);
     
     // --- App flow ---
     
@@ -42,11 +44,17 @@ extern "C" {
     
     // --- Util ---
     
-//    void UnitySendMessage(const char* obj, const char* method, const char* msg);
+    void UnitySendMessage(const char* obj, const char* method, const char* msg);
     
     char* cStringCopy(const char* string);
     
-    char* getSpilUIDNative();
+    char* getSpilUserIdNative();
+    
+    char* getUserIdNative();
+    
+    void setUserIdNative(const char* providerId, const char* userId);
+    
+    void setPluginInformationNative(const char* pluginName, const char* pluginVersion);
 
     // --- Config ---
     
@@ -68,8 +76,6 @@ extern "C" {
     
     void showMoreAppsNative ();
 
-    void showIntersitialNative ();
-
     void playRewardVideoNative ();
     
     void devRequestAdNative(const char* providerName, const char* adTypeName, const bool parentalGate);
@@ -83,8 +89,6 @@ extern "C" {
     void showToastOnVideoReward(const bool enabled);
     
     // --- Game & Player data ---
-    
-    //char* getUserProfileNative ();
 
     char* getWalletNative ();
     
@@ -101,6 +105,14 @@ extern "C" {
     void subtractItemFromInventoryNative (int itemId, int amount, char* reasonName);
     
     void consumeBundleNative (int itemId, char* reasonName);
+    
+    // --- Customer support ---
+    
+    void showHelpCenterNative();
+    
+    void showContactCenterNative();
+    
+    void showHelpCenterWebviewNative();
 }
 
 #endif

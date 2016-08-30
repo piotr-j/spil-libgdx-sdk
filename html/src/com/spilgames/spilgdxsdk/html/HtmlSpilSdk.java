@@ -2,7 +2,6 @@ package com.spilgames.spilgdxsdk.html;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.JsonValue;
-import com.badlogic.gdx.utils.ObjectMap;
 import com.spilgames.spilgdxsdk.*;
 
 /**
@@ -16,6 +15,18 @@ public class HtmlSpilSdk implements SpilSdk {
 	}
 
 	@Override public void setDebug (boolean debug) {
+
+	}
+
+	@Override public String getSpilUserID () {
+		return "";
+	}
+
+	@Override public String getUserID() {
+		return "";
+	}
+
+	@Override public void setUserID(String providerId, String userId) {
 
 	}
 
@@ -39,11 +50,15 @@ public class HtmlSpilSdk implements SpilSdk {
 		return null;
 	}
 
+	@Override public void setSpilConfigLDataListener (SpilConfigDataListener listener) {
+		Gdx.app.log(TAG, "setSpilConfigLDataListener ("+listener+")");
+	}
+
 	@Override public void requestPackages () {
 		Gdx.app.log(TAG, "requestPackages");
 	}
 
-	@Override public void setSpilRewardListener (SpilRewardListener rewardListener) {
+	@Override public void setSpilNotificationDataListener (SpilNotificationDataListener rewardListener) {
 		Gdx.app.log(TAG, "SpilRewardListener ("+rewardListener+")");
 	}
 
@@ -74,7 +89,7 @@ public class HtmlSpilSdk implements SpilSdk {
 
 	}
 
-	@Override public void setSpilAdCallbacks (SpilAdCallbacks adCallbacks) {
+	@Override public void setSpilAdListener (SpilAdListener adCallbacks) {
 
 	}
 

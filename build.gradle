@@ -1,6 +1,6 @@
 ext {
     GROUPID = 'com.spilgames.spilgdxsdk'
-    VERSION = '2.1.0'
+    VERSION = '2.2.0'
 }
 
 buildscript {
@@ -16,8 +16,6 @@ buildscript {
 //        classpath 'com.intel.gradle:moeGradlePlugin:1.1.0.final-1'
 //        classpath 'com.mobidevelop.robovm:robovm-gradle-plugin:2.1.0'
         classpath 'com.mobidevelop.robovm:robovm-gradle-plugin:2.2.0-SNAPSHOT'
-
-//        classpath 'com.google.gms:google-services:3.0.0'
     }
 }
 
@@ -34,7 +32,9 @@ allprojects {
 
     repositories {
         mavenCentral()
+        jcenter()
         mavenLocal()
+        maven { url 'https://dl.bintray.com/spilgames/maven' }
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
     }
@@ -50,13 +50,6 @@ project(":android") {
         natives
     }
 
-    repositories {
-        flatDir {
-            // needed for aar's
-            dirs 'libs'
-        }
-    }
-
     eclipse {
         project {
             name = appName + "-android"
@@ -66,15 +59,14 @@ project(":android") {
     dependencies {
         compile project(':core')
         compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
-        /* note: using compile adds the dependency to pom when and since its a local jar,
-          it cant be found and stuff fails in project that depends on this one */
-//        compile name: 'spilSDK-2.1.0'
-        // note: sp we just do this, that way jars are not added to the pom
-        compile fileTree(dir: 'libs', include: '*.jar')
+        compile('com.spilgames.spilsdk:spilsdk:2.2.0') {
+            transitive = false;
+        }
+        compile 'com.spilgames.spilsdk:spilsdk-fyber:2.2.0'
+        compile 'com.spilgames.spilsdk:spilsdk-dfp:2.2.0'
+        compile 'com.spilgames.spilsdk:spilsdk-chartboost:2.2.0'
 
         compile 'com.google.android.gms:play-services-ads:9.2.0'
-        // note; apparently, its not feasible to bundle the aar inside our own aar, so we need to distribute both
-//        compile(name:'aartestlib-debug', ext:'aar')
     }
 }
 

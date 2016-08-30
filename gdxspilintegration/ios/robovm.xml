@@ -34,8 +34,6 @@
   </forceLinkClasses>
   <libs>
       <lib>z</lib>
-      <lib>libs/libGoogleAnalyticsServices.a</lib>
-      <lib>libs/libAdIdAccess.a</lib>
   </libs>
   <frameworkPaths>
     <path>libs</path>
@@ -50,7 +48,6 @@
     <framework>AudioToolbox</framework>
     <framework>AVFoundation</framework>
 
-    <framework>AdjustSdk</framework>
     <!-- frameworks required by spil are automatically merged from its robovm file-->
     <framework>Spil</framework>
   </frameworks>

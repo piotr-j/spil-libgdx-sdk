@@ -7,10 +7,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
 import com.kotcrab.vis.ui.widget.VisLabel;
-import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
-import com.kotcrab.vis.ui.widget.VisTextField;
-import com.spilgames.spilgdxsdk.SpilAdCallbacks;
+import com.spilgames.spilgdxsdk.SpilAdListener;
 import com.spilgames.spilgdxsdk.SpilSdk;
 import com.spilgames.libgdxbridge.SpilGame;
 
@@ -62,28 +60,28 @@ public class AdScreen extends BackScreen {
 			content.add(cbMoreApps).row();
 			cbInterstitial.addListener(new ClickListener(){
 				@Override public void clicked (InputEvent event, float x, float y) {
-					if (spilSdk.isAdProviderInitialized("ChartBoost")) {
-						spilSdk.devRequestAd("ChartBoost", "interstitial", false);
+					if (spilSdk.isAdProviderInitialized("Chartboost")) {
+						spilSdk.devRequestAd("Chartboost", "interstitial", false);
 					}
 				}
 			});
 			cbRewardVideo.addListener(new ClickListener(){
 				@Override public void clicked (InputEvent event, float x, float y) {
-					if (spilSdk.isAdProviderInitialized("ChartBoost")) {
-						spilSdk.devRequestAd("ChartBoost", "rewardVideo", false);
+					if (spilSdk.isAdProviderInitialized("Chartboost")) {
+						spilSdk.devRequestAd("Chartboost", "rewardVideo", false);
 					}
 				}
 			});
 			cbMoreApps.addListener(new ClickListener(){
 				@Override public void clicked (InputEvent event, float x, float y) {
-					if (spilSdk.isAdProviderInitialized("ChartBoost")) {
-						spilSdk.devRequestAd("ChartBoost", "moreApps", false);
+					if (spilSdk.isAdProviderInitialized("Chartboost")) {
+						spilSdk.devRequestAd("Chartboost", "moreApps", false);
 					}
 				}
 			});
 		}
 
-		game.spilSdk.setSpilAdCallbacks(new SpilAdCallbacks() {
+		game.spilSdk.setSpilAdListener(new SpilAdListener() {
 			@Override public void adAvailable (final String type) {
 				Gdx.app.log(TAG, "adAvailable " +type);
 				if (SpilSdk.AD_REWARD_VIDEO.equals(type)) {

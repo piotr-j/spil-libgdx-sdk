@@ -40,7 +40,7 @@ public class PlayerDataScreen extends BackScreen {
 				updateUI();
 			}
 
-			@Override public void playerDataUpdated (String reason) {
+			@Override public void playerDataUpdated (String reason, JsonValue updatedData) {
 				updateUI();
 			}
 

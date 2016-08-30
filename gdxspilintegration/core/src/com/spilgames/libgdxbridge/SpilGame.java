@@ -6,6 +6,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.kotcrab.vis.ui.VisUI;
 import com.spilgames.libgdxbridge.screens.MainScreen;
+import com.spilgames.spilgdxsdk.SpilConfigDataListener;
+import com.spilgames.spilgdxsdk.SpilErrorCode;
+import com.spilgames.spilgdxsdk.SpilGameDataListener;
 import com.spilgames.spilgdxsdk.SpilSdk;
 
 /**
@@ -45,6 +48,16 @@ public class SpilGame extends Game {
 			VisUI.load(VisUI.SkinScale.X1);
 		}
 		setScreen(new MainScreen(this));
+
+		String spilUserId = spilSdk.getSpilUserID();
+		Gdx.app.log(TAG, "Spil User ID = " + spilUserId);
+		String userId = spilSdk.getUserID();
+		Gdx.app.log(TAG, "User ID = " + userId);
+		spilSdk.setSpilConfigLDataListener(new SpilConfigDataListener() {
+			@Override public void configDataUpdated () {
+				Gdx.app.log(TAG, "configDataUpdated");
+			}
+		});
 	}
 
 	@Override public void dispose () {

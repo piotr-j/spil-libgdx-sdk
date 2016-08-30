@@ -5,8 +5,6 @@ import com.adjust.bindings.Adjust;
 import com.badlogic.gdx.backends.iosrobovm.IOSApplication;
 import com.badlogic.gdx.backends.iosrobovm.IOSApplicationConfiguration;
 import com.spilgames.spilgdxsdk.ios.robovm.IosRoboVMSpilSdk;
-import com.spilgames.spilgdxsdk.ios.robovm.bindings.Spil;
-import com.spilgames.spilgdxsdk.ios.robovm.bindings.SpilDelegateAdapter;
 import org.robovm.apple.foundation.NSAutoreleasePool;
 import org.robovm.apple.foundation.NSData;
 import org.robovm.apple.foundation.NSDictionary;
@@ -47,6 +45,7 @@ public class IOSLauncher extends IOSApplication.Delegate {
 
 				GAITracker tracker = GAI.getSharedInstance().getTracker(GA_TRACKER);
 				tracker.send(event);
+				tracker.setAllowsIDFACollection(true);
 
 			}
 		};

@@ -10,9 +10,11 @@ import com.badlogic.gdx.utils.JsonWriter;
 import com.spilgames.spilgdxsdk.*;
 import com.spilgames.spilgdxsdk.SpilSdk;
 import com.spilgames.spilsdk.SpilEnvironment;
-import com.spilgames.spilsdk.ads.NativeAdCallbacks;
+import com.spilgames.spilsdk.ads.AdCallbacks;
 import com.spilgames.spilsdk.ads.OnAdsListener;
 import com.spilgames.spilsdk.ads.dfp.DFPUtil;
+import com.spilgames.spilsdk.config.ConfigDataCallbacks;
+import com.spilgames.spilsdk.config.OnConfigDataListener;
 import com.spilgames.spilsdk.events.Event;
 import com.spilgames.spilsdk.events.EventActionListener;
 import com.spilgames.spilsdk.events.response.ResponseEvent;
@@ -20,6 +22,8 @@ import com.spilgames.spilsdk.gamedata.OnGameDataListener;
 import com.spilgames.spilsdk.gamedata.SpilGameDataCallbacks;
 import com.spilgames.spilsdk.playerdata.OnPlayerDataListener;
 import com.spilgames.spilsdk.playerdata.PlayerDataCallbacks;
+import com.spilgames.spilsdk.pushnotifications.NotificationDataCallbacks;
+import com.spilgames.spilsdk.pushnotifications.OnNotificationListener;
 import com.spilgames.spilsdk.utils.error.ErrorCodes;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,10 +31,71 @@ import org.json.JSONObject;
 
 public class AndroidSpilSdk implements SpilSdk {
 	private final static String TAG = AndroidSpilSdk.class.getSimpleName();
-
+	private MyOnConfigDataListener configListener;
+	private MyOnPlayerDataListener playerListener;
+	private MySpilGameDataCallbacks gameListener;
+	private MyOnAdsListener adListener;
 	private com.spilgames.spilsdk.SpilSdk instance;
+
 	public AndroidSpilSdk (Context context) {
+		com.spilgames.spilsdk.SpilSdk.resetContext();
 		instance = com.spilgames.spilsdk.SpilSdk.getInstance(context);
+		instance.setConfigDataCallbacks(new ConfigDataCallbacks(configListener = new MyOnConfigDataListener()));
+		instance.setPlayerDataCallbacks(new PlayerDataCallbacks(playerListener = new MyOnPlayerDataListener()));
+		instance.setGameDataCallbacks(new SpilGameDataCallbacks(gameListener = new MySpilGameDataCallbacks()));
+		instance.setNativeAdCallbacks(new AdCallbacks(adListener = new MyOnAdsListener()));
+	}
+
+	private static class MyOnConfigDataListener implements OnConfigDataListener {
+		SpilConfigDataListener listener;
+		@Override public void ConfigDataUpdated () {
+			if (listener != null) listener.configDataUpdated();
+		}
+	}
+
+	private static class MyOnPlayerDataListener implements OnPlayerDataListener {
+		SpilPlayerDataListener listener;
+		@Override public void PlayerDataAvailable () {
+			if (listener != null) listener.playerDataAvailable();
+		}
+
+		@Override public void PlayerDataUpdated (String reason, String updatedData) {
+			if (listener != null) listener.playerDataUpdated(reason, toJson(updatedData));
+		}
+
+		@Override public void PlayerDataError (ErrorCodes error) {
+			if (listener != null) listener.playerDataError(SpilErrorCode.fromId(error.getId()));
+		}
+	}
+
+	private static class MySpilGameDataCallbacks implements OnGameDataListener {
+		SpilGameDataListener listener;
+		@Override public void GameDataAvailable () {
+			if (listener != null) listener.gameDataAvailable();
+		}
+
+		@Override public void GameDataError (ErrorCodes error) {
+			if (listener != null) listener.gameDataError(SpilErrorCode.fromId(error.getId()));
+		}
+	}
+
+	private static class MyOnAdsListener implements OnAdsListener {
+		SpilAdListener listener;
+		@Override public void AdAvailable (String type) {
+			if (listener != null) listener.adAvailable(type);
+		}
+
+		@Override public void AdNotAvailable (String type) {
+			if (listener != null) listener.adNotAvailable(type);
+		}
+
+		@Override public void AdStart () {
+			if (listener != null) listener.adStart();
+		}
+
+		@Override public void AdFinished (String response) {
+			if (listener != null) listener.adFinished(toJson(response));
+		}
 	}
 
 	public void registerDevice (String projectID) {
@@ -47,22 +112,34 @@ public class AndroidSpilSdk implements SpilSdk {
 
 	@Override public void setDebug (boolean debug) {
 		if (debug) {
-			instance.setEnvironment(SpilEnvironment.PRODUCTION);
+			instance.setEnvironment(SpilEnvironment.STAGING);
 		} else {
 			instance.setEnvironment(SpilEnvironment.PRODUCTION);
 		}
 	}
 
-	private SpilRewardListener rewardListener;
-	public void processNotification () {
-		String dara = instance.processNotification();
-		if (dara != null && rewardListener != null) {
-			rewardListener.onRewardReceived(toJson(dara));
+	@Override public void setSpilNotificationDataListener (final SpilNotificationDataListener notificationDataListener) {
+		if (notificationDataListener == null) {
+			instance.setNotificationDataCallbacks(null);
+		} else {
+			instance.setNotificationDataCallbacks(new NotificationDataCallbacks(new OnNotificationListener() {
+				@Override public void onNotificationReceived (String notification) {
+					notificationDataListener.onRewardReceived(toJson(notification));
+				}
+			}));
 		}
 	}
 
-	@Override public void setSpilRewardListener (SpilRewardListener rewardListener) {
-		this.rewardListener = rewardListener;
+	@Override public String getSpilUserID () {
+		return instance.getSpilUID(); // TODO change to getSpilUserID()
+	}
+
+	@Override public String getUserID () {
+		return instance.getUserId();
+	}
+
+	@Override public void setUserID (String providerId, String userId) {
+		 instance.setUserId(providerId, userId);
 	}
 
 	@Override public void trackEvent (SpilEvent event) {
@@ -143,7 +220,12 @@ public class AndroidSpilSdk implements SpilSdk {
 
 	@Override public JsonValue getConfig () {
 		String data = instance.getConfigAll();
+		instance.getSpilUID(); // TODO change to getSpilUserID()
 		return toJson(data);
+	}
+
+	@Override public void setSpilConfigLDataListener (SpilConfigDataListener listener) {
+		configListener.listener = listener;
 	}
 
 	@Override public void requestPackages () {
@@ -162,7 +244,7 @@ public class AndroidSpilSdk implements SpilSdk {
 		return toJson(instance.getPromotion(packageId));
 	}
 
-	private JsonValue toJson (String data) {
+	private static JsonValue toJson (String data) {
 		if (data == null) return null;
 		try {
 			return new JsonReader().parse(data);
@@ -172,29 +254,8 @@ public class AndroidSpilSdk implements SpilSdk {
 		return null;
 	}
 
-	@Override public void setSpilAdCallbacks (final SpilAdCallbacks adCallbacks) {
-		if (adCallbacks == null) {
-			instance.setNativeAdCallbacks(null);
-			return;
-		}
-		NativeAdCallbacks nativeAdCallbacks = new NativeAdCallbacks(new OnAdsListener() {
-			@Override public void AdAvailable (String type) {
-				adCallbacks.adAvailable(type);
-			}
-
-			@Override public void AdNotAvailable (String type) {
-				adCallbacks.adNotAvailable(type);
-			}
-
-			@Override public void AdStart () {
-				adCallbacks.adStart();
-			}
-
-			@Override public void AdFinished (String response) {
-				adCallbacks.adFinished(toJson(response));
-			}
-		});
-		instance.setNativeAdCallbacks(nativeAdCallbacks);
+	@Override public void setSpilAdListener (final SpilAdListener spilAdListener) {
+		adListener.listener = spilAdListener;
 	}
 
 	public void startChartboost (final String appId, final String appSignature) {
@@ -236,7 +297,7 @@ public class AndroidSpilSdk implements SpilSdk {
 			return true;
 		} else if (clean.equals("dfp")) {
 			// DFP is initialized when this is not null
-			return DFPUtil.getPublisherInterstitialAd() != null;
+			return DFPUtil.getInstance().getPublisherInterstitialAd() != null;
 		} else if (clean.equals("fyber")) {
 			// no easy way to know, but wont explode when request ad is called
 			return true;
@@ -283,40 +344,12 @@ public class AndroidSpilSdk implements SpilSdk {
 		instance.requestPlayerData();
 	}
 
-	@Override public void setSpilGameDataListener (final SpilGameDataListener gameDataListener) {
-		if (gameDataListener == null) {
-			instance.setGameDataCallbacks(null);
-			return;
-		}
-		instance.setGameDataCallbacks(new SpilGameDataCallbacks(new OnGameDataListener() {
-			@Override public void GameDataAvailable () {
-				gameDataListener.gameDataAvailable();
-			}
-
-			@Override public void GameDataError (ErrorCodes errorCodes) {
-				gameDataListener.gameDataError(SpilErrorCode.fromId(errorCodes.getId()));
-			}
-		}));
+	@Override public void setSpilGameDataListener (SpilGameDataListener gameDataListener) {
+		gameListener.listener = gameDataListener;
 	}
 
-	@Override public void setSpilPlayerDataListener (final SpilPlayerDataListener playerDataListener) {
-		if (playerDataListener == null) {
-			instance.setPlayerDataCallbacks(null);
-			return;
-		}
-		instance.setPlayerDataCallbacks(new PlayerDataCallbacks(new OnPlayerDataListener() {
-			@Override public void PlayerDataAvailable () {
-				playerDataListener.playerDataAvailable();
-			}
-
-			@Override public void PlayerDataUpdated (String reason) {
-				playerDataListener.playerDataUpdated(reason);
-			}
-
-			@Override public void PlayerDataError (ErrorCodes errorCodes) {
-				playerDataListener.playerDataError(SpilErrorCode.fromId(errorCodes.getId()));
-			}
-		}));
+	@Override public void setSpilPlayerDataListener (SpilPlayerDataListener playerDataListener) {
+		playerListener.listener = playerDataListener;
 	}
 
 	@Override public JsonValue getUserProfile () {
@@ -365,10 +398,6 @@ public class AndroidSpilSdk implements SpilSdk {
 
 	public void onResume () {
 		instance.onResume();
-		// TODO do we want to call this or make the user do that?
-		if (rewardListener != null) {
-			processNotification();
-		}
 	}
 
 	public void onPause () {

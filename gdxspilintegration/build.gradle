@@ -32,12 +32,14 @@ allprojects {
         gdxVersion = '1.9.3'
         roboVMVersion = '2.1.0'
         robopodsVersion = '2.2.0-SNAPSHOT'
-        spilGDXSDKVersion = '2.1.0'
+        spilGDXSDKVersion = '2.2.0'
     }
 
     repositories {
         mavenLocal()
         mavenCentral()
+        jcenter()
+        maven { url 'https://dl.bintray.com/spilgames/maven' }
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
     }
@@ -78,13 +80,7 @@ project(":android") {
         compile 'com.google.android.gms:play-services-analytics:9.2.0'
         compile 'com.google.android.gms:play-services-ads:9.2.0'
 
-        compile 'com.adjust.sdk:adjust-android:4.7.0'
-
         compile ("com.spilgames.spilgdxsdk:spil-gdx-sdk-android:$spilGDXSDKVersion") { changing = true }
-
-//        compile fileTree(dir: 'libs', include: ['*.jar'])
-        compile(name:'mm-ad-sdk', ext:'aar')
-        compile(name:'unityads-sdk', ext:'aar')
 
         // required as we have a ton of sdks
         compile 'com.android.support:multidex:1.0.0'

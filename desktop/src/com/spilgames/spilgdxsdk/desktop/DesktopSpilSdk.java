@@ -49,6 +49,18 @@ public class DesktopSpilSdk implements SpilSdk {
 		log(TAG, "setDebug ("+debug+")");
 	}
 
+	@Override public String getSpilUserID () {
+		return "";
+	}
+
+	@Override public String getUserID() {
+		return "";
+	}
+
+	@Override public void setUserID(String providerId, String userId) {
+
+	}
+
 	@Override public void trackEvent (SpilEvent event) {
 		log(TAG, "trackEvent ("+event+")");
 	}
@@ -57,12 +69,16 @@ public class DesktopSpilSdk implements SpilSdk {
 		log(TAG, "trackEvent ("+event+", "+listener+")");
 	}
 
-	@Override public void setSpilRewardListener (SpilRewardListener rewardListener) {
+	@Override public void setSpilNotificationDataListener (SpilNotificationDataListener rewardListener) {
 		log(TAG, "SpilRewardListener ("+rewardListener+")");
 	}
 
 	@Override public JsonValue getConfig () {
 		return null;
+	}
+
+	@Override public void setSpilConfigLDataListener (SpilConfigDataListener listener) {
+		log(TAG, "setSpilConfigLDataListener ("+listener+")");
 	}
 
 	@Override public void requestPackages () {
@@ -96,8 +112,8 @@ public class DesktopSpilSdk implements SpilSdk {
 		log(TAG, "showRewardVideo");
 	}
 
-	@Override public void setSpilAdCallbacks (SpilAdCallbacks adCallbacks) {
-		log(TAG, "setSpilAdCallbacks ("+adCallbacks+")");
+	@Override public void setSpilAdListener (SpilAdListener adCallbacks) {
+		log(TAG, "setSpilAdListener ("+adCallbacks+")");
 	}
 
 	@Override public void devRequestAd (String provider, String adType, boolean parentalGate) {

@@ -5,22 +5,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import com.adjust.sdk.Adjust;
 import com.adjust.sdk.AdjustConfig;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import com.facebook.ads.AdSettings;
 import com.spilgames.libgdxbridge.BuildConfig;
 import com.spilgames.libgdxbridge.PlatformBridge;
 import com.spilgames.libgdxbridge.SpilGame;
 import com.spilgames.spilgdxsdk.android.AndroidSpilSdk;
-import com.spilgames.spilsdk.SpilEnvironment;
-import com.spilgames.spilsdk.ads.NativeAdCallbacks;
-import com.spilgames.spilsdk.gamedata.OnGameDataListener;
-import com.spilgames.spilsdk.gamedata.SpilGameDataCallbacks;
-import com.spilgames.spilsdk.utils.error.ErrorCodes;
 
 public class AndroidLauncher extends AndroidApplication {
 	private final static String TAG = AndroidLauncher.class.getSimpleName();
@@ -56,9 +48,6 @@ public class AndroidLauncher extends AndroidApplication {
 		String environment = AdjustConfig.ENVIRONMENT_SANDBOX;
 		AdjustConfig adjustConfig = new AdjustConfig(AndroidLauncher.this, appToken, environment);
 		Adjust.onCreate(adjustConfig);
-
-		AdSettings.addTestDevice("22134B4472FE5181D0ECDD2D22048DBB");
-		AdSettings.addTestDevice("710fdf61be878656071f89a144712143");
 
 		spilSdk = new AndroidSpilSdk(this);
 

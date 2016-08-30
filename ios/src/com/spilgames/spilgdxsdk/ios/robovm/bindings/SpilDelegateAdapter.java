@@ -29,8 +29,8 @@ public class SpilDelegateAdapter extends NSObject implements SpilDelegate {
 
 	}
 
-	@NotImplemented("notificationReward:")
-	@Override public void notificationReward (NSDictionary<?, ?> reward) {
+	@NotImplemented("grantReward:")
+	@Override public void grantReward (NSDictionary<?, ?> reward) {
 
 	}
 
@@ -59,8 +59,13 @@ public class SpilDelegateAdapter extends NSObject implements SpilDelegate {
 
 	}
 
-	@NotImplemented("playerDataUpdated:")
-	@Override public void playerDataUpdated (String reason) {
+	@NotImplemented("playerDataUpdated:updatedData:")
+	@Override public void playerDataUpdated (String reason, String updatedData) {
+
+	}
+
+	@NotImplemented("configDataUpdated")
+	@Override public void configUpdated () {
 
 	}
 }

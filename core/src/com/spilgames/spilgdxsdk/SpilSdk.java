@@ -24,6 +24,7 @@ public interface SpilSdk {
 	void trackEvent(SpilEvent event, SpilEventActionListener listener);
 
 	JsonValue getConfig ();
+	void setSpilConfigLDataListener (SpilConfigDataListener listener);
 
 	// Ads
 	boolean isAdProviderInitialized(String provider);
@@ -34,7 +35,7 @@ public interface SpilSdk {
 	void showRewardVideo ();
 	void showMoreApps ();
 
-	void setSpilAdCallbacks(SpilAdCallbacks adCallbacks);
+	void setSpilAdListener (SpilAdListener adListener);
 
 	// ads dev
 	void devRequestAd(String provider, String adType, boolean parentalGate);
@@ -52,7 +53,7 @@ public interface SpilSdk {
 
 	JsonValue getPromotion(String packageId);
 
-	void setSpilRewardListener(SpilRewardListener rewardListener);
+	void setSpilNotificationDataListener (SpilNotificationDataListener rewardListener);
 
 	// wallet
 	void requestPlayerData();
@@ -72,4 +73,8 @@ public interface SpilSdk {
 	void subtractItemFromInventory(int itemId, int amount, String reason);
 
 	void consumeBundle(int bundleId, String reason);
+
+	String getSpilUserID();
+	String getUserID();
+	void setUserID(String providerId, String userId);
 }

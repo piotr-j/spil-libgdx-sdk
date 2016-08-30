@@ -32,8 +32,8 @@ public interface SpilDelegate extends NSObjectProtocol {
 	void adFinished(String type, String reason, String reward, String network);
 
 	// Notification events
-	@Method(selector = "notificationReward:")
-	void notificationReward(NSDictionary<?, ?> reward);
+	@Method(selector = "grantReward:")
+	void grantReward(NSDictionary<?, ?> reward);
 
 	// Package events
 	@Method(selector = "packagesLoaded")
@@ -46,6 +46,9 @@ public interface SpilDelegate extends NSObjectProtocol {
 	@Method(selector = "spilGameDataError:")
 	void spilGameDataError(String message);
 
+	@Method(selector = "configDataUpdated")
+	void configUpdated();
+
 	// Player data events
 	@Method(selector = "playerDataAvailable")
 	void playerDataAvailable();
@@ -53,6 +56,6 @@ public interface SpilDelegate extends NSObjectProtocol {
 	@Method(selector = "playerDataError:")
 	void playerDataError(String message);
 
-	@Method(selector = "playerDataUpdated:")
-	void playerDataUpdated(String reason);
+	@Method(selector = "playerDataUpdated:updatedData:")
+	void playerDataUpdated(String reason, String updatedData);
 }

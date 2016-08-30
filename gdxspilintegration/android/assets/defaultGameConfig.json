@@ -1,10 +1,27 @@
 {
-  "adjustToken": "ozq14osmze2o",
-  "adjustEnvironment": "sandbox",
-  "chartBoostAppId":"5776767a04b01608ac8cf156",
-  "chartBoostAppSignature":"bcbcf4357637263e7d10b147b3e58d139701b9cd",
+  "androidSdkConfig": {
+    "chartBoostAppId":"56f3bf0c2fdf3406a7450e5a",
+    "chartBoostAppSignature":"b655f901fb6b1258dc170a0da94ae1b70c320a3f",
+    "googleAnalyticsId": "UA-55365967-3",
+    "googleIAPKey": "",
+    "adjustAppToken": "knwgh42p181s",
+    "zendeskSubdomain":"https://spilgames.zendesk.com",
+    "zendeskAppId":"bf4b80b3654a573fb7ae62fb51edffdb8859afadcb9d2caa",
+    "zendeskOauthClientId":"mobile_sdk_client_275253633ef8d57108f3"
+  },
 
-  "enemyhealth":{ "Bat":10, "Beardwoman":400, "Clown":35 },
-  "enemycoindrop":{ "Bat":1, "Beardwoman":7, "Clown":2 },
-  "WizardDamage":{ "Wizard1":25, "Wizard2":35 }
+  "enemyhealth": {
+    "Bat": 10,
+    "Beardwoman": 400,
+    "Clown": 35
+  },
+  "enemycoindrop": {
+    "Bat": 1,
+    "Beardwoman": 7,
+    "Clown": 2
+  },
+  "WizardDamage": {
+    "Wizard1": 25,
+    "Wizard2": 35
+  }
 }

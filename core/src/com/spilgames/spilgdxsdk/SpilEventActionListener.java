@@ -7,5 +7,5 @@ package com.spilgames.spilgdxsdk;
  */
 public interface SpilEventActionListener {
 
-	void onResponse (SpilResponseEvent convert);
+	void onResponse (SpilResponseEvent response);
 }

@@ -1,8 +1,30 @@
 {
-  "adjustToken": "h4qr2bjubugw",
-  "adjustEnvironment": "sandbox",
-  "chartBoostAppId":"577f6c5904b01662ffaf805d",
-  "chartBoostAppSignature":"500e10a1188ae9799cc9e7a829ccca73554079db",
+//  "adjustToken": "h4qr2bjubugw",
+//  "adjustEnvironment": "sandbox",
+//  "chartBoostAppId":"577f6c5904b01662ffaf805d",
+//  "chartBoostAppSignature":"500e10a1188ae9799cc9e7a829ccca73554079db",
+
+  "iosSdkConfig":{
+    "googleAnalyticsId":"UA-55365967-3",
+    "adjustAppToken":"cyafkpw8soow",
+    "zendeskSubdomain":"https://spilapps.zendesk.com",
+    "zendeskAppId":"3d3a17f327b472289377eb3dabcf5628a3a948663d950eb3",
+    "zendeskOauthClientId":"mobile_sdk_client_24c6e04403c90003b62b",
+    "zendeskCustomTheme":{
+      "customizeNavBar":"true",
+      "navBarItemsColor":"#000000",
+      "navBarTextColor":"#000000",
+      "navBarTintColor":"#FFFFFF",
+      "primaryTextColor":"#000000",
+      "primaryBackgroundColor":"#FFFFFF",
+      "secondaryBackgroundColor":"#DDDDDD",
+      "emptyBackgroundColor":"#AAAAAA",
+      "metaTextColor":"#111111",
+      "separatorColor":"#555555",
+      "inputFieldTextColor":"#000000",
+      "inputFieldBackgroundColor":"#FFFFFF"
+    }
+  },
 
   "enemyhealth":{ "Bat":10, "Beardwoman":400, "Clown":35 },
   "enemycoindrop":{ "Bat":1, "Beardwoman":7, "Clown":2 },

@@ -2,6 +2,7 @@ package com.spilgames.spilgdxsdk.ios.robovm;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.iosrobovm.IOSApplication;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.spilgames.spilgdxsdk.*;
@@ -20,8 +21,9 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 	private final static String TAG = IosRoboVMSpilSdk.class.getSimpleName();
 
 	private SpilDelegate delegate;
+	private IosRoboVMTrack tracking;
 	public IosRoboVMSpilSdk (IOSApplication.Delegate delegate){
-
+		tracking = new IosRoboVMTrack();
 	}
 
 	@Override public SpilSdkType getBackendType () {
@@ -33,19 +35,66 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 	}
 
 	@Override public String getSpilUserID () {
-		NSString value = Spil.getSpilUserID();
-		if (value == null) return null;
-		return value.toString();
+		return Spil.getSpilUserId();
+	}
+
+	@Override public void requestOtherUsersGameState(String provider, Array<String> userIds) {
+		if (provider == null) {
+			Gdx.app.error(TAG, "Provider name cannot be null!");
+			return;
+		}
+		if (userIds == null) {
+			Gdx.app.error(TAG, "userIds cannot be null!");
+			return;
+		}
+		if (userIds.size == 0) return;
+
+		NSMutableArray<NSString> list = new NSMutableArray<>();
+		for (String userId : userIds) {
+			list.add(new NSString(userId));
+		}
+
+		Spil.getOtherUsersGameState(provider, list);
 	}
 
 	@Override public String getUserID () {
-		NSString value = Spil.getUserID();
-		if (value == null) return null;
-		return value.toString();
+		return Spil.getUserId();
+	}
+
+	@Override public String getUserProvider () {
+		return Spil.getUserProvider();
 	}
 
 	@Override public void setUserID (String providerId, String userId) {
 		Spil.setUserID(userId, providerId);
+	}
+
+	@Override public String getPublicGameState () {
+		return Spil.getPublicGameState();
+	}
+
+	@Override public void setPublicGameState (String publicGameState) {
+		Spil.setPublicGameState(publicGameState);
+	}
+
+	@Override public String getPrivateGameState () {
+		return Spil.getPrivateGameState();
+	}
+
+	@Override public void setPrivateGameState (String privateGameState) {
+		Spil.setPrivateGameState(privateGameState);
+	}
+
+	@Override public void setSpilGameStateListener (final SpilGameStateListener gameStateListener) {
+		delegate().gameStateListener = gameStateListener;
+	}
+
+	@Override public void setSpilAutomatedEventsListener (SpilAutomatedEventsListener automatedEventsListener) {
+		delegate().automatedEventsListener = automatedEventsListener;
+	}
+
+	@Override public IosRoboVMTrack track () {
+		return tracking;
 	}
 
 	@Override public void trackEvent (SpilEvent event) {
@@ -98,8 +147,7 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 	}
 
 	@Override public void setSpilConfigLDataListener (SpilConfigDataListener listener) {
-		initDelegate();
-		delegate.configDataListener = listener;
+		delegate().configDataListener = listener;
 	}
 
 	@Override public void requestPackages () {
@@ -141,25 +189,28 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 	}
 
 	@Override public void setSpilNotificationDataListener (SpilNotificationDataListener rewardListener) {
-		initDelegate();
-		delegate.notificationDataListener = rewardListener;
+		delegate().notificationDataListener = rewardListener;
 	}
 
 	@Override public void setSpilAdListener (SpilAdListener adCallbacks) {
-		initDelegate();
-		delegate.adListener = adCallbacks;
+		delegate().adListener = adCallbacks;
 	}
 
-	private void initDelegate () {
+	private SpilDelegate delegate () {
 		if (delegate == null) {
 			delegate = new SpilDelegate();
 			Spil instance = Spil.getInstance();
 			instance.setDelegate(delegate);
 		}
+		return delegate;
 	}
 
 	@Override public boolean isAdProviderInitialized (String provider) {
 		return Spil.isAdProviderInitialized(provider);
+	}
+
+	@Override public void showToastOnVideoReward (boolean enabled) {
+		Spil.showToastOnVideoReward(enabled);
 	}
 
 	@Override public void requestMoreApps () {
@@ -183,7 +234,6 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 		Spil.devRequestAd(provider, adType, parentalGate);
 	}
 
-	// TODO does this dev stuff even work?
 	@Override public void devShowRewardVideo (String provider) {
 		Spil.devShowRewardVideo(provider);
 	}
@@ -231,13 +281,11 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 	}
 
 	@Override public void setSpilPlayerDataListener (SpilPlayerDataListener playerDataListener) {
-		initDelegate();
-		delegate.playerDataListener = playerDataListener;
+		delegate().playerDataListener = playerDataListener;
 	}
 
 	@Override public void setSpilGameDataListener (SpilGameDataListener gameDataListener) {
-		initDelegate();
-		delegate.gameDataListener = gameDataListener;
+		delegate().gameDataListener = gameDataListener;
 	}
 
 	@Override public JsonValue getUserProfile () {
@@ -276,12 +324,28 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 		Spil.consumeBundle(bundleId, reason);
 	}
 
+
+	// customer support
+	@Override public void showZendeskHelpCenter () {
+		Spil.showHelpCenter();
+	}
+
+	@Override public void showZendeskWebViewHelpCenter () {
+		Spil.showHelpCenterWebview();
+	}
+
+	@Override public void showZendeskContactCenter () {
+		Spil.showContactCenter();
+	}
+
 	private class SpilDelegate extends SpilDelegateAdapter {
 		SpilAdListener adListener;
 		SpilNotificationDataListener notificationDataListener;
 		SpilGameDataListener gameDataListener;
 		SpilPlayerDataListener playerDataListener;
 		SpilConfigDataListener configDataListener;
+		SpilGameStateListener gameStateListener;
+		SpilAutomatedEventsListener automatedEventsListener;
 
 		@Override public void adAvailable (String type) {
 			if (adListener != null) adListener.adAvailable(type);
@@ -332,15 +396,7 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 		}
 
 		@Override public void spilGameDataError (String message) {
-			if (gameDataListener != null) {
-				JsonValue value = toJson(message);
-				if (value == null) {
-					playerDataListener.playerDataError(SpilErrorCode.Invalid);
-				} else {
-					int id = value.getInt("id");
-					playerDataListener.playerDataError(SpilErrorCode.fromId(id));
-				}
-			}
+			if (gameDataListener != null) playerDataListener.playerDataError(convertErrorMessage(message));
 		}
 
 		@Override public void playerDataAvailable () {
@@ -348,15 +404,7 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 		}
 
 		@Override public void playerDataError (String message) {
-			if (playerDataListener != null) {
-				JsonValue value = toJson(message);
-				if (value == null) {
-					playerDataListener.playerDataError(SpilErrorCode.Invalid);
-				} else {
-					int id = value.getInt("id");
-					playerDataListener.playerDataError(SpilErrorCode.fromId(id));
-				}
-			}
+			if (playerDataListener != null) playerDataListener.playerDataError(convertErrorMessage(message));
 		}
 
 		@Override public void playerDataUpdated (String reason, String updatedData) {
@@ -365,6 +413,31 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 
 		@Override public void configUpdated () {
 			if (configDataListener != null) configDataListener.configDataUpdated();
+		}
+
+		@Override public void gameStateUpdated (String access) {
+			if (gameStateListener != null) gameStateListener.gameStateUpdated(access);
+		}
+
+		@Override public void otherUsersGameStateLoaded (NSDictionary<?, ?> data, String provider) {
+			if (gameStateListener != null) gameStateListener.otherUsersGameStateLoaded(provider, toJson(data));
+		}
+
+		@Override public void gameStateError (String message) {
+			if (gameStateListener != null) gameStateListener.gameStateError(convertErrorMessage(message));
+		}
+
+		@Override public void openGameShop () {
+			if (automatedEventsListener != null) automatedEventsListener.openGameShop();
+		}
+
+		SpilErrorCode convertErrorMessage(String message) {
+			JsonValue value = toJson(message);
+			if (value != null) {
+				int id = value.getInt("id", -1);
+				SpilErrorCode.fromId(id);
+			}
+			return SpilErrorCode.Invalid;
 		}
 	}
 }

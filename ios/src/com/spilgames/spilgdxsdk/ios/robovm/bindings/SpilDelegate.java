@@ -58,4 +58,18 @@ public interface SpilDelegate extends NSObjectProtocol {
 
 	@Method(selector = "playerDataUpdated:updatedData:")
 	void playerDataUpdated(String reason, String updatedData);
+
+	// User data events
+	@Method(selector = "gameStateUpdated:")
+	void gameStateUpdated(String access);
+
+	@Method(selector = "otherUsersGameStateLoaded:forProvider:")
+	void otherUsersGameStateLoaded(NSDictionary<?, ?> data, String provider);
+
+	@Method(selector = "gameStateError:")
+	void gameStateError(String message);
+
+	// Automated events
+	@Method(selector = "openGameShop")
+	void openGameShop();
 }

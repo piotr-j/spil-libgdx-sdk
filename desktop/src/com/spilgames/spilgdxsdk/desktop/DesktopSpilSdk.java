@@ -1,6 +1,7 @@
 package com.spilgames.spilgdxsdk.desktop;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import com.spilgames.spilgdxsdk.*;
 
@@ -12,6 +13,7 @@ import com.spilgames.spilgdxsdk.*;
 public class DesktopSpilSdk implements SpilSdk {
 	private final static String TAG = DesktopSpilSdk.class.getSimpleName();
 	private boolean log;
+	private DesktopTrack track = new DesktopTrack();
 
 	public DesktopSpilSdk() {
 		this(true);
@@ -23,10 +25,15 @@ public class DesktopSpilSdk implements SpilSdk {
 
 	public void setLogging (boolean enabled) {
 		this.log = enabled;
+		track.log = enabled;
 	}
 
 	public boolean isLogging () {
 		return log;
+	}
+
+	private void log (String tag, String message) {
+		if (log) Gdx.app.log(tag, message);
 	}
 
 	@Override public SpilSdkType getBackendType () {
@@ -35,10 +42,6 @@ public class DesktopSpilSdk implements SpilSdk {
 
 	@Override public void requestMoreApps () {
 		log(TAG, "requestMoreApps");
-	}
-
-	private void log (String tag, String message) {
-		if (log) Gdx.app.log(tag, message);
 	}
 
 	@Override public void requestRewardVideo () {
@@ -53,12 +56,48 @@ public class DesktopSpilSdk implements SpilSdk {
 		return "";
 	}
 
+	@Override public void requestOtherUsersGameState(String provider, Array<String> userIdsList) {
+		log(TAG, "requestOtherUsersGameState (" + provider + ", " + userIdsList + ")");
+	}
+
 	@Override public String getUserID() {
 		return "";
 	}
 
-	@Override public void setUserID(String providerId, String userId) {
+	@Override public String getUserProvider () {
+		return null;
+	}
 
+	@Override public void setUserID(String providerId, String userId) {
+		log(TAG, "setUserID ("+providerId+", "+userId+")");
+	}
+
+	@Override public String getPublicGameState () {
+		return null;
+	}
+
+	@Override public void setPublicGameState (String publicGameState) {
+		log(TAG, "setPublicGameState ("+publicGameState+")");
+	}
+
+	@Override public String getPrivateGameState () {
+		return null;
+	}
+
+	@Override public void setPrivateGameState (String privateGameState) {
+		log(TAG, "setPrivateGameState ("+privateGameState+")");
+	}
+
+	@Override public void setSpilGameStateListener (final SpilGameStateListener gameStateListener) {
+		log(TAG, "setSpilGameStateListener ("+gameStateListener+")");
+	}
+
+	@Override public void setSpilAutomatedEventsListener (SpilAutomatedEventsListener automatedEventsListener) {
+		log(TAG, "setSpilAutomatedEventsListener ("+automatedEventsListener+")");
+	}
+
+	@Override public Track track () {
+		return track;
 	}
 
 	@Override public void trackEvent (SpilEvent event) {
@@ -102,6 +141,10 @@ public class DesktopSpilSdk implements SpilSdk {
 
 	@Override public boolean isAdProviderInitialized (String provider) {
 		return false;
+	}
+
+	@Override public void showToastOnVideoReward (boolean enabled) {
+		log(TAG, "showToastOnVideoReward("+enabled+")");
 	}
 
 	@Override public void showMoreApps () {
@@ -196,5 +239,18 @@ public class DesktopSpilSdk implements SpilSdk {
 
 	@Override public void consumeBundle (int bundleId, String reason) {
 		log(TAG, "consumeBundle (" +bundleId+", "+ reason+")");
+	}
+
+	// customer support
+	@Override public void showZendeskHelpCenter () {
+		log(TAG, "showZendeskHelpCenter ()");
+	}
+
+	@Override public void showZendeskWebViewHelpCenter () {
+		log(TAG, "showZendeskWebViewHelpCenter ()");
+	}
+
+	@Override public void showZendeskContactCenter () {
+		log(TAG, "showZendeskContactCenter ()");
 	}
 }

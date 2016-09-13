@@ -4,9 +4,8 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplication;
-import com.badlogic.gdx.utils.JsonReader;
-import com.badlogic.gdx.utils.JsonValue;
-import com.badlogic.gdx.utils.JsonWriter;
+import com.badlogic.gdx.utils.*;
+import com.badlogic.gdx.utils.StringBuilder;
 import com.spilgames.spilgdxsdk.*;
 import com.spilgames.spilgdxsdk.SpilSdk;
 import com.spilgames.spilsdk.SpilEnvironment;
@@ -20,11 +19,15 @@ import com.spilgames.spilsdk.events.EventActionListener;
 import com.spilgames.spilsdk.events.response.ResponseEvent;
 import com.spilgames.spilsdk.gamedata.OnGameDataListener;
 import com.spilgames.spilsdk.gamedata.SpilGameDataCallbacks;
+import com.spilgames.spilsdk.playerdata.GameStateCallbacks;
+import com.spilgames.spilsdk.playerdata.OnGameStateListener;
 import com.spilgames.spilsdk.playerdata.OnPlayerDataListener;
 import com.spilgames.spilsdk.playerdata.PlayerDataCallbacks;
 import com.spilgames.spilsdk.pushnotifications.NotificationDataCallbacks;
 import com.spilgames.spilsdk.pushnotifications.OnNotificationListener;
 import com.spilgames.spilsdk.utils.error.ErrorCodes;
+import com.spilgames.spilsdk.web.OnWebListener;
+import com.spilgames.spilsdk.web.WebCallbacks;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,6 +39,7 @@ public class AndroidSpilSdk implements SpilSdk {
 	private MySpilGameDataCallbacks gameListener;
 	private MyOnAdsListener adListener;
 	private com.spilgames.spilsdk.SpilSdk instance;
+	private AndroidTrack track;
 
 	public AndroidSpilSdk (Context context) {
 		com.spilgames.spilsdk.SpilSdk.resetContext();
@@ -44,6 +48,7 @@ public class AndroidSpilSdk implements SpilSdk {
 		instance.setPlayerDataCallbacks(new PlayerDataCallbacks(playerListener = new MyOnPlayerDataListener()));
 		instance.setGameDataCallbacks(new SpilGameDataCallbacks(gameListener = new MySpilGameDataCallbacks()));
 		instance.setNativeAdCallbacks(new AdCallbacks(adListener = new MyOnAdsListener()));
+		track = new AndroidTrack(context);
 	}
 
 	private static class MyOnConfigDataListener implements OnConfigDataListener {
@@ -134,12 +139,72 @@ public class AndroidSpilSdk implements SpilSdk {
 		return instance.getSpilUID(); // TODO change to getSpilUserID()
 	}
 
+	@Override public void requestOtherUsersGameState(String provider, Array<String> userIdsList) {
+		instance.requestOtherUsersGameState(provider, toJsonString(userIdsList));
+	}
+
 	@Override public String getUserID () {
 		return instance.getUserId();
 	}
 
-	@Override public void setUserID (String providerId, String userId) {
-		 instance.setUserId(providerId, userId);
+	@Override public String getUserProvider () {
+		return instance.getUserProvider();
+	}
+
+	@Override public void setUserID(String providerId, String userId) {
+		instance.setUserId(providerId, userId);
+	}
+
+	@Override public String getPublicGameState () {
+		return instance.getPublicGameState();
+	}
+
+	@Override public void setPublicGameState (String publicGameState) {
+		instance.setPublicGameState(publicGameState);
+	}
+
+	@Override public String getPrivateGameState () {
+		return instance.getPrivateGameState();
+	}
+
+	@Override public void setPrivateGameState (String privateGameState) {
+		instance.setPrivateGameState(privateGameState);
+	}
+
+	@Override public void setSpilGameStateListener (final SpilGameStateListener gameStateListener) {
+		instance.setGameStateCallbacks(new GameStateCallbacks(new OnGameStateListener() {
+			@Override public void GameStateUpdated (String access) {
+				gameStateListener.gameStateUpdated(access);
+			}
+
+			@Override public void OtherUsersGameStateLoaded (String provider, JSONObject data) {
+				gameStateListener.otherUsersGameStateLoaded(provider, toJson(data.toString()));
+			}
+
+			@Override public void GameStateError (ErrorCodes errorCode) {
+				gameStateListener.gameStateError(SpilErrorCode.fromId(errorCode.getId()));
+			}
+		}));
+	}
+
+	@Override public void setSpilAutomatedEventsListener (final SpilAutomatedEventsListener automatedEventsListener) {
+		if (automatedEventsListener == null) {
+			instance.setWebCallbacks(null);
+			return;
+		}
+		instance.setWebCallbacks(new WebCallbacks(new OnWebListener() {
+			@Override public void OpenGameShop () {
+				automatedEventsListener.openGameShop();
+			}
+
+			@Override public void ReceiveReward (String rewardData) {
+				// TODO what about this? is this the same as notification reward thing? what about ios?
+			}
+		}));
+	}
+
+	@Override public AndroidTrack track () {
+		return track;
 	}
 
 	@Override public void trackEvent (SpilEvent event) {
@@ -254,6 +319,18 @@ public class AndroidSpilSdk implements SpilSdk {
 		return null;
 	}
 
+	private static String toJsonString (Array<String> data) {
+		if (data == null) return null;
+		if (data.size == 0) return "{}";
+		StringBuilder sb = new StringBuilder(64);
+		sb.append("{\"").append(data.get(0)).append("\"");
+		for (int i = 1, size = data.size; i < size; i++) {
+			sb.append(", \"").append(data.get(i)).append("\"");
+		}
+		sb.append("}");
+		return sb.toString();
+	}
+
 	@Override public void setSpilAdListener (final SpilAdListener spilAdListener) {
 		adListener.listener = spilAdListener;
 	}
@@ -303,6 +380,10 @@ public class AndroidSpilSdk implements SpilSdk {
 			return true;
 		}
 		return false;
+	}
+
+	@Override public void showToastOnVideoReward (boolean enabled) {
+		instance.showToastOnVideoReward(enabled);
 	}
 
 	@Override public void devRequestAd (final String provider, final String adType, final boolean parentalGate) {
@@ -386,6 +467,20 @@ public class AndroidSpilSdk implements SpilSdk {
 
 	@Override public void consumeBundle (int bundleId, String reason) {
 		instance.consumeBundle(bundleId, reason);
+	}
+
+	// customer support
+
+	@Override public void showZendeskHelpCenter () {
+		instance.showZendeskHelpCenter();
+	}
+
+	@Override public void showZendeskWebViewHelpCenter () {
+		instance.showZendeskWebViewHelpCenter();
+	}
+
+	@Override public void showZendeskContactCenter () {
+		instance.showContactZendeskCenter();
 	}
 
 	public void onCreate () {

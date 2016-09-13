@@ -14,6 +14,22 @@
 			<key>DefaultValue</key>
 			<false/>
 			<key>Key</key>
+			<string>spil_debugmode</string>
+			<key>Title</key>
+			<string>Debug mode</string>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Advanced debugging</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+		</dict>
+		<dict>
+			<key>DefaultValue</key>
+			<false/>
+			<key>Key</key>
 			<string>spil_usingstaging</string>
 			<key>Title</key>
 			<string>Using Staging</string>
@@ -24,9 +40,9 @@
 			<key>DefaultValue</key>
 			<false/>
 			<key>Key</key>
-			<string>spil_usingdebug</string>
+			<string>spil_advancedlogging</string>
 			<key>Title</key>
-			<string>Debug Mode</string>
+			<string>Advanced logging</string>
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 		</dict>

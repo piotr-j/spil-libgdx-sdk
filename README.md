@@ -1,6 +1,6 @@
 # Spil GDX SDK Bridge
 
-Based on Spil SDK 2.1.0
+Based on Spil Android SDK 2.2.2 and iOS SDK 2.0.8
 
 ##Supported Platforms
 Android, iOS-RoboVM
@@ -28,22 +28,7 @@ https://github.com/MobiDevelop/robovm-robopods/tree/master/google-analytics/ios
 
 **Adjust SDK**
 
-For Android backend, follow these instructions:
-https://github.com/adjust/android_sdk#basic-integration
-
-For iOS RoboVM, follow these instructions:
-Download `AdjustSdkStaticNoBitcode.framework.zip` from https://github.com/adjust/ios_sdk
-Unpack it and put `AdjustSdk.framewoek` into `ios/libs` directory.
-Adjust `robovm.xml` file to include added framework
-```xml
-<frameworks>
-    // ...
-    <framework>AdjustSdk</framework>
-</frameworks>
-```
-
-Minimal java bindings are included in sample project
-
+Adjust SDK is not bundled in the Spil SDK
 
 ## Installation 
 
@@ -53,20 +38,14 @@ Once prerequisites are added and working, Spil sdk can be added.
 
 Add this to your `build.gradle` core dependencies
 ```gradle
-compile "com.spilgames.spilgdxsdk:spil-gdx-sdk-core:2.1.0"
+compile "com.spilgames.spilgdxsdk:spil-gdx-sdk-core:2.2.2"
 ```
 
 **Android**
 
-Add following libraries to `android/libs` directory found in same directory in this project
- - mm-ad-sdk.aar  
- - unity-ads.aar    
-
 Add this to your build.gradle android dependencies
 ```gradle
-compile "com.spilgames.spilgdxsdk:spil-gdx-sdk-android:2.1.0@aar"
-
-compile fileTree(dir: 'libs', include: '*.jar')
+compile "com.spilgames.spilgdxsdk:spil-gdx-sdk-android:2.2.2"
 ```
 
 Due to number of methods, MultiDex is required on Android.
@@ -79,7 +58,7 @@ Follow the instructions [on libGDX wiki](https://github.com/libgdx/libgdx/wiki/S
 
 Add this to your build.gradle ios dependencies
 ```gradle
-compile "com.spilgames.spilgdxsdk:spil-gdx-sdk-ios-robovm:2.1.0"
+compile "com.spilgames.spilgdxsdk:spil-gdx-sdk-ios-robovm:2.2.2"
 ```
 
 Copy Spil.framework from `ios/libs` directory into `ios/libs` in your project 
@@ -118,7 +97,7 @@ Add this to your info.plist.xml
 
 Add this to your build.gradle desktop dependencies
 ```gradle
-compile "com.spilgames.spilgdxsdk:spil-gdx-sdk-desktop:2.1.0"
+compile "com.spilgames.spilgdxsdk:spil-gdx-sdk-desktop:2.2.2"
 ```
 
 ## Usage
@@ -796,5 +775,52 @@ The last step is to use one of the following operations to update your Users Wal
     PlayerDataUpdateReasons.ItemPickedUp = "Item Picked Up";
 ```
 
+### Game State
 
+The Spil LibGDX SDK also allows the saving of custom data blobs, game states, that can be associated to a specific user. These game states come in two flavors, public and private. Private game states can be saved at any time, and that game state will be associated with the Spil UUID. If you plan on saving a public game state, then you are required to provide a custom user id and provider. Any changes to the game states will be pulled automatically by the Spil SDK at the start of the app. You can also request other users public game state by supplying their user ids.
+
+The first step you need to do in order to process the game state data is to setup the callback listener like this:
+
+```java
+spilSdk.setSpilGameStateListener(new SpilGameStateListener() {
+    @Override public void gameStateUpdated (String access) {
+        Gdx.app.log("GSL", "gameStateUpdated " + access);
+    }
+
+    @Override public void otherUsersGameStateLoaded (String provider, JsonValue data) {
+        Gdx.app.log("GSL", "otherUsersGameStateLoaded " + provider + " " + data);
+    }
+
+    @Override public void gameStateError (SpilErrorCode errorCode) {
+        Gdx.app.log("GSL", "gameStateError " + errorCode);
+    }
+});
+
+//JSON response for other users game state
+"gameStates": {
+  "12345": "data",
+  "54321": "data"
+}
+```
+
+Next you can use the following methods to operate the game states:
+
+```java
+//Set public and private game states
+spilSdk.setPublicGameState(gameState);
+spilSdk.setPrivateGameState(gameState);
+
+//Get public and private game states
+String publicGameState = spilSdk.getPublicGameState();
+String privateGameState = spilSdk.getPrivateGameState();
+
+//Request other user's game states
+//Requires a provider and a JSON string list
+// build other users list
+Array<String> otherUserIds = new Array<String>();
+otherUserIds.add("otherUserId1");
+otherUserIds.add("otherUserId2");
+// request data
+spilSdk.requestOtherUsersGameState(provider, otherUserIds);
+```
 

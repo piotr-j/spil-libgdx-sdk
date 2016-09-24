@@ -1,7 +1,5 @@
 package com.spilgames.libgdxbridge;
 
-import com.adjust.bindings.ADJConfig;
-import com.adjust.bindings.Adjust;
 import com.badlogic.gdx.backends.iosrobovm.IOSApplication;
 import com.badlogic.gdx.backends.iosrobovm.IOSApplicationConfiguration;
 import com.spilgames.spilgdxsdk.ios.robovm.IosRoboVMSpilSdk;
@@ -17,13 +15,10 @@ import org.robovm.pods.google.analytics.GAITracker;
 public class IOSLauncher extends IOSApplication.Delegate {
 	private final static String TAG = IOSLauncher.class.getSimpleName();
 
-	private static final String ADJUST_APP_TOKEN = "h4qr2bjubugw";
 	private static final String GA_TRACKER = "UA-48906028-3";
 
 	IosRoboVMSpilSdk spilSdk;
 	@Override protected IOSApplication createApplication () {
-		ADJConfig adjConfig = new ADJConfig(ADJUST_APP_TOKEN, ADJConfig.ENVIRONMENT_SANDBOX);
-		Adjust.appDidLaunch(adjConfig);
 
 		final IOSApplicationConfiguration config = new IOSApplicationConfiguration();
 		com.spilgames.libgdxbridge.PlatformBridge bridge = new com.spilgames.libgdxbridge.PlatformBridge() {

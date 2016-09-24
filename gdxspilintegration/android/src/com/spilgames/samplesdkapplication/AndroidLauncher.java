@@ -43,12 +43,6 @@ public class AndroidLauncher extends AndroidApplication {
 			}
 		}
 
-		// adjust, it doesnt like being initialized in callback
-		String appToken = "ozq14osmze2o";
-		String environment = AdjustConfig.ENVIRONMENT_SANDBOX;
-		AdjustConfig adjustConfig = new AdjustConfig(AndroidLauncher.this, appToken, environment);
-		Adjust.onCreate(adjustConfig);
-
 		spilSdk = new AndroidSpilSdk(this);
 
 		// dunno what this is used for, but its in android sample project
@@ -82,13 +76,11 @@ public class AndroidLauncher extends AndroidApplication {
 
 	@Override protected void onResume () {
 		super.onResume();
-		Adjust.onResume();
 		spilSdk.onResume();
 	}
 
 	@Override protected void onPause () {
 		spilSdk.onPause();
-		Adjust.onPause();
 		super.onPause();
 	}
 

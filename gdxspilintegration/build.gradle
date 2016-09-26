@@ -1,0 +1,156 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        jcenter()
+        // NOTE: disabled so moe installation is not required for this project
+//        maven { url uri(System.getenv("INTEL_MULTI_OS_ENGINE_HOME") + "/gradle") }
+    }
+    dependencies {
+//        classpath 'de.richsource.gradle.plugins:gwt-gradle-plugin:0.6'
+        classpath 'com.android.tools.build:gradle:2.1.0'
+        classpath 'com.mobidevelop.robovm:robovm-gradle-plugin:2.2.0-SNAPSHOT'
+        classpath 'com.google.gms:google-services:3.0.0'
+        // NOTE: disabled so moe installation is not required for this project
+//        classpath 'com.intel.gradle:moeGradlePlugin:1.1.0.final-1'
+    }
+}
+
+
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+
+allprojects {
+    apply plugin: "eclipse"
+    apply plugin: "idea"
+
+    version = '1.0'
+    ext {
+        appName = "LibGDXBridge"
+        gdxVersion = '1.9.3'
+        roboVMVersion = '2.1.0'
+        robopodsVersion = '2.2.0-SNAPSHOT'
+        spilGDXSDKVersion = '2.2.0'
+    }
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        jcenter()
+        maven { url 'https://dl.bintray.com/spilgames/maven' }
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+    }
+}
+
+project(":core") {
+    apply plugin: "java"
+
+    dependencies {
+        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
+        // used for gui
+        compile "com.kotcrab.vis:vis-ui:1.1.1"
+
+        compile ("com.spilgames.spilgdxsdk:spil-gdx-sdk-core:$spilGDXSDKVersion"){ changing = true }
+    }
+}
+project(":android") {
+    apply plugin: 'com.android.application'
+
+    configurations { natives }
+
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
+
+    dependencies {
+        compile project(":core")
+        compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
+        natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"
+        natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
+        natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-arm64-v8a"
+        natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86"
+        natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86_64"
+
+        compile 'com.google.android.gms:play-services-gcm:9.2.0'
+        compile 'com.google.android.gms:play-services-analytics:9.2.0'
+        compile 'com.google.android.gms:play-services-ads:9.2.0'
+
+        compile ("com.spilgames.spilgdxsdk:spil-gdx-sdk-android:$spilGDXSDKVersion") { changing = true }
+
+        // required as we have a ton of sdks
+        compile 'com.android.support:multidex:1.0.0'
+    }
+}
+
+project(":ios") {
+    apply plugin: "java"
+    apply plugin: "robovm"
+
+    dependencies {
+        compile project(":core")
+        compile "com.mobidevelop.robovm:robovm-rt:$roboVMVersion"
+        compile "com.mobidevelop.robovm:robovm-cocoatouch:$roboVMVersion"
+        compile "com.badlogicgames.gdx:gdx-backend-robovm:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-ios"
+
+        compile ("com.spilgames.spilgdxsdk:spil-gdx-sdk-ios-robovm:$spilGDXSDKVersion") { changing = true }
+
+        // TODO this should be enabled when its available
+//        compile "com.mobidevelop.robovm:robopods-google-analytics-ios:$robopodsVersion"
+        compile "org.robovm:robopods-google-analytics-ios:1.14.0"
+    }
+}
+
+// NOTE: disabled so moe installation is not required for this project
+//project(":ios-moe") {
+//    apply plugin: "moe"
+//
+//    configurations { natives }
+//
+//    dependencies {
+//        compile project(":core")
+//        compile "com.badlogicgames.gdx:gdx-backend-moe:$gdxVersion"
+//        natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-ios"
+//
+//        compile "com.spilgames.spilgdxsdk:spil-gdx-sdk-ios-moe:$spilGDXSDKVersion"
+//    }
+//}
+
+project(":desktop") {
+    apply plugin: "java"
+
+    dependencies {
+        compile project(":core")
+        compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+
+        compile ("com.spilgames.spilgdxsdk:spil-gdx-sdk-desktop:$spilGDXSDKVersion") { changing = true }
+    }
+}
+
+//project(":html") {
+//    apply plugin: "gwt"
+//    apply plugin: "war"
+//
+//    dependencies {
+//        compile project(":core")
+//        compile "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion"
+//        compile "com.badlogicgames.gdx:gdx:$gdxVersion:sources"
+//        compile "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion:sources"
+//        // used for gui
+//        compile "com.kotcrab.vis:vis-ui:1.1.1:sources"
+//
+//        // This is disabled for now as some classes in core are not compatible with GWT
+////        compile "com.spilgames.spilgdxsdk:spil-gdx-sdk-html:$spilGDXSDKVersion:sources"
+////        compile "com.spilgames.spilgdxsdk:spil-gdx-sdk-core:$spilGDXSDKVersion:sources"
+//    }
+//}
+
+tasks.eclipse.doLast {
+    delete ".project"
+}

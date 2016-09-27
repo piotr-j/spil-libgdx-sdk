@@ -321,13 +321,13 @@ public class AndroidSpilSdk implements SpilSdk {
 
 	private static String toJsonString (Array<String> data) {
 		if (data == null) return null;
-		if (data.size == 0) return "{}";
+		if (data.size == 0) return "[]";
 		StringBuilder sb = new StringBuilder(64);
-		sb.append("{\"").append(data.get(0)).append("\"");
+		sb.append("[\"").append(data.get(0)).append("\"");
 		for (int i = 1, size = data.size; i < size; i++) {
 			sb.append(", \"").append(data.get(i)).append("\"");
 		}
-		sb.append("}");
+		sb.append("]");
 		return sb.toString();
 	}
 

@@ -48,8 +48,8 @@ public class GameStateScreen extends BackScreen {
 				}
 			});
 
-			if (spilSdk.getUserID() != null) provider.setText(spilSdk.getUserID());
-			if (spilSdk.getUserProvider() != null) userId.setText(spilSdk.getUserProvider());
+			if (spilSdk.getUserID() != null) userId.setText(spilSdk.getUserID());
+			if (spilSdk.getUserProvider() != null) provider.setText(spilSdk.getUserProvider());
 		}
 		// private & public game state
 		{

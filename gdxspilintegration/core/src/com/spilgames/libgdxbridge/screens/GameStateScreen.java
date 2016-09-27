@@ -158,7 +158,7 @@ public class GameStateScreen extends BackScreen {
 			}
 
 			@Override public void otherUsersGameStateLoaded (String provider, JsonValue data) {
-				toasts.show("OUGS Updated " + provider, 2f);
+				toasts.show("OUGS Updated " + provider + "\n" + data, 2f);
 				Gdx.app.log(TAG, "otherUsersGameStateLoaded " + provider + " " + data);
 			}
 

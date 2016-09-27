@@ -26,6 +26,7 @@ public class TrackingScreen extends BackScreen {
 
 		content.defaults().pad(5);
 		content.add(new VisLabel("Track shortcuts")).row();
+		content.add(new VisLabel("All shortcuts called!")).row();
 		Track track = spilSdk.track();
 		// TODO do we want controls for values? quite a lot of those...
 		// TODO no activity for this in android test app

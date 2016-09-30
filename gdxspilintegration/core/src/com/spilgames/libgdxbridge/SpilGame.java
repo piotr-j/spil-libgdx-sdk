@@ -7,8 +7,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.kotcrab.vis.ui.VisUI;
 import com.spilgames.libgdxbridge.screens.MainScreen;
 import com.spilgames.spilgdxsdk.SpilConfigDataListener;
-import com.spilgames.spilgdxsdk.SpilErrorCode;
-import com.spilgames.spilgdxsdk.SpilGameDataListener;
 import com.spilgames.spilgdxsdk.SpilSdk;
 
 /**
@@ -55,9 +53,10 @@ public class SpilGame extends Game {
 		Gdx.app.log(TAG, "User ID = " + userId);
 		spilSdk.setSpilConfigLDataListener(new SpilConfigDataListener() {
 			@Override public void configDataUpdated () {
-				Gdx.app.log(TAG, "configDataUpdated");
+				Gdx.app.log( TAG, "configDataUpdated");
 			}
 		});
+		spilSdk.showToastOnVideoReward(true);
 	}
 
 	@Override public void dispose () {

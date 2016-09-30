@@ -68,4 +68,24 @@ public class SpilDelegateAdapter extends NSObject implements SpilDelegate {
 	@Override public void configUpdated () {
 
 	}
+
+	@NotImplemented("configDataUpdated")
+	@Override public void gameStateUpdated (String access) {
+
+	}
+
+	@NotImplemented("configDataUpdated")
+	@Override public void otherUsersGameStateLoaded (NSDictionary<?, ?> data, String provider) {
+
+	}
+
+	@NotImplemented("configDataUpdated")
+	@Override public void gameStateError (String message) {
+
+	}
+
+	@NotImplemented("configDataUpdated")
+	@Override public void openGameShop () {
+
+	}
 }

@@ -23,6 +23,7 @@ public class MainScreen extends BaseScreen {
 		addScreenButton(table, "Config", ConfigScreen.class);
 		addScreenButton(table, "IAPEvents", IAPEventsScreen.class);
 		addScreenButton(table, "CustomEvents", CustomEventsScreen.class);
+		addScreenButton(table, "Tracking shortcuts", TrackingScreen.class);
 
 		table.add(new VisLabel("Packages & Promotions")).row();
 		addScreenButton(table, "Packages & Promotions", PackagesScreen.class);
@@ -31,7 +32,11 @@ public class MainScreen extends BaseScreen {
 		addScreenButton(table, "Ads", AdScreen.class);
 
 		table.add(new VisLabel("Game & Player Data")).row();
-		addScreenButton(table, "PlayerData", PlayerDataScreen.class);
+		addScreenButton(table, "Player Data", PlayerDataScreen.class);
+		addScreenButton(table, "Game State", GameStateScreen.class);
+
+		table.add(new VisLabel("Customer Support")).row();
+		addScreenButton(table, "Zendesk", ZendeskScreen.class);
 
 		root.add(table).expand().top();
 	}

@@ -1,5 +1,6 @@
 package com.spilgames.spilgdxsdk;
 
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 
 /**
@@ -20,8 +21,12 @@ public interface SpilSdk {
 	SpilSdkType getBackendType ();
 
 	void setDebug(boolean debug);
+
+	// Event
 	void trackEvent(SpilEvent event);
 	void trackEvent(SpilEvent event, SpilEventActionListener listener);
+
+	Track track();
 
 	JsonValue getConfig ();
 	void setSpilConfigLDataListener (SpilConfigDataListener listener);
@@ -36,6 +41,8 @@ public interface SpilSdk {
 	void showMoreApps ();
 
 	void setSpilAdListener (SpilAdListener adListener);
+
+	void showToastOnVideoReward(boolean enabled);
 
 	// ads dev
 	void devRequestAd(String provider, String adType, boolean parentalGate);
@@ -74,7 +81,28 @@ public interface SpilSdk {
 
 	void consumeBundle(int bundleId, String reason);
 
+	// user data
 	String getSpilUserID();
 	String getUserID();
+	String getUserProvider();
+
+	void requestOtherUsersGameState(String provider, Array<String> userIdsList);
+
 	void setUserID(String providerId, String userId);
+
+	String getPublicGameState();
+	void setPublicGameState(String publicGameState);
+
+	String getPrivateGameState();
+	void setPrivateGameState(String privateGameState);
+
+	void setSpilGameStateListener (SpilGameStateListener gameStateListener);
+
+	// customer support
+	void showZendeskHelpCenter();
+	void showZendeskWebViewHelpCenter();
+	void showZendeskContactCenter();
+
+	// Automated events
+	void setSpilAutomatedEventsListener (SpilAutomatedEventsListener automatedEventsListener);
 }

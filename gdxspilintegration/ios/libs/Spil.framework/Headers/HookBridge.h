@@ -26,6 +26,32 @@ extern "C" {
     
     void trackEventWithParamsNative(const char* eventName, const char* jsonStringParams);
     
+    void trackIAPPurchasedEvent(const char* skuId, const char* transactionId, const char* purchaseDate);
+
+    void trackIAPRestoredEvent(const char* skuId, const char* originalTransactionId, const char* originalPurchaseDate);
+
+    void trackIAPFailedEvent(const char* skuId, const char* error);
+
+    void trackWalletInventoryEvent(const char* currencyList, const char* itemsList, const char* reason, const char* location);
+
+    void trackMilestoneEvent(const char* name);
+
+    void trackLevelStartEvent(const char* level);
+
+    void trackLevelCompleteEvent(const char* level, const char* score, const char* stars, const char* turns);
+
+    void trackLevelFailed(const char* level, const char* score, const char* turns);
+
+    void trackTutorialCompleteEvent();
+    
+    void trackTutorialSkippedEvent();
+
+    void trackRegisterEvent(const char* platform);
+
+    void trackShareEvent(const char* platform);
+
+    void trackInviteEvent(const char* platform);
+    
     // --- Push messages ---
     
     void disableAutomaticRegisterForPushNotificationsNative();
@@ -38,6 +64,8 @@ extern "C" {
     
     // --- App flow ---
     
+    void applicationDidFinishLaunchingWithOptions(const char* launchOptions);
+    
     void applicationDidEnterBackground();
     
     void applicationDidBecomeActive();
@@ -49,10 +77,6 @@ extern "C" {
     char* cStringCopy(const char* string);
     
     char* getSpilUserIdNative();
-    
-    char* getUserIdNative();
-    
-    void setUserIdNative(const char* providerId, const char* userId);
     
     void setPluginInformationNative(const char* pluginName, const char* pluginVersion);
 
@@ -113,6 +137,24 @@ extern "C" {
     void showContactCenterNative();
     
     void showHelpCenterWebviewNative();
+    
+    // --- User data ---
+    
+    char* getUserIdNative();
+    
+    char* getUserProviderNative();
+    
+    void setUserIdNative(const char* providerId, const char* userId);
+
+    void setPrivateGameStateNative(const char* privateData);
+
+    char* getPrivateGameStateNative();
+
+    void setPublicGameStateNative(const char* publicData);
+    
+    char* getPublicGameStateNative();
+
+    void getOtherUsersGameStateNative(const char* provider, const char* userIdsJsonArray);
 }
 
 #endif

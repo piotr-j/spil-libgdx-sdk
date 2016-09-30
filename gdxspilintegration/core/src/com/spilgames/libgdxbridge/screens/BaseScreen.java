@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.reflect.Constructor;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.util.ToastManager;
 import com.spilgames.libgdxbridge.SpilGame;
 import com.spilgames.spilgdxsdk.SpilSdk;
 
@@ -26,6 +27,7 @@ public abstract class BaseScreen implements Screen, InputProcessor{
 	protected final Stage stage;
 	protected final Table root;
 	protected SpilSdk spilSdk;
+	protected ToastManager toasts;
 
 	public BaseScreen (SpilGame game) {
 		this.game = game;
@@ -39,6 +41,8 @@ public abstract class BaseScreen implements Screen, InputProcessor{
 		stage.addActor(root);
 		Gdx.input.setCatchBackKey(true);
 		Gdx.input.setInputProcessor(new InputMultiplexer(stage, this));
+
+		toasts = new ToastManager(stage);
 
 		if (Gdx.app.getType() == ApplicationType.Android || Gdx.app.getType() == ApplicationType.iOS) {
 			VisUI.getSkin().getFont("default-font").getData().setScale(2);

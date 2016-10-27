@@ -1,3 +1,5 @@
+import de.richsource.gradle.plugins.gwt.Style
+
 apply plugin: "java"
 apply plugin: "jetty"
 
@@ -15,6 +17,7 @@ gwt {
         strict = true;
         enableClosureCompiler = true;
         disableCastChecking = true;
+        style = Style.PRETTY;
     }
 }
 

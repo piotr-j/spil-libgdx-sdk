@@ -1,5 +1,6 @@
 package com.spilgames.spilgdxsdk.html;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import com.spilgames.spilgdxsdk.*;
@@ -30,7 +31,7 @@ public class HtmlSpilSdk implements SpilSdk {
 	}
 
 	private void log (String tag, String message) {
-		if (log) log(tag, message);
+		if (log) Gdx.app.log(tag, message);
 	}
 	
 	@Override public SpilSdkType getBackendType () {

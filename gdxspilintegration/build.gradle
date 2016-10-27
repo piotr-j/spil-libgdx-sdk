@@ -8,7 +8,7 @@ buildscript {
 //        maven { url uri(System.getenv("INTEL_MULTI_OS_ENGINE_HOME") + "/gradle") }
     }
     dependencies {
-//        classpath 'de.richsource.gradle.plugins:gwt-gradle-plugin:0.6'
+        classpath 'de.richsource.gradle.plugins:gwt-gradle-plugin:0.6'
         classpath 'com.android.tools.build:gradle:2.1.0'
         classpath 'com.mobidevelop.robovm:robovm-gradle-plugin:2.2.0'
         classpath 'com.google.gms:google-services:3.0.0'
@@ -32,7 +32,7 @@ allprojects {
         gdxVersion = '1.9.4'
         roboVMVersion = '2.2.0'
         robopodsVersion = '2.2.0-SNAPSHOT'
-        spilGDXSDKVersion = '2.2.2'
+        spilGDXSDKVersion = '2.2.3'
         // TODO this should be 9.4.0 but it doesnt work for whatever reason
         gmsVersion = '9.2.0'
     }
@@ -135,23 +135,24 @@ project(":desktop") {
     }
 }
 
-//project(":html") {
-//    apply plugin: "gwt"
-//    apply plugin: "war"
-//
-//    dependencies {
-//        compile project(":core")
-//        compile "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion"
-//        compile "com.badlogicgames.gdx:gdx:$gdxVersion:sources"
-//        compile "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion:sources"
-//        // used for gui
-//        compile "com.kotcrab.vis:vis-ui:1.1.1:sources"
-//
-//        // This is disabled for now as some classes in core are not compatible with GWT
-////        compile "com.spilgames.spilgdxsdk:spil-gdx-sdk-html:$spilGDXSDKVersion:sources"
-////        compile "com.spilgames.spilgdxsdk:spil-gdx-sdk-core:$spilGDXSDKVersion:sources"
-//    }
-//}
+project(":html") {
+    apply plugin: "gwt"
+    apply plugin: "war"
+
+    dependencies {
+        compile project(":core")
+        compile "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx:$gdxVersion:sources"
+        compile "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion:sources"
+        // used for gui
+        compile "com.kotcrab.vis:vis-ui:1.1.1:sources"
+
+        // This is disabled for now as some classes in core are not compatible with GWT
+        compile "com.spilgames.spilgdxsdk:spil-gdx-sdk-html:$spilGDXSDKVersion"
+        compile "com.spilgames.spilgdxsdk:spil-gdx-sdk-html:$spilGDXSDKVersion:sources"
+        compile "com.spilgames.spilgdxsdk:spil-gdx-sdk-core:$spilGDXSDKVersion:sources"
+    }
+}
 
 tasks.eclipse.doLast {
     delete ".project"

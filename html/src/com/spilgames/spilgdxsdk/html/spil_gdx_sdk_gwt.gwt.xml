@@ -3,6 +3,4 @@
 <module>
     <source path="" />
     <inherits name="com.spilgames.spilgdxsdk.spil_gdx_sdk" />
-    <!-- required for reflection use -->
-    <extend-configuration-property name="gdx.reflect.include" value="com.spilgames.spilgdxsdk.html.HtmlSpilSdk" />
 </module>

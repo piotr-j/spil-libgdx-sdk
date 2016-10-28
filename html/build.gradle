@@ -3,6 +3,17 @@ sourceCompatibility = 1.7
 
 sourceSets.main.java.srcDirs = [ "src/" ]
 
+apply plugin: "java"
+
+javadoc {
+	// we set this cus gwt craps up on javadoc for whatever reason
+	failOnError = false
+}
+
+eclipse.project {
+	name = appName + "-html"
+}
+
 ext {
 	ARTIFACTID = 'spil-gdx-sdk-html'
-}		
+}

@@ -3,22 +3,52 @@ package com.spilgames.spilgdxsdk.html;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
+import com.google.gwt.core.client.Callback;
+import com.google.gwt.core.client.ScriptInjector;
+import com.google.gwt.user.client.Window;
 import com.spilgames.spilgdxsdk.*;
+import com.spilgames.spilgdxsdk.html.bindings.JsSpilSdk;
 
 /**
  * Created by PiotrJ on 01/07/16.
  */
 public class HtmlSpilSdk implements SpilSdk {
+	public interface SpilSdkLoadedCallback {
+		void loaded();
+	}
 	private final static String TAG = HtmlSpilSdk.class.getSimpleName();
 	private boolean log;
 	private HtmlTrack track = new HtmlTrack();
 
-	public HtmlSpilSdk() {
-		this(true);
+	private boolean initialized;
+
+	// TODO we probably dont want this stuff in constructor
+	public HtmlSpilSdk(String appId, String version, String env, SpilSdkLoadedCallback callback) {
+		this(appId, version, env, callback, true);
 	}
 
-	public HtmlSpilSdk(boolean loggingEnabled) {
+	public HtmlSpilSdk(final String appId, final String version, final String env, final SpilSdkLoadedCallback callback, boolean loggingEnabled) {
 		setLogging(loggingEnabled);
+		// TODO how do we get this? hopefully will be available somewhere eventually
+		// TODO yay callbacks, we probably want to add a callback in core, something like 'sdk loaded' or whatever
+		ScriptInjector.fromUrl("spil-sdk.js").setCallback(new Callback<Void, Exception>() {
+			@Override public void onSuccess (Void aVoid) {
+				JsSpilSdk.init(appId, version, env, new Callback<Void, Void>() {
+					@Override public void onSuccess (Void aVoid) {System.out.println("Loaded spil! ");
+						initialized = true;
+						callback.loaded();
+					}
+
+					@Override public void onFailure (Void result) {
+						System.out.println("FAILED to load spil, now what?");
+					}
+				});
+			}
+
+			@Override public void onFailure (Exception e) {
+				Window.alert("Script load failed.");
+			}
+		}).inject();
 	}
 
 	public void setLogging (boolean enabled) {
@@ -41,7 +71,6 @@ public class HtmlSpilSdk implements SpilSdk {
 	@Override public void requestMoreApps () {
 		log(TAG, "requestMoreApps");
 	}
-
 
 	@Override public void requestRewardVideo () {
 		log(TAG, "requestRewardVideo");
@@ -117,6 +146,8 @@ public class HtmlSpilSdk implements SpilSdk {
 
 	@Override public void setSpilConfigLDataListener (SpilConfigDataListener listener) {
 		log(TAG, "setSpilConfigLDataListener ("+listener+")");
+		// NOTE perhaps we will need simpler listeners as we need to translate some stuff into out classes, might be simpler in java
+		JsSpilSdk.setConfigDataCallbacks(listener);
 	}
 
 	@Override public void requestPackages () {
@@ -156,6 +187,9 @@ public class HtmlSpilSdk implements SpilSdk {
 
 	@Override public void setSpilAdListener (SpilAdListener adCallbacks) {
 		log(TAG, "setSpilAdListener ("+adCallbacks+")");
+
+		// NOTE perhaps we will need simpler listeners as we need to translate some stuff into out classes, might be simpler in java
+		JsSpilSdk.setAdCallbacks(adCallbacks);
 	}
 
 	@Override public void devRequestAd (String provider, String adType, boolean parentalGate) {
@@ -184,10 +218,16 @@ public class HtmlSpilSdk implements SpilSdk {
 
 	@Override public void setSpilPlayerDataListener (SpilPlayerDataListener playerDataListener) {
 		log(TAG, "setSpilPlayerDataListener ("+playerDataListener+")");
+
+		// NOTE perhaps we will need simpler listeners as we need to translate some stuff into out classes, might be simpler in java
+		JsSpilSdk.setPlayerDataCallbacks(playerDataListener);
 	}
 
 	@Override public void setSpilGameDataListener (SpilGameDataListener gameDataListener) {
 		log(TAG, "setSpilGameDataListener ("+gameDataListener+")");
+
+		// NOTE perhaps we will need simpler listeners as we need to translate some stuff into out classes, might be simpler in java
+		JsSpilSdk.setGameDataCallbacks(gameDataListener);
 	}
 
 	@Override public JsonValue getUserProfile () {

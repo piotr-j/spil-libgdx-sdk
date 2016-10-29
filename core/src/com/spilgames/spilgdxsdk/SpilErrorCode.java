@@ -15,7 +15,12 @@ public enum SpilErrorCode {
 	ItemAmountToLow(8, "ItemAmountToLow", "Could not remove item as amount is too low!"),
 	CurrencyOperation(9, "CurrencyOperation", "Error updating wallet!"),
 	ItemOperation(10, "ItemOperation", "Error updating item to player inventory!"),
-	BundleOperation(11, "BundleOperation", "Error adding bundle to player inventory!")
+	BundleOperation(11, "BundleOperation", "Error adding bundle to player inventory!"),
+	PublicGameStateOperation(12, "UserIdMissing", "Error adding public game state data! A custom user id must be set in order to save public game state data"),
+	GameStateServerError(13, "OtherUsersGameStateError", "Error when loading provided user id's game states from the server"),
+	DailyBonusServerError(14, "DailyBonusServerError", "Error processing the reward from daily bonus"),
+	DailyBonusLoadError(15, "DailyBonusLoadError", "Error loading the daily bonus page"),
+	SplashScreenLoadError(16, "SplashScreenLoadError", "Error loading the splash screen"),
 	;
 
 	private int id;

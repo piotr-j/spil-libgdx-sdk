@@ -51,7 +51,7 @@ public class CustomEventsScreen extends BackScreen {
 					Dialogs.showErrorDialog(stage, "Parameter value cannot be empty");
 					return;
 				}
-				spilEvent.addData(key, value);
+				spilEvent.addCustomData(key, value);
 				parameters.setText(parameters.getText()+"\n"+key+" : " + value);
 //				keyTF.setText("");
 //				valueTF.setText("");

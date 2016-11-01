@@ -1043,7 +1043,7 @@ module.exports = {
                 config = responseData.data;
                 configDataCallbacks.configDataUpdated();
                 if (callback) {
-                    callback(data);
+                    callback(config);
                 }
             });
         },

@@ -18,6 +18,31 @@ public class JsSpilSdk {
 		}, env);
 	}-*/;
 
+	public static native void sendEvent (String eventName, String data, SpilEventActionListener listener) /*-{
+		// this is super janky, we convert from JsonValue to string to object and to string again in the api
+		var callback = null;
+		if (listener) {
+			callback = function(responseData) {
+			   console.log("JsSpilSdk response for " + eventName + ": " + JSON.stringify(responseData));
+			   // looks like we are getting something like this back at this point
+			   // {"status":"204","name":"eventName"}
+				var response = @com.spilgames.spilgdxsdk.SpilResponseEvent::new()()
+				response.@com.spilgames.spilgdxsdk.SpilResponseEvent::setName(Ljava/lang/String;)(responseData["name2"]);
+				listener.@com.spilgames.spilgdxsdk.SpilEventActionListener::onResponse(Lcom/spilgames/spilgdxsdk/SpilResponseEvent;)(response);
+			}
+		}
+		if (data) {
+			SpilSDK.sendEvent(eventName, JSON.parse(data), callback);
+		} else {
+			SpilSDK.sendEvent(eventName, null, callback);
+		}
+	}-*/;
+
+	public static void sendCustomEvent(String eventName, String data, SpilEventActionListener listener) {
+		// NOTE sendCustomEvent in js just delegates to sendEvent, so we will do the same
+		sendEvent(eventName, data, listener);
+	}
+
 	// note: we are calling java stuff inside functions now, but it should probably by direct when we know it works
 	public static native void setConfigDataCallbacks (SpilConfigDataListener listener) /*-{
 		SpilSDK.setConfigDataCallbacks({
@@ -104,6 +129,10 @@ public class JsSpilSdk {
 
 	public static native void playVideo () /*-{
 		SpilSDK.PlayVideo();
+	}-*/;
+
+	public static native String getUuid() /*-{
+		return SpilSDK.getUuid();
 	}-*/;
 
 }

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.JsonWriter;
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.ScriptInjector;
 import com.spilgames.spilgdxsdk.*;
@@ -16,7 +17,7 @@ import com.spilgames.spilgdxsdk.html.bindings.JsUtils;
  */
 public class HtmlSpilSdk implements SpilSdk {
 	public interface SpilSdkLoadedCallback {
-		void loaded();
+		void loaded(SpilSdk spilSdk);
 	}
 	private final static String TAG = HtmlSpilSdk.class.getSimpleName();
 	private boolean log;
@@ -39,14 +40,12 @@ public class HtmlSpilSdk implements SpilSdk {
 					@Override public void onSuccess (Void aVoid) {System.out.println("Loaded spil! ");
 						initialized = true;
 						if (callback != null) {
-							callback.loaded();
-						} else {
-							log(TAG, "Null callback?!");
+							callback.loaded(HtmlSpilSdk.this);
 						}
 					}
 
 					@Override public void onFailure (Void result) {
-						log(TAG, "FAILED to initialize Spil SDK");
+						// NOTE: this will never get called
 					}
 				});
 			}
@@ -102,7 +101,8 @@ public class HtmlSpilSdk implements SpilSdk {
 	}
 
 	@Override public String getUserID() {
-		return "";
+		// is this uuid? ot spil user id?
+		return JsSpilSdk.getUuid();
 	}
 
 	@Override public String getUserProvider () {
@@ -143,10 +143,22 @@ public class HtmlSpilSdk implements SpilSdk {
 
 	@Override public void trackEvent (SpilEvent event) {
 		log(TAG, "trackEvent ("+event+")");
+		JsonValue customData = event.getCustomData();
+		if (customData != null) {
+			JsSpilSdk.sendEvent(event.getName(), customData.toJson(JsonWriter.OutputType.json), null);
+		} else {
+			JsSpilSdk.sendEvent(event.getName(), null, null);
+		}
 	}
 
 	@Override public void trackEvent (SpilEvent event, SpilEventActionListener listener) {
 		log(TAG, "trackEvent ("+event+", "+listener+")");
+		JsonValue customData = event.getCustomData();
+		if (customData != null) {
+			JsSpilSdk.sendEvent(event.getName(), customData.toJson(JsonWriter.OutputType.json), listener);
+		} else {
+			JsSpilSdk.sendEvent(event.getName(), null, listener);
+		}
 	}
 
 	@Override public void setSpilNotificationDataListener (SpilNotificationDataListener rewardListener) {
@@ -162,7 +174,6 @@ public class HtmlSpilSdk implements SpilSdk {
 	}
 
 	@Override public void setSpilConfigLDataListener (SpilConfigDataListener listener) {
-		log(TAG, "setSpilConfigLDataListener ("+listener+")");
 		// NOTE perhaps we will need simpler listeners as we need to translate some stuff into out classes, might be simpler in java
 		JsSpilSdk.setConfigDataCallbacks(listener);
 	}
@@ -313,6 +324,7 @@ public class HtmlSpilSdk implements SpilSdk {
 
 	private JsonReader jsonReader = new JsonReader();
 	private JsonValue toJson (String data) {
+		if (data == null) return null;
 		try {
 			return jsonReader.parse(data);
 		} catch (Exception ex) {

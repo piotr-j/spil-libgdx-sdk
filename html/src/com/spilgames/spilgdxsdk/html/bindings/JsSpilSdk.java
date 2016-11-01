@@ -27,7 +27,7 @@ public class JsSpilSdk {
 			   // looks like we are getting something like this back at this point
 			   // {"status":"204","name":"eventName"}
 				var response = @com.spilgames.spilgdxsdk.SpilResponseEvent::new()()
-				response.@com.spilgames.spilgdxsdk.SpilResponseEvent::setName(Ljava/lang/String;)(responseData["name2"]);
+				response.@com.spilgames.spilgdxsdk.SpilResponseEvent::setName(Ljava/lang/String;)(responseData["name"]);
 				listener.@com.spilgames.spilgdxsdk.SpilEventActionListener::onResponse(Lcom/spilgames/spilgdxsdk/SpilResponseEvent;)(response);
 			}
 		}

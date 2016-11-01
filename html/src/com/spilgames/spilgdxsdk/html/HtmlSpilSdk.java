@@ -16,31 +16,33 @@ import com.spilgames.spilgdxsdk.html.bindings.JsUtils;
  * Created by PiotrJ on 01/07/16.
  */
 public class HtmlSpilSdk implements SpilSdk {
-	public interface SpilSdkLoadedCallback {
-		void loaded(SpilSdk spilSdk);
-	}
 	private final static String TAG = HtmlSpilSdk.class.getSimpleName();
 	private boolean log;
 	private HtmlTrack track = new HtmlTrack();
+	private SpilLifecycleListener lifecycleListener;
 
 	private boolean initialized;
 
 	// TODO we probably dont want this stuff in constructor
-	public HtmlSpilSdk(String appId, String version, String env, SpilSdkLoadedCallback callback) {
-		this(appId, version, env, callback, true);
+	public HtmlSpilSdk(String appId, String version, String env) {
+		this(appId, version, env, null);
 	}
 
-	public HtmlSpilSdk(final String appId, final String version, final String env, final SpilSdkLoadedCallback callback, boolean loggingEnabled) {
+	public HtmlSpilSdk(String appId, String version, String env, SpilLifecycleListener listener) {
+		this(appId, version, env, listener, true);
+	}
+
+	public HtmlSpilSdk(final String appId, final String version, final String env, SpilLifecycleListener listener, boolean loggingEnabled) {
 		setLogging(loggingEnabled);
-		// TODO how do we get this? hopefully will be available somewhere eventually
-		// TODO yay callbacks, we probably want to add a callback in core, something like 'sdk loaded' or whatever
+		setSpilLifecycleListener(listener);
 		ScriptInjector.fromUrl("spil-sdk.js").setCallback(new Callback<Void, Exception>() {
 			@Override public void onSuccess (Void aVoid) {
 				JsSpilSdk.init(appId, version, env, new Callback<Void, Void>() {
-					@Override public void onSuccess (Void aVoid) {System.out.println("Loaded spil! ");
+					@Override public void onSuccess (Void aVoid) {
+						log(TAG, "Spil SDK initialized");
 						initialized = true;
-						if (callback != null) {
-							callback.loaded(HtmlSpilSdk.this);
+						if (lifecycleListener != null) {
+							lifecycleListener.initialized(HtmlSpilSdk.this);
 						}
 					}
 
@@ -54,6 +56,13 @@ public class HtmlSpilSdk implements SpilSdk {
 				log(TAG, "FAILED to load Spil SDK");
 			}
 		}).inject();
+	}
+
+	@Override public void setSpilLifecycleListener (SpilLifecycleListener listener) {
+		lifecycleListener = listener;
+		if (lifecycleListener != null && initialized) {
+			lifecycleListener.initialized(this);
+		}
 	}
 
 	public void setLogging (boolean enabled) {

@@ -23,6 +23,12 @@ public class DesktopSpilSdk implements SpilSdk {
 		setLogging(loggingEnabled);
 	}
 
+	@Override public void setSpilLifecycleListener (SpilLifecycleListener listener) {
+		if (listener != null) {
+			listener.initialized(this);
+		}
+	}
+
 	public void setLogging (boolean enabled) {
 		this.log = enabled;
 		track.log = enabled;

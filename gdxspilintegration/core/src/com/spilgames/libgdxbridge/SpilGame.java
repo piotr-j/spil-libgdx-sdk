@@ -7,12 +7,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.kotcrab.vis.ui.VisUI;
 import com.spilgames.libgdxbridge.screens.MainScreen;
 import com.spilgames.spilgdxsdk.SpilConfigDataListener;
+import com.spilgames.spilgdxsdk.SpilLifecycleListener;
 import com.spilgames.spilgdxsdk.SpilSdk;
 
 /**
  * Created by EvilEntity on 20/07/2016.
  */
-public class SpilGame extends Game {
+public class SpilGame extends Game implements SpilLifecycleListener {
 	private final static String TAG = SpilGame.class.getSimpleName();
 
 	public SpriteBatch batch;
@@ -36,9 +37,8 @@ public class SpilGame extends Game {
 		// required so we get logging on HTML
 		Gdx.app.setLogLevel(Application.LOG_INFO);
 		if (bridge != null) bridge.onCreate();
-		// NOTE due to html being all async and stuff, we need to defer various spil calls probably
-//		spilSdk.setInitializedListener(new ...);
-		spilSdk.setDebug(true);
+		// NOTE due to html being all async and stuff, we need to defer various spil calls
+		spilSdk.setSpilLifecycleListener(this);
 
 		batch = new SpriteBatch();
 		// TODO handle scaling
@@ -48,6 +48,11 @@ public class SpilGame extends Game {
 			VisUI.load(VisUI.SkinScale.X1);
 		}
 		setScreen(new MainScreen(this));
+
+	}
+
+	@Override public void initialized (final SpilSdk spilSdk) {
+		spilSdk.setDebug(true);
 
 		String spilUserId = spilSdk.getSpilUserID();
 		Gdx.app.log(TAG, "Spil User ID = " + spilUserId);

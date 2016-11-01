@@ -22,8 +22,22 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 
 	private SpilDelegate delegate;
 	private IosRoboVMTrack tracking;
+	private SpilLifecycleListener lifecycleListener;
+
 	public IosRoboVMSpilSdk (IOSApplication.Delegate delegate){
+		this(delegate, null);
+	}
+
+	public IosRoboVMSpilSdk (IOSApplication.Delegate delegate, SpilLifecycleListener listener){
 		tracking = new IosRoboVMTrack();
+		setSpilLifecycleListener(listener);
+	}
+
+	@Override public void setSpilLifecycleListener (SpilLifecycleListener listener) {
+		lifecycleListener = listener;
+		if (lifecycleListener != null) {
+			lifecycleListener.initialized(this);
+		}
 	}
 
 	@Override public SpilSdkType getBackendType () {

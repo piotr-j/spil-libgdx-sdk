@@ -19,6 +19,7 @@ public interface SpilSdk {
 	String AD_MORE_APPS = "moreApps";
 
 	SpilSdkType getBackendType ();
+	void setSpilLifecycleListener(SpilLifecycleListener listener);
 
 	void setDebug(boolean debug);
 

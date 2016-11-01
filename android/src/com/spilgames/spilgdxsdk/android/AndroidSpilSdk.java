@@ -40,8 +40,13 @@ public class AndroidSpilSdk implements SpilSdk {
 	private MyOnAdsListener adListener;
 	private com.spilgames.spilsdk.SpilSdk instance;
 	private AndroidTrack track;
+	private SpilLifecycleListener lifecycleListener;
 
 	public AndroidSpilSdk (Context context) {
+		this(context, null);
+	}
+
+	public AndroidSpilSdk (Context context, SpilLifecycleListener listener) {
 		com.spilgames.spilsdk.SpilSdk.resetContext();
 		instance = com.spilgames.spilsdk.SpilSdk.getInstance(context);
 		instance.setConfigDataCallbacks(new ConfigDataCallbacks(configListener = new MyOnConfigDataListener()));
@@ -49,6 +54,14 @@ public class AndroidSpilSdk implements SpilSdk {
 		instance.setGameDataCallbacks(new SpilGameDataCallbacks(gameListener = new MySpilGameDataCallbacks()));
 		instance.setNativeAdCallbacks(new AdCallbacks(adListener = new MyOnAdsListener()));
 		track = new AndroidTrack(context);
+		setSpilLifecycleListener(listener);
+	}
+
+	@Override public void setSpilLifecycleListener (SpilLifecycleListener listener) {
+		lifecycleListener = listener;
+		if (lifecycleListener != null) {
+			lifecycleListener.initialized(this);
+		}
 	}
 
 	private static class MyOnConfigDataListener implements OnConfigDataListener {

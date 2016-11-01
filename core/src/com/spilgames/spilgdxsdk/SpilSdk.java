@@ -28,6 +28,7 @@ public interface SpilSdk {
 
 	Track track();
 
+	void requestConfig ();
 	JsonValue getConfig ();
 	void setSpilConfigLDataListener (SpilConfigDataListener listener);
 

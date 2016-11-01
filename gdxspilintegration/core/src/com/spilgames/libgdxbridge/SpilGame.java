@@ -36,6 +36,8 @@ public class SpilGame extends Game {
 		// required so we get logging on HTML
 		Gdx.app.setLogLevel(Application.LOG_INFO);
 		if (bridge != null) bridge.onCreate();
+		// NOTE due to html being all async and stuff, we need to defer various spil calls probably
+//		spilSdk.setInitializedListener(new ...);
 		spilSdk.setDebug(true);
 
 		batch = new SpriteBatch();
@@ -53,9 +55,10 @@ public class SpilGame extends Game {
 		Gdx.app.log(TAG, "User ID = " + userId);
 		spilSdk.setSpilConfigLDataListener(new SpilConfigDataListener() {
 			@Override public void configDataUpdated () {
-				Gdx.app.log( TAG, "configDataUpdated");
+				Gdx.app.log( TAG, "configDataUpdated " + spilSdk.getConfig());
 			}
 		});
+		spilSdk.requestConfig();
 		spilSdk.showToastOnVideoReward(true);
 	}
 

@@ -142,6 +142,10 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 		return params;
 	}
 
+	@Override public void requestConfig () {
+		// TODO need to update ios sdk for this
+	}
+
 	@Override public JsonValue getConfig () {
 		return toJson(Spil.getConfig());
 	}

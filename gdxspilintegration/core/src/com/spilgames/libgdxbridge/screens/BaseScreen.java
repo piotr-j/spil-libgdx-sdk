@@ -20,6 +20,8 @@ import com.spilgames.spilgdxsdk.SpilSdk;
  * Created by EvilEntity on 20/07/2016.
  */
 public abstract class BaseScreen implements Screen, InputProcessor{
+	private static final String TAG = BaseScreen.class.getSimpleName();
+
 	protected final SpilGame game;
 	protected final OrthographicCamera camera;
 	protected final ScreenViewport viewport;
@@ -55,7 +57,7 @@ public abstract class BaseScreen implements Screen, InputProcessor{
 			Constructor constructor = ClassReflection.getConstructor(aClass, SpilGame.class);
 			game.setScreen((Screen)constructor.newInstance(game));
 		} catch (ReflectionException e) {
-			e.printStackTrace();
+			Gdx.app.error(TAG, "Failed to change screen", e);
 		}
 	}
 

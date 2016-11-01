@@ -6,6 +6,7 @@ import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
 import com.spilgames.libgdxbridge.SpilGame;
 import com.spilgames.spilgdxsdk.html.HtmlSpilSdk;
+import com.spilgames.spilgdxsdk.html.bindings.JsUtils;
 
 public class HtmlLauncher extends GwtApplication {
 	private static final String TAG = HtmlLauncher.class.getSimpleName();
@@ -20,9 +21,15 @@ public class HtmlLauncher extends GwtApplication {
 		setLogLevel(LOG_DEBUG);
 		// TODO need to get this stuff from config of some sort?
 		// TODO do we even want to pass this in?
-		HtmlSpilSdk sdk = new HtmlSpilSdk("com.spilgames.slot", "0.0.2", "stg", new HtmlSpilSdk.SpilSdkLoadedCallback() {
+		HtmlSpilSdk sdk = new HtmlSpilSdk("com.spilgames.slot", "0.0.2", "prd", new HtmlSpilSdk.SpilSdkLoadedCallback() {
 			@Override public void loaded () {
-				Gdx.app.log(TAG, "Spil sdk loaded!");
+				// pretty sure the gdx might not be initialized at this point :/
+				// we are running local, so its instant, but on the web it might be after we init the game itself
+				if (Gdx.app != null) {
+					Gdx.app.log(TAG, "GDX Spil sdk loaded!");
+				} else {
+					JsUtils.log(TAG, "JS Spil sdk loaded!");
+				}
 			}
 		});
 		return new SpilGame(sdk, null);

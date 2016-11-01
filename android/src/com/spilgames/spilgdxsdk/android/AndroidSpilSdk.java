@@ -283,6 +283,10 @@ public class AndroidSpilSdk implements SpilSdk {
 		return event;
 	}
 
+	@Override public void requestConfig () {
+		instance.requestConfig();
+	}
+
 	@Override public JsonValue getConfig () {
 		String data = instance.getConfigAll();
 		instance.getSpilUID(); // TODO change to getSpilUserID()

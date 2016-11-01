@@ -2,9 +2,15 @@ package com.spilgames.spilgdxsdk.html;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
+import com.google.gwt.core.client.GWT;
 import com.spilgames.spilgdxsdk.SpilCurrency;
 import com.spilgames.spilgdxsdk.SpilItem;
 import com.spilgames.spilgdxsdk.Track;
+import com.spilgames.spilgdxsdk.html.bindings.JsSpilSdk;
+import com.spilgames.spilgdxsdk.html.bindings.JsUtils;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by PiotrJ on 12/09/16.
@@ -14,7 +20,13 @@ public class HtmlTrack extends Track {
 	boolean log;
 
 	private void log (String message) {
-		if (log) Gdx.app.log(TAG, message);
+		if (log) {
+			if (Gdx.app != null) {
+				Gdx.app.log(TAG, message);
+			} else {
+				JsUtils.log(TAG, message);
+			}
+		}
 	}
 
 	@Override public void IAPPurchasedEvent (String skuId, String transactionId, String purchaseDate) {

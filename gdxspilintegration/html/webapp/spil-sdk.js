@@ -343,7 +343,11 @@ module.exports = {
         return sessionId;
     },
     getUrl: function () {
-        return "http://api-" + environment + ".sap.dmz.ams1.spil/v1/native-events/event/html5/slottestgame";
+        if (environment == 'prd') {
+            return "https://apptracker.spilgames.com/v1/native-events/event/" + this.getOs() + "/" + this.getBundleId();
+        } else {
+            return "http://api-stg.sap.dmz.ams1.spil/v1/native-events/event/" + this.getOs() + "/" + this.getBundleId();
+        }
     },
     getFromStorage: function (key) {
         if (!localStorage) {

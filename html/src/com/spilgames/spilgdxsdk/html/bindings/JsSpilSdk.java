@@ -84,4 +84,26 @@ public class JsSpilSdk {
 			}
 		});
 	}-*/;
+
+	public static native void refreshConfig () /*-{
+		SpilSDK.refreshConfig();
+	}-*/;
+
+	public static native String getConfigAll () /*-{
+		// is there a cleaner way to do this then js object -> string -> JsonValue? Probably not
+		return JSON.stringify(SpilSDK.getConfigAll());
+	}-*/;
+
+	public static native void requestPackages () /*-{
+		SpilSDK.requestPackages();
+	}-*/;
+
+	public static native void requestRewardVideo () /*-{
+		SpilSDK.RequestRewardVideo();
+	}-*/;
+
+	public static native void playVideo () /*-{
+		SpilSDK.PlayVideo();
+	}-*/;
+
 }

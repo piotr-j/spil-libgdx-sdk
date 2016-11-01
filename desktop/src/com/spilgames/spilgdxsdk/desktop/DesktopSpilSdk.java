@@ -112,6 +112,10 @@ public class DesktopSpilSdk implements SpilSdk {
 		log(TAG, "SpilRewardListener ("+rewardListener+")");
 	}
 
+	@Override public void requestConfig () {
+		log(TAG, "requestConfig ()");
+	}
+
 	@Override public JsonValue getConfig () {
 		return null;
 	}

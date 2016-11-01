@@ -2,12 +2,14 @@ package com.spilgames.spilgdxsdk.html;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.ScriptInjector;
-import com.google.gwt.user.client.Window;
 import com.spilgames.spilgdxsdk.*;
 import com.spilgames.spilgdxsdk.html.bindings.JsSpilSdk;
+import com.spilgames.spilgdxsdk.html.bindings.JsUtils;
+
 
 /**
  * Created by PiotrJ on 01/07/16.
@@ -36,17 +38,21 @@ public class HtmlSpilSdk implements SpilSdk {
 				JsSpilSdk.init(appId, version, env, new Callback<Void, Void>() {
 					@Override public void onSuccess (Void aVoid) {System.out.println("Loaded spil! ");
 						initialized = true;
-						callback.loaded();
+						if (callback != null) {
+							callback.loaded();
+						} else {
+							log(TAG, "Null callback?!");
+						}
 					}
 
 					@Override public void onFailure (Void result) {
-						System.out.println("FAILED to load spil, now what?");
+						log(TAG, "FAILED to initialize Spil SDK");
 					}
 				});
 			}
 
 			@Override public void onFailure (Exception e) {
-				Window.alert("Script load failed.");
+				log(TAG, "FAILED to load Spil SDK");
 			}
 		}).inject();
 	}
@@ -61,7 +67,14 @@ public class HtmlSpilSdk implements SpilSdk {
 	}
 
 	private void log (String tag, String message) {
-		if (log) Gdx.app.log(tag, message);
+		if (log){
+			// NOTE Gdx.app will be null before gdx is fully initialized, which is after createApplicationListener entry point returns
+			if (Gdx.app != null) {
+				Gdx.app.log(tag, message);
+			} else {
+				JsUtils.log(TAG, message);
+			}
+		}
 	}
 	
 	@Override public SpilSdkType getBackendType () {
@@ -140,8 +153,12 @@ public class HtmlSpilSdk implements SpilSdk {
 		log(TAG, "SpilRewardListener ("+rewardListener+")");
 	}
 
+	@Override public void requestConfig () {
+		JsSpilSdk.refreshConfig();
+	}
+
 	@Override public JsonValue getConfig () {
-		return null;
+		return toJson(JsSpilSdk.getConfigAll());
 	}
 
 	@Override public void setSpilConfigLDataListener (SpilConfigDataListener listener) {
@@ -152,6 +169,7 @@ public class HtmlSpilSdk implements SpilSdk {
 
 	@Override public void requestPackages () {
 		log(TAG, "requestPackages");
+		JsSpilSdk.requestPackages();
 	}
 
 	@Override public JsonValue getPromotion (String packageId) {
@@ -291,5 +309,15 @@ public class HtmlSpilSdk implements SpilSdk {
 
 	@Override public void showZendeskContactCenter () {
 		log(TAG, "showZendeskContactCenter ()");
+	}
+
+	private JsonReader jsonReader = new JsonReader();
+	private JsonValue toJson (String data) {
+		try {
+			return jsonReader.parse(data);
+		} catch (Exception ex) {
+			Gdx.app.error(TAG, "Failed to parse json data ", ex);
+		}
+		return null;
 	}
 }

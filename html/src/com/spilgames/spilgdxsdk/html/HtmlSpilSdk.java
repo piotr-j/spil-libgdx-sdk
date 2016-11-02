@@ -24,18 +24,18 @@ public class HtmlSpilSdk implements SpilSdk {
 	private boolean initialized;
 
 	// TODO we probably dont want this stuff in constructor
-	public HtmlSpilSdk(String appId, String version, String env) {
-		this(appId, version, env, null);
+	public HtmlSpilSdk(String appId, String version, String env, String spilUrl) {
+		this(appId, version, env, spilUrl, null);
 	}
 
-	public HtmlSpilSdk(String appId, String version, String env, SpilLifecycleListener listener) {
-		this(appId, version, env, listener, true);
+	public HtmlSpilSdk(String appId, String version, String env, String spilUrl, SpilLifecycleListener listener) {
+		this(appId, version, env, spilUrl, listener, true);
 	}
 
-	public HtmlSpilSdk(final String appId, final String version, final String env, SpilLifecycleListener listener, boolean loggingEnabled) {
+	public HtmlSpilSdk(final String appId, final String version, final String env, String spilUrl, SpilLifecycleListener listener, boolean loggingEnabled) {
 		setLogging(loggingEnabled);
 		setSpilLifecycleListener(listener);
-		ScriptInjector.fromUrl("spil-sdk.js").setCallback(new Callback<Void, Exception>() {
+		ScriptInjector.fromUrl(spilUrl).setCallback(new Callback<Void, Exception>() {
 			@Override public void onSuccess (Void aVoid) {
 				JsSpilSdk.init(appId, version, env, new Callback<Void, Void>() {
 					@Override public void onSuccess (Void aVoid) {

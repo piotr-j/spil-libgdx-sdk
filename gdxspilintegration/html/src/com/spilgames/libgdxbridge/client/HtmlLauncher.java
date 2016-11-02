@@ -18,6 +18,6 @@ public class HtmlLauncher extends GwtApplication {
 	public ApplicationListener createApplicationListener () {
 		setLogLevel(LOG_DEBUG);
 		// TODO need to get this stuff from config of some sort?
-		return new SpilGame(new HtmlSpilSdk("com.spilgames.slot", "0.0.2", "prd"), null);
+		return new SpilGame(new HtmlSpilSdk("com.spilgames.slot", "0.0.2", "prd", "spil-sdk.js"), null);
 	}
 }

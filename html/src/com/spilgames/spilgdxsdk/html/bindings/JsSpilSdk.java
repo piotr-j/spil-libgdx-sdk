@@ -51,13 +51,15 @@ public class JsSpilSdk {
 		SpilSDK.setPlayerDataCallbacks({
 			playerDataError:function(error){
 				console.log(error);
-				var spilError = @com.spilgames.spilgdxsdk.SpilErrorCode::fromId(I)(error["id"]);
+				var spilError = @com.spilgames.spilgdxsdk.SpilErrorCode::fromId(I)(error["id"] || -1);
 				listener.@com.spilgames.spilgdxsdk.SpilPlayerDataListener::playerDataError(Lcom/spilgames/spilgdxsdk/SpilErrorCode;)(spilError);
 			},
 			playerDataUpdated:function(reason, updatedData){
 				console.log('playerDataUpdated triggered ' + reason + ' ' + updatedData);
 				// reason String, updateData js object, we can make it into a string with JSON and do out toJsonValue stuff?
-				listener.@com.spilgames.spilgdxsdk.SpilPlayerDataListener::playerDataUpdated(Ljava/lang/String;Lcom/badlogic/gdx/utils/JsonValue;)(reason, null);
+				var jsonReader = @com.badlogic.gdx.utils.JsonReader::new()();
+				var jsonValue = jsonReader.@com.badlogic.gdx.utils.JsonReader::parse(Ljava/lang/String;)(JSON.stringify(updatedData));
+				listener.@com.spilgames.spilgdxsdk.SpilPlayerDataListener::playerDataUpdated(Ljava/lang/String;Lcom/badlogic/gdx/utils/JsonValue;)(reason, jsonValue);
 			},
 			playerDataAvailable: function() {
 				console.log('playerDataAvailable triggered');
@@ -74,7 +76,7 @@ public class JsSpilSdk {
 		SpilSDK.setGameDataCallbacks({
 			gameDataError: function (error) {
 				console.log(error)
-				var spilError = @com.spilgames.spilgdxsdk.SpilErrorCode::fromId(I)(error["id"]);
+				var spilError = @com.spilgames.spilgdxsdk.SpilErrorCode::fromId(I)(error["id"] || -1);
 				listener.@com.spilgames.spilgdxsdk.SpilGameDataListener::gameDataError(Lcom/spilgames/spilgdxsdk/SpilErrorCode;)(spilError);
 			},
 			gameDataAvailable: function() {
@@ -101,7 +103,23 @@ public class JsSpilSdk {
 			AdFinished: function(network, adType, reason){
 				console.log('AdFinished triggered ' + network + ' ' + adType + ' ' + reason);
 				// gotta stuff params into JsonValue
-				listener.@com.spilgames.spilgdxsdk.SpilAdListener::adFinished(Lcom/badlogic/gdx/utils/JsonValue;)(null);
+
+				// JsonValue jsonValue = new JsonValue(JsonValue.ValueType.object);
+				//jsonValue.addChild("network", new JsonValue("network"));
+				//jsonValue.addChild("type", new JsonValue("type"));
+				//jsonValue.addChild("reason", new JsonValue("reason"));
+				var rootType = @com.badlogic.gdx.utils.JsonValue.ValueType::object;
+				var jsonValue = @com.badlogic.gdx.utils.JsonValue::new(Lcom/badlogic/gdx/utils/JsonValue$ValueType;)(rootType);
+				jsonValue.@com.badlogic.gdx.utils.JsonValue::addChild(Ljava/lang/String;Lcom/badlogic/gdx/utils/JsonValue;)(
+					"network", @com.badlogic.gdx.utils.JsonValue::new(Ljava/lang/String;)(network)
+				);
+				jsonValue.@com.badlogic.gdx.utils.JsonValue::addChild(Ljava/lang/String;Lcom/badlogic/gdx/utils/JsonValue;)(
+					"type", @com.badlogic.gdx.utils.JsonValue::new(Ljava/lang/String;)(adType)
+				);
+				jsonValue.@com.badlogic.gdx.utils.JsonValue::addChild(Ljava/lang/String;Lcom/badlogic/gdx/utils/JsonValue;)(
+					"reason", @com.badlogic.gdx.utils.JsonValue::new(Ljava/lang/String;)(reason)
+				);
+				listener.@com.spilgames.spilgdxsdk.SpilAdListener::adFinished(Lcom/badlogic/gdx/utils/JsonValue;)(jsonValue);
 			}
 		});
 	}-*/;

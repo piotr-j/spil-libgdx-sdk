@@ -37,15 +37,17 @@ public class PlayerDataScreen extends BackScreen {
 
 		spilSdk.setSpilPlayerDataListener(new SpilPlayerDataListener() {
 			@Override public void playerDataAvailable () {
+				Gdx.app.log(TAG, "playerDataAvailable");
 				updateUI();
 			}
 
 			@Override public void playerDataUpdated (String reason, JsonValue updatedData) {
+				Gdx.app.log(TAG, "playerDataUpdated( " + reason + ", " +updatedData+")");
 				updateUI();
 			}
 
 			@Override public void playerDataError (SpilErrorCode errorCode) {
-				Gdx.app.log(TAG, "Player data error: " + errorCode.getMessage() + " (" + errorCode.getId()+")");
+				Gdx.app.log(TAG, "playerDataError" + errorCode.getMessage() + " (" + errorCode.getId()+")");
 			}
 		});
 		spilSdk.requestPlayerData();

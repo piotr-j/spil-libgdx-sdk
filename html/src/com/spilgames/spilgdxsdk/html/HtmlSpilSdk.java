@@ -95,6 +95,7 @@ public class HtmlSpilSdk implements SpilSdk {
 
 	@Override public void requestRewardVideo () {
 		log(TAG, "requestRewardVideo");
+		JsSpilSdk.requestRewardVideo();
 	}
 
 	@Override public void setDebug (boolean debug) {
@@ -210,7 +211,8 @@ public class HtmlSpilSdk implements SpilSdk {
 	}
 
 	@Override public boolean isAdProviderInitialized (String provider) {
-		return false;
+		// we don't really have providers on html, do we?
+		return true;
 	}
 
 	@Override public void showToastOnVideoReward (boolean enabled) {
@@ -223,6 +225,7 @@ public class HtmlSpilSdk implements SpilSdk {
 
 	@Override public void showRewardVideo () {
 		log(TAG, "showRewardVideo");
+		JsSpilSdk.playVideo();
 	}
 
 	@Override public void setSpilAdListener (SpilAdListener adCallbacks) {
@@ -234,10 +237,14 @@ public class HtmlSpilSdk implements SpilSdk {
 
 	@Override public void devRequestAd (String provider, String adType, boolean parentalGate) {
 		log(TAG, "devRequestAd ("+provider+", "+adType+", "+parentalGate+")");
+		if (AD_REWARD_VIDEO.equals(adType)) {
+			JsSpilSdk.requestRewardVideo();
+		}
 	}
 
 	@Override public void devShowRewardVideo (String provider) {
 		log(TAG, "devShowRewardVideo ("+provider+")");
+		JsSpilSdk.playVideo();
 	}
 
 	@Override public void devShowInterstitial (String provider) {

@@ -30,7 +30,16 @@ public class AdScreen extends BackScreen {
 			dfpInterstitial.addListener(new ClickListener(){
 				@Override public void clicked (InputEvent event, float x, float y) {
 					if (spilSdk.isAdProviderInitialized("DFP")) {
-						spilSdk.devRequestAd("DFP", "interstitial", false);
+						spilSdk.devRequestAd(SpilSdk.PROVIDER_DFP, SpilSdk.AD_INTERSTITIAL, false);
+					}
+				}
+			});
+			VisTextButton dfpRewardVideo = new VisTextButton("Reward Video");
+			content.add(dfpRewardVideo).row();
+			dfpRewardVideo.addListener(new ClickListener(){
+				@Override public void clicked (InputEvent event, float x, float y) {
+					if (spilSdk.isAdProviderInitialized("DFP")) {
+						spilSdk.devRequestAd(SpilSdk.PROVIDER_DFP, SpilSdk.AD_REWARD_VIDEO, false);
 					}
 				}
 			});
@@ -43,7 +52,7 @@ public class AdScreen extends BackScreen {
 			fybRewardVideo.addListener(new ClickListener(){
 				@Override public void clicked (InputEvent event, float x, float y) {
 					if (spilSdk.isAdProviderInitialized("Fyber")) {
-						spilSdk.devRequestAd("Fyber", "rewardVideo", false);
+						spilSdk.devRequestAd(SpilSdk.PROVIDER_FYBER, SpilSdk.AD_REWARD_VIDEO, false);
 					}
 				}
 			});
@@ -61,21 +70,21 @@ public class AdScreen extends BackScreen {
 			cbInterstitial.addListener(new ClickListener(){
 				@Override public void clicked (InputEvent event, float x, float y) {
 					if (spilSdk.isAdProviderInitialized("Chartboost")) {
-						spilSdk.devRequestAd("Chartboost", "interstitial", false);
+						spilSdk.devRequestAd(SpilSdk.PROVIDER_CHARTBOOST, SpilSdk.AD_INTERSTITIAL, false);
 					}
 				}
 			});
 			cbRewardVideo.addListener(new ClickListener(){
 				@Override public void clicked (InputEvent event, float x, float y) {
 					if (spilSdk.isAdProviderInitialized("Chartboost")) {
-						spilSdk.devRequestAd("Chartboost", "rewardVideo", false);
+						spilSdk.devRequestAd(SpilSdk.PROVIDER_CHARTBOOST, SpilSdk.AD_REWARD_VIDEO, false);
 					}
 				}
 			});
 			cbMoreApps.addListener(new ClickListener(){
 				@Override public void clicked (InputEvent event, float x, float y) {
 					if (spilSdk.isAdProviderInitialized("Chartboost")) {
-						spilSdk.devRequestAd("Chartboost", "moreApps", false);
+						spilSdk.devRequestAd(SpilSdk.PROVIDER_CHARTBOOST, SpilSdk.AD_MORE_APPS, false);
 					}
 				}
 			});

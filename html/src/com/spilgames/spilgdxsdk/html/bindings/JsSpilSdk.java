@@ -43,28 +43,20 @@ public class JsSpilSdk {
 		sendEvent(eventName, data, listener);
 	}
 
-	// note: we are calling java stuff inside functions now, but it should probably by direct when we know it works
-	public static native void setConfigDataCallbacks (SpilConfigDataListener listener) /*-{
-		SpilSDK.setConfigDataCallbacks({
-			configDataUpdated: function(){
-				listener.@com.spilgames.spilgdxsdk.SpilConfigDataListener::configDataUpdated()();
-			}
-			// should probably be this
-			// configDataUpdated: listener.@com.spilgames.spilgdxsdk.SpilConfigDataListener::configDataUpdated()
-		});
+	public static native void requestPlayerData () /*-{
+		SpilSDK.requestPlayerData();
 	}-*/;
 
 	public static native void setPlayerDataCallbacks (SpilPlayerDataListener listener) /*-{
 		SpilSDK.setPlayerDataCallbacks({
 			playerDataError:function(error){
-				// what is this error? gotta translate it into SpilErrorCode somehow
 				console.log(error);
-				// when we know whats in the error, translate it into SpilErrorCode
-				listener.@com.spilgames.spilgdxsdk.SpilPlayerDataListener::playerDataError(Lcom/spilgames/spilgdxsdk/SpilErrorCode;)(null);
+				var spilError = @com.spilgames.spilgdxsdk.SpilErrorCode::fromId(I)(error["id"]);
+				listener.@com.spilgames.spilgdxsdk.SpilPlayerDataListener::playerDataError(Lcom/spilgames/spilgdxsdk/SpilErrorCode;)(spilError);
 			},
 			playerDataUpdated:function(reason, updatedData){
 				console.log('playerDataUpdated triggered ' + reason + ' ' + updatedData);
-				// what are the args? gotta translate updatedData into JsonValue somehow
+				// reason String, updateData js object, we can make it into a string with JSON and do out toJsonValue stuff?
 				listener.@com.spilgames.spilgdxsdk.SpilPlayerDataListener::playerDataUpdated(Ljava/lang/String;Lcom/badlogic/gdx/utils/JsonValue;)(reason, null);
 			},
 			playerDataAvailable: function() {
@@ -74,12 +66,16 @@ public class JsSpilSdk {
 		});
 	}-*/;
 
+	public static native void requestGameData () /*-{
+		SpilSDK.requestGameData();
+	}-*/;
+
 	public static native void setGameDataCallbacks (SpilGameDataListener listener) /*-{
 		SpilSDK.setGameDataCallbacks({
 			gameDataError: function (error) {
 				console.log(error)
-				// gotta translate the error at some point!
-				listener.@com.spilgames.spilgdxsdk.SpilGameDataListener::gameDataError(Lcom/spilgames/spilgdxsdk/SpilErrorCode;)(null);
+				var spilError = @com.spilgames.spilgdxsdk.SpilErrorCode::fromId(I)(error["id"]);
+				listener.@com.spilgames.spilgdxsdk.SpilGameDataListener::gameDataError(Lcom/spilgames/spilgdxsdk/SpilErrorCode;)(spilError);
 			},
 			gameDataAvailable: function() {
 				console.log('gameDataAvailable triggered');
@@ -119,8 +115,30 @@ public class JsSpilSdk {
 		return JSON.stringify(SpilSDK.getConfigAll());
 	}-*/;
 
+	// note: we are calling java stuff inside functions now, but it should probably by direct when we know it works
+	public static native void setConfigDataCallbacks (SpilConfigDataListener listener) /*-{
+		SpilSDK.setConfigDataCallbacks({
+			// setting the listener function directly does not seem to work
+			configDataUpdated: function(){
+				listener.@com.spilgames.spilgdxsdk.SpilConfigDataListener::configDataUpdated()();
+			}
+		});
+	}-*/;
+
 	public static native void requestPackages () /*-{
 		SpilSDK.requestPackages();
+	}-*/;
+
+	public static native String getAllPackages() /*-{
+		return JSON.stringify(SpilSDK.getAllPackages());
+	}-*/;
+
+	public static native String getPackage(String packageId) /*-{
+		return JSON.stringify(SpilSDK.getPackage(packageId));
+	}-*/;
+
+	public static native String getPromotion(String packageId) /*-{
+		return JSON.stringify(SpilSDK.getPromotion(packageId));
 	}-*/;
 
 	public static native void requestRewardVideo () /*-{
@@ -133,6 +151,44 @@ public class JsSpilSdk {
 
 	public static native String getUuid() /*-{
 		return SpilSDK.getUuid();
+	}-*/;
+
+	public static native String getUserProfile() /*-{
+		return JSON.stringify(SpilSDK.getUserProfile());
+	}-*/;
+
+	public static native String getGameData() /*-{
+		return JSON.stringify(SpilSDK.getGameData());
+	}-*/;
+
+	public static native void consumeBundle(int bundleId, String reason, boolean fromShop) /*-{
+		SpilSDK.consumeBundle(bundleId, reason, fromShop);
+	}-*/;
+
+	public static native String getWallet () /*-{
+		// is there a cleaner way to do this then js object -> string -> JsonValue? Probably not
+		return JSON.stringify(SpilSDK.getWallet());
+	}-*/;
+
+	public static native void addCurrencyToWallet (int currencyId, int amount, String reason) /*-{
+		SpilSDK.addCurrencyToWallet(currencyId, amount, reason);
+	}-*/;
+
+	public static native void subtractCurrencyFromWallet (int currencyId, int amount, String reason) /*-{
+		SpilSDK.addCurrencyToWallet(currencyId, amount, reason);
+	}-*/;
+
+	public static native String getInventory () /*-{
+		// is there a cleaner way to do this then js object -> string -> JsonValue? Probably not
+		return JSON.stringify(SpilSDK.getInventory());
+	}-*/;
+
+	public static native void addItemToInventory (int itemId, int amount, String reason) /*-{
+		SpilSDK.addItemToInventory(itemId, amount, reason);
+	}-*/;
+
+	public static native void subtractItemFromInventory (int itemId, int amount, String reason) /*-{
+		SpilSDK.subtractItemFromInventory(itemId, amount, reason);
 	}-*/;
 
 }

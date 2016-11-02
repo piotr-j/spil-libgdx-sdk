@@ -99,6 +99,7 @@ public class HtmlSpilSdk implements SpilSdk {
 
 	@Override public void setDebug (boolean debug) {
 		log(TAG, "setDebug ("+debug+")");
+		// change env? not super clear what this should do
 	}
 
 	@Override public String getSpilUserID () {
@@ -140,6 +141,7 @@ public class HtmlSpilSdk implements SpilSdk {
 
 	@Override public void setSpilGameStateListener (final SpilGameStateListener gameStateListener) {
 		log(TAG, "setSpilGameStateListener ("+gameStateListener+")");
+
 	}
 
 	@Override public void setSpilAutomatedEventsListener (SpilAutomatedEventsListener automatedEventsListener) {
@@ -147,7 +149,7 @@ public class HtmlSpilSdk implements SpilSdk {
 	}
 
 	@Override public Track track () {
-		return null;
+		return track;
 	}
 
 	@Override public void trackEvent (SpilEvent event) {
@@ -194,17 +196,17 @@ public class HtmlSpilSdk implements SpilSdk {
 
 	@Override public JsonValue getPromotion (String packageId) {
 		log(TAG, "getPromotion");
-		return null;
+		return toJson(JsSpilSdk.getPromotion(packageId));
 	}
 
 	@Override public JsonValue getPackage (String packageId) {
 		log(TAG, "getPackage");
-		return null;
+		return toJson(JsSpilSdk.getPackage(packageId));
 	}
 
 	@Override public JsonValue getAllPackages () {
 		log(TAG, "getAllPackages");
-		return null;
+		return toJson(JsSpilSdk.getAllPackages());
 	}
 
 	@Override public boolean isAdProviderInitialized (String provider) {
@@ -248,10 +250,12 @@ public class HtmlSpilSdk implements SpilSdk {
 
 	@Override public void requestGameData () {
 		log(TAG, "requestGameData");
+		JsSpilSdk.requestGameData();
 	}
 
 	@Override public void requestPlayerData () {
 		log(TAG, "requestPlayerData)");
+		JsSpilSdk.requestPlayerData();
 	}
 
 	@Override public void setSpilPlayerDataListener (SpilPlayerDataListener playerDataListener) {
@@ -270,22 +274,11 @@ public class HtmlSpilSdk implements SpilSdk {
 
 	@Override public JsonValue getUserProfile () {
 		log(TAG, "getUserProfile");
-		return null;
+		return toJson(JsSpilSdk.getUserProfile());
 	}
-
-	@Override public JsonValue getWallet () {
-		log(TAG, "getWallet");
-		return null;
-	}
-
 	@Override public JsonValue getGameData () {
 		log(TAG, "getGameData");
-		return null;
-	}
-
-	@Override public JsonValue getInventory () {
-		log(TAG, "getInventory");
-		return null;
+		return toJson(JsSpilSdk.getGameData());
 	}
 
 //	@Override public String getShop () {
@@ -298,24 +291,40 @@ public class HtmlSpilSdk implements SpilSdk {
 //		return null;
 //	}
 
+	@Override public JsonValue getWallet () {
+		log(TAG, "getWallet");
+		return toJson(JsSpilSdk.getWallet());
+	}
+
 	@Override public void addCurrencyToWallet (int currencyId, int amount, String reason) {
 		log(TAG, "addCurrencyToWallet (" +currencyId+", "+amount+", "+ reason+")");
+		JsSpilSdk.addCurrencyToWallet(currencyId, amount, reason);
 	}
 
 	@Override public void subtractCurrencyFromWallet (int currencyId, int amount, String reason) {
 		log(TAG, "subtractCurrencyFromWallet (" +currencyId+", "+amount+", "+ reason+")");
+		JsSpilSdk.subtractCurrencyFromWallet(currencyId, amount, reason);
+	}
+
+	@Override public JsonValue getInventory () {
+		log(TAG, "getInventory");
+		return toJson(JsSpilSdk.getInventory());
 	}
 
 	@Override public void addItemToInventory (int itemId, int amount, String reason) {
 		log(TAG, "addItemToInventory (" +itemId+", "+amount+", "+ reason+")");
+		JsSpilSdk.addItemToInventory(itemId, amount, reason);
 	}
 
 	@Override public void subtractItemFromInventory (int itemId, int amount, String reason) {
 		log(TAG, "subtractItemFromInventory (" +itemId+", "+amount+", "+ reason+")");
+		JsSpilSdk.subtractItemFromInventory(itemId, amount, reason);
 	}
 
 	@Override public void consumeBundle (int bundleId, String reason) {
 		log(TAG, "consumeBundle (" +bundleId+", "+ reason+")");
+		// TODO do we want to expose the from shop part? gotta check other backends
+		JsSpilSdk.consumeBundle(bundleId, reason, false);
 	}
 
 	// customer support

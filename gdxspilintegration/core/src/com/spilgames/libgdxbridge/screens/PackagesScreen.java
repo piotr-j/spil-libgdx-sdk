@@ -63,7 +63,7 @@ public class PackagesScreen extends BackScreen {
 
 		resultLabel = new VisLabel();
 		VisScrollPane scrollPane = new VisScrollPane(resultLabel);
-		content.add(scrollPane).expand();
+		content.add(scrollPane).expand().fill();
 
 		getAll.addListener(new ClickListener() {
 			@Override public void clicked (InputEvent event, float x, float y) {

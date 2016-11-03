@@ -23,7 +23,7 @@ public class ConfigScreen extends BackScreen {
 		final VisTable valueTable = new VisTable(true);
 		final VisTextField configValueKey = new VisTextField();
 		configValueKey.setMessageText("key");
-		VisTextButton getConfigValue = new VisTextButton("Get config");
+		VisTextButton getConfigValue = new VisTextButton("Get value");
 		valueTable.add(configValueKey).expandX().fillX();
 		valueTable.add(getConfigValue);
 		content.add(valueTable).expandX().fillX().row();

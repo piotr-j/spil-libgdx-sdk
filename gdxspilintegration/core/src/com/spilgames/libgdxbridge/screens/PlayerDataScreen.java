@@ -3,16 +3,13 @@ package com.spilgames.libgdxbridge.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.JsonValue;
-import com.badlogic.gdx.utils.JsonWriter;
+import com.badlogic.gdx.utils.*;
+import com.badlogic.gdx.utils.StringBuilder;
 import com.kotcrab.vis.ui.util.dialog.Dialogs;
-import com.kotcrab.vis.ui.widget.VisDialog;
-import com.kotcrab.vis.ui.widget.VisLabel;
-import com.kotcrab.vis.ui.widget.VisTable;
-import com.kotcrab.vis.ui.widget.VisTextButton;
+import com.kotcrab.vis.ui.widget.*;
 import com.spilgames.libgdxbridge.SpilGame;
 import com.spilgames.spilgdxsdk.SpilErrorCode;
 import com.spilgames.spilgdxsdk.SpilPlayerDataListener;
@@ -25,15 +22,21 @@ public class PlayerDataScreen extends BackScreen {
 
 	VisTable walletContainer;
 	VisTable inventoryContainer;
+	VisTable scrolled;
+	VisScrollPane scrollPane;
+	IntMap<String> currencyNames = new IntMap<String>();
+	IntMap<String> itemNames = new IntMap<String>();
 
 	public PlayerDataScreen (SpilGame game) {
 		super(game);
 		//content.add(new VisLabel(getClass().getSimpleName()));
 		walletContainer = new VisTable(true);
 		inventoryContainer = new VisTable(true);
-		content.add(walletContainer).expandX().fillX().row();
-		content.add(inventoryContainer).expandX().fillX().row();
-		content.add().expand().fill();
+		scrollPane = new VisScrollPane(scrolled = new VisTable());
+		scrollPane.debugAll();
+		scrolled.add(walletContainer).expandX().fillX().row();
+		scrolled.add(inventoryContainer).expandX().fillX().row();
+		content.add(scrollPane).expand().fill();
 
 		spilSdk.setSpilPlayerDataListener(new SpilPlayerDataListener() {
 			@Override public void playerDataAvailable () {
@@ -48,6 +51,7 @@ public class PlayerDataScreen extends BackScreen {
 
 			@Override public void playerDataError (SpilErrorCode errorCode) {
 				Gdx.app.log(TAG, "playerDataError" + errorCode.getMessage() + " (" + errorCode.getId()+")");
+				dialog("playerDataError", errorCode.getMessage());
 			}
 		});
 		spilSdk.requestPlayerData();
@@ -59,6 +63,19 @@ public class PlayerDataScreen extends BackScreen {
 		if (userProfile != null) {
 //			Gdx.app.log(TAG, "User profile " + userProfile.prettyPrint(JsonWriter.OutputType.minimal, 0));
 		}
+		itemNames.clear();
+		JsonValue gameData = spilSdk.getGameData();
+		if (gameData != null) {
+			JsonValue items = gameData.get("items");
+			if (items != null) {
+				for (JsonValue item : items) {
+					int id = item.getInt("id", -1);
+					String name = item.getString("name", "no-name");
+					itemNames.put(id, name);
+				}
+			}
+		}
+		currencyNames.clear();
 		JsonValue wallet = spilSdk.getWallet();
 		if (wallet != null) {
 			walletContainer.clear();
@@ -71,6 +88,7 @@ public class PlayerDataScreen extends BackScreen {
 				for (JsonValue currency : currencies) {
 					int id = currency.getInt("id", -1);
 					String name = currency.getString("name", "no-name");
+					currencyNames.put(id, name);
 					int balance = currency.getInt("currentBalance", 0);
 					int type = currency.getInt("type", -1);
 					int delta = currency.getInt("delta", 0);
@@ -168,8 +186,15 @@ public class PlayerDataScreen extends BackScreen {
 	}
 
 	private void showItems (JsonValue items, final int count) {
-		final VisDialog dialog = new VisDialog(count > 0 ? "Add items" : "Subtract items");
-		Table content = dialog.getContentTable();
+		final VisDialog dialog = new VisDialog(count > 0 ? "Add item" : "Remove item");
+		Table contentTable = dialog.getContentTable();
+		Table content = new Table();
+		ScrollPane scrollPane = new VisScrollPane(content);
+		scrollPane.setScrollingDisabled(true, false);
+		scrollPane.setFadeScrollBars(false);
+
+		contentTable.add(scrollPane).expandX().fillX();
+		contentTable.row();
 		for (JsonValue item : items) {
 			int amount = item.getInt("amount", 0);
 			int delta = item.getInt("delta", 0);
@@ -178,7 +203,7 @@ public class PlayerDataScreen extends BackScreen {
 			String name = item.getString("name", "no-name");
 			VisLabel label = new VisLabel(name + "(" + id + ")");
 
-			VisTextButton button = new VisTextButton(count > 0 ? "Add" : "Subtract");
+			VisTextButton button = new VisTextButton(count > 0 ? "Add" : "Remove");
 			VisTable row = new VisTable(true);
 			row.add(label);
 			row.add().expandX().fillX();
@@ -202,26 +227,43 @@ public class PlayerDataScreen extends BackScreen {
 				dialog.fadeOut();
 			}
 		});
-		content.add(close).pad(10);
+		contentTable.add(close).pad(10);
 		dialog.show(stage);
+		dialog.setSize(stage.getWidth() * .8f, stage.getHeight() * .8f);
+		dialog.centerWindow();
 	}
 
 	private void showBundles (JsonValue bundles) {
 		final VisDialog dialog = new VisDialog("Get bundles");
-		Table content = dialog.getContentTable();
+		Table contentTable = dialog.getContentTable();
+		Table bundlesTable = new Table();
+		ScrollPane scrollPane = new VisScrollPane(bundlesTable);
+		scrollPane.setScrollingDisabled(true, false);
+		scrollPane.setFadeScrollBars(false);
+
+		contentTable.add(scrollPane).expandX().fillX();
+		contentTable.row();
 		for (JsonValue bundle : bundles) {
-			Gdx.app.log(TAG, "Bundle " + bundle.toString());
+//			Gdx.app.log(TAG, "Bundle " + bundle.toString());
 			final int id = bundle.getInt("id", 0);
 			String name = bundle.getString("name", "no-name");
 			VisLabel nameLabel = new VisLabel("Bundle '" + name + "' (" + id + ")");
 
-			String cost = "free!";
+			StringBuilder cost = new StringBuilder("Free!");
 			JsonValue prices = bundle.get("prices");
 			if (prices != null) {
-				cost = "";
+				cost.setLength(0);
+				cost.append("Price: ");
 				// looks like bundles have only one price, but whatever
 				for (JsonValue price : prices) {
-					cost += "C " + price.getInt("currencyId", 0) + " x " + price.getInt("value", 0) + " ";
+					int currencyId = price.getInt("currencyId", 0);
+					cost.append(currencyNames.get(currencyId, "Cid " + currencyId));
+					cost.append(" x ");
+					cost.append(price.getInt("value", 0));
+					cost.append("\n");
+				}
+				if (cost.length() > 1) {
+					cost.setLength(cost.length() - 1);
 				}
 			}
 			VisLabel costLabel = new VisLabel(cost);
@@ -230,12 +272,19 @@ public class PlayerDataScreen extends BackScreen {
 			row.add(costLabel).row();
 			JsonValue items = bundle.get("items");
 			if (prices != null) {
-				String bundledItems = "";
+				StringBuilder itemList = new StringBuilder();
 				// looks like bundles have only one price, but whatever
 				for (JsonValue item : items) {
-					bundledItems += "I " + item.getInt("id", 0) + " x " + item.getInt("amount", 0) + " ";
+					int itemId = item.getInt("id", 0);
+					itemList.append(itemNames.get(itemId, "Iid " + itemId));
+					itemList.append(" x ");
+					itemList.append(item.getInt("amount", 0));
+					itemList.append("\n");
 				}
-				row.add(new VisLabel(bundledItems)).row();
+				if (itemList.length() > 1) {
+					itemList.setLength(itemList.length() - 1);
+				}
+				row.add(new VisLabel(itemList)).row();
 			}
 			VisTextButton buy = new VisTextButton("Buy");
 			buy.addListener(new ClickListener(){
@@ -245,17 +294,18 @@ public class PlayerDataScreen extends BackScreen {
 				}
 			});
 			row.add(buy).row();
-			content.add(row).pad(10).row();
+			bundlesTable.add(row).pad(10).row();
 		}
-		content.row();
 		VisTextButton close = new VisTextButton("Close");
 		close.addListener(new ClickListener(){
 			@Override public void clicked (InputEvent event, float x, float y) {
 				dialog.fadeOut();
 			}
 		});
-		content.add(close).pad(10);
+		contentTable.add(close).pad(10);
 		dialog.show(stage);
+		dialog.setSize(stage.getWidth() * .8f, stage.getHeight() * .8f);
+		dialog.centerWindow();
 	}
 
 	private Actor currencyButton (final int id, final int count) {

@@ -29,8 +29,10 @@ public class AdScreen extends BackScreen {
 			content.add(dfpInterstitial).row();
 			dfpInterstitial.addListener(new ClickListener(){
 				@Override public void clicked (InputEvent event, float x, float y) {
-					if (spilSdk.isAdProviderInitialized("DFP")) {
+					if (spilSdk.isAdProviderInitialized(SpilSdk.PROVIDER_DFP)) {
 						spilSdk.devRequestAd(SpilSdk.PROVIDER_DFP, SpilSdk.AD_INTERSTITIAL, false);
+					} else {
+						dialog("Provider " + SpilSdk.PROVIDER_DFP + " not initialized");
 					}
 				}
 			});
@@ -38,8 +40,10 @@ public class AdScreen extends BackScreen {
 			content.add(dfpRewardVideo).row();
 			dfpRewardVideo.addListener(new ClickListener(){
 				@Override public void clicked (InputEvent event, float x, float y) {
-					if (spilSdk.isAdProviderInitialized("DFP")) {
+					if (spilSdk.isAdProviderInitialized(SpilSdk.PROVIDER_DFP)) {
 						spilSdk.devRequestAd(SpilSdk.PROVIDER_DFP, SpilSdk.AD_REWARD_VIDEO, false);
+					} else {
+						dialog("Provider " + SpilSdk.PROVIDER_DFP + " not initialized");
 					}
 				}
 			});
@@ -51,8 +55,10 @@ public class AdScreen extends BackScreen {
 			content.add(fybRewardVideo).row();
 			fybRewardVideo.addListener(new ClickListener(){
 				@Override public void clicked (InputEvent event, float x, float y) {
-					if (spilSdk.isAdProviderInitialized("Fyber")) {
+					if (spilSdk.isAdProviderInitialized(SpilSdk.PROVIDER_FYBER)) {
 						spilSdk.devRequestAd(SpilSdk.PROVIDER_FYBER, SpilSdk.AD_REWARD_VIDEO, false);
+					} else {
+						dialog("Provider " + SpilSdk.PROVIDER_FYBER + " not initialized");
 					}
 				}
 			});
@@ -69,22 +75,28 @@ public class AdScreen extends BackScreen {
 			content.add(cbMoreApps).row();
 			cbInterstitial.addListener(new ClickListener(){
 				@Override public void clicked (InputEvent event, float x, float y) {
-					if (spilSdk.isAdProviderInitialized("Chartboost")) {
+					if (spilSdk.isAdProviderInitialized(SpilSdk.PROVIDER_CHARTBOOST)) {
 						spilSdk.devRequestAd(SpilSdk.PROVIDER_CHARTBOOST, SpilSdk.AD_INTERSTITIAL, false);
+					} else {
+						dialog("Provider " + SpilSdk.PROVIDER_CHARTBOOST + " not initialized");
 					}
 				}
 			});
 			cbRewardVideo.addListener(new ClickListener(){
 				@Override public void clicked (InputEvent event, float x, float y) {
-					if (spilSdk.isAdProviderInitialized("Chartboost")) {
+					if (spilSdk.isAdProviderInitialized(SpilSdk.PROVIDER_CHARTBOOST)) {
 						spilSdk.devRequestAd(SpilSdk.PROVIDER_CHARTBOOST, SpilSdk.AD_REWARD_VIDEO, false);
+					} else {
+						dialog("Provider " + SpilSdk.PROVIDER_CHARTBOOST + " not initialized");
 					}
 				}
 			});
 			cbMoreApps.addListener(new ClickListener(){
 				@Override public void clicked (InputEvent event, float x, float y) {
-					if (spilSdk.isAdProviderInitialized("Chartboost")) {
+					if (spilSdk.isAdProviderInitialized(SpilSdk.PROVIDER_CHARTBOOST)) {
 						spilSdk.devRequestAd(SpilSdk.PROVIDER_CHARTBOOST, SpilSdk.AD_MORE_APPS, false);
+					} else {
+						dialog("Provider " + SpilSdk.PROVIDER_CHARTBOOST + " not initialized");
 					}
 				}
 			});
@@ -104,6 +116,7 @@ public class AdScreen extends BackScreen {
 
 			@Override public void adNotAvailable (String type) {
 				Gdx.app.log(TAG, "adNotAvailable " +type);
+				dialog("Ad " + type + " not available");
 			}
 
 			@Override public void adStart () {

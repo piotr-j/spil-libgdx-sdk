@@ -13,6 +13,9 @@ import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.ToastManager;
+import com.kotcrab.vis.ui.widget.ButtonBar;
+import com.kotcrab.vis.ui.widget.VisDialog;
+import com.kotcrab.vis.ui.widget.VisLabel;
 import com.spilgames.libgdxbridge.SpilGame;
 import com.spilgames.spilgdxsdk.SpilSdk;
 
@@ -59,6 +62,23 @@ public abstract class BaseScreen implements Screen, InputProcessor{
 		} catch (ReflectionException e) {
 			Gdx.app.error(TAG, "Failed to change screen", e);
 		}
+	}
+
+	protected void dialog(String text) {
+		dialog(text, null);
+	}
+
+	protected void dialog(String title, String text) {
+		VisDialog dialog = new VisDialog(title);
+		if (text != null) {
+			VisLabel label = new VisLabel(text);
+			label.setWrap(true);
+			dialog.getContentTable().add(label).width(stage.getWidth() * 3 / 4).expand().fill();
+		}
+		dialog.button(ButtonBar.ButtonType.OK.getText()).padBottom(3);
+		dialog.pack();
+		dialog.centerWindow();
+		stage.addActor(dialog.fadeIn());
 	}
 
 	@Override public boolean keyDown (int keycode) {

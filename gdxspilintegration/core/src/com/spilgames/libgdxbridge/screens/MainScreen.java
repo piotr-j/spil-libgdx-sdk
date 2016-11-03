@@ -34,6 +34,7 @@ public class MainScreen extends BaseScreen {
 		table.add(new VisLabel("Game & Player Data")).row();
 		addScreenButton(table, "Player Data", PlayerDataScreen.class);
 		addScreenButton(table, "Game State", GameStateScreen.class);
+		addScreenButton(table, "Shop", ShopScreen.class);
 
 		table.add(new VisLabel("Customer Support")).row();
 		addScreenButton(table, "Zendesk", ZendeskScreen.class);

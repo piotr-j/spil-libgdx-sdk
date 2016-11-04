@@ -12,24 +12,24 @@ public class JsSpilSdk {
 	private JsSpilSdk () {}
 
 	public static native void init (String gameId, String gameVersion, String env, Callback<Void, Void> callback) /*-{
-		SpilSDK(gameId, gameVersion, function(){
+		SpilSDK(gameId, gameVersion, $entry(function(){
 			// looks like it accepts only Object for generic type
 			callback.@com.google.gwt.core.client.Callback::onSuccess(Ljava/lang/Object;)();
-		}, env);
+		}), env);
 	}-*/;
 
 	public static native void sendEvent (String eventName, String data, SpilEventActionListener listener) /*-{
 		// this is super janky, we convert from JsonValue to string to object and to string again in the api
 		var callback = null;
 		if (listener) {
-			callback = function(responseData) {
+			callback = $entry(function(responseData) {
 			   console.log("JsSpilSdk response for " + eventName + ": " + JSON.stringify(responseData));
 			   // looks like we are getting something like this back at this point
 			   // {"status":"204","name":"eventName"}
 				var response = @com.spilgames.spilgdxsdk.SpilResponseEvent::new()()
 				response.@com.spilgames.spilgdxsdk.SpilResponseEvent::setName(Ljava/lang/String;)(responseData["name"]);
 				listener.@com.spilgames.spilgdxsdk.SpilEventActionListener::onResponse(Lcom/spilgames/spilgdxsdk/SpilResponseEvent;)(response);
-			}
+			});
 		}
 		if (data) {
 			SpilSDK.sendEvent(eventName, JSON.parse(data), callback);
@@ -49,22 +49,22 @@ public class JsSpilSdk {
 
 	public static native void setPlayerDataCallbacks (SpilPlayerDataListener listener) /*-{
 		SpilSDK.setPlayerDataCallbacks({
-			playerDataError:function(error){
+			playerDataError: $entry(function(error){
 				console.log(error);
 				var spilError = @com.spilgames.spilgdxsdk.SpilErrorCode::fromId(I)(error["id"] || -1);
 				listener.@com.spilgames.spilgdxsdk.SpilPlayerDataListener::playerDataError(Lcom/spilgames/spilgdxsdk/SpilErrorCode;)(spilError);
-			},
-			playerDataUpdated:function(reason, updatedData){
+			}),
+			playerDataUpdated: $entry(function(reason, updatedData){
 				console.log('playerDataUpdated triggered ' + reason + ' ' + updatedData);
 				// reason String, updateData js object, we can make it into a string with JSON and do out toJsonValue stuff?
 				var jsonReader = @com.badlogic.gdx.utils.JsonReader::new()();
 				var jsonValue = jsonReader.@com.badlogic.gdx.utils.JsonReader::parse(Ljava/lang/String;)(JSON.stringify(updatedData));
 				listener.@com.spilgames.spilgdxsdk.SpilPlayerDataListener::playerDataUpdated(Ljava/lang/String;Lcom/badlogic/gdx/utils/JsonValue;)(reason, jsonValue);
-			},
-			playerDataAvailable: function() {
+			}),
+			playerDataAvailable: $entry(function() {
 				console.log('playerDataAvailable triggered');
 				listener.@com.spilgames.spilgdxsdk.SpilPlayerDataListener::playerDataAvailable()();
-			}
+			})
 		});
 	}-*/;
 
@@ -74,33 +74,33 @@ public class JsSpilSdk {
 
 	public static native void setGameDataCallbacks (SpilGameDataListener listener) /*-{
 		SpilSDK.setGameDataCallbacks({
-			gameDataError: function (error) {
+			gameDataError: $entry(function (error) {
 				console.log(error)
 				var spilError = @com.spilgames.spilgdxsdk.SpilErrorCode::fromId(I)(error["id"] || -1);
 				listener.@com.spilgames.spilgdxsdk.SpilGameDataListener::gameDataError(Lcom/spilgames/spilgdxsdk/SpilErrorCode;)(spilError);
-			},
-			gameDataAvailable: function() {
+			}),
+			gameDataAvailable: $entry(function() {
 				console.log('gameDataAvailable triggered');
 				listener.@com.spilgames.spilgdxsdk.SpilGameDataListener::gameDataAvailable()();
-			}
+			})
 		});
 	}-*/;
 
 	public static native void setAdCallbacks (SpilAdListener listener) /*-{
 		SpilSDK.setAdCallbacks({
-			AdAvailable: function(adType){
+			AdAvailable: $entry(function(adType){
 				console.log('AdAvailable triggered ' + adType);
 				listener.@com.spilgames.spilgdxsdk.SpilAdListener::adAvailable(Ljava/lang/String;)(adType);
-			},
-			AdNotAvailable: function(adType){
+			}),
+			AdNotAvailable: $entry(function(adType){
 				console.log('AdNotAvailable triggered ' + adType);
 				listener.@com.spilgames.spilgdxsdk.SpilAdListener::adNotAvailable(Ljava/lang/String;)(adType);
-			},
-			AdStart: function(adType){
+			}),
+			AdStart: $entry(function(adType){
 				console.log('AdStart triggered ' + adType);
 				listener.@com.spilgames.spilgdxsdk.SpilAdListener::adStart()();
-			},
-			AdFinished: function(network, adType, reason){
+			}),
+			AdFinished: $entry(function(network, adType, reason){
 				console.log('AdFinished triggered ' + network + ' ' + adType + ' ' + reason);
 				// gotta stuff params into JsonValue
 
@@ -120,7 +120,7 @@ public class JsSpilSdk {
 					"reason", @com.badlogic.gdx.utils.JsonValue::new(Ljava/lang/String;)(reason)
 				);
 				listener.@com.spilgames.spilgdxsdk.SpilAdListener::adFinished(Lcom/badlogic/gdx/utils/JsonValue;)(jsonValue);
-			}
+			})
 		});
 	}-*/;
 
@@ -137,9 +137,9 @@ public class JsSpilSdk {
 	public static native void setConfigDataCallbacks (SpilConfigDataListener listener) /*-{
 		SpilSDK.setConfigDataCallbacks({
 			// setting the listener function directly does not seem to work
-			configDataUpdated: function(){
+			configDataUpdated: $entry(function(){
 				listener.@com.spilgames.spilgdxsdk.SpilConfigDataListener::configDataUpdated()();
-			}
+			})
 		});
 	}-*/;
 

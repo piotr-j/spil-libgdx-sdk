@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
 import com.google.gwt.core.client.Callback;
+import com.google.gwt.core.client.ScriptInjector;
 import com.google.gwt.user.client.Timer;
 import com.spilgames.spilgdxsdk.*;
 import com.spilgames.spilgdxsdk.html.bindings.JsSpilSdk;
@@ -22,6 +23,44 @@ public class HtmlSpilSdk implements SpilSdk {
 	private SpilLifecycleListener lifecycleListener;
 
 	private boolean initialized;
+
+	protected HtmlSpilSdk(final String appId, final String version, final String env) {
+		this(appId, version, env, "spil-sdk.js");
+	}
+
+	protected HtmlSpilSdk(final String appId, final String version, final String env, String spilUrl) {
+		this(appId, version, env, spilUrl, null);
+	}
+
+	/**
+	 * This is hidden due to gwt problems due to iframe
+	 * It breaks ads on test site, but works otherwise
+	 */
+	protected HtmlSpilSdk(final String appId, final String version, final String env, String spilUrl, SpilLifecycleListener listener) {
+		setLogging(true);
+		setSpilLifecycleListener(listener);
+		ScriptInjector.fromUrl(spilUrl).setCallback(new Callback<Void, Exception>() {
+			@Override public void onSuccess (Void aVoid) {
+				JsSpilSdk.initWithParams(appId, version, env, new Callback<Void, Void>() {
+					@Override public void onSuccess (Void aVoid) {
+						log(TAG, "Spil SDK initialized");
+						initialized = true;
+						if (lifecycleListener != null) {
+							lifecycleListener.initialized(HtmlSpilSdk.this);
+						}
+					}
+
+					@Override public void onFailure (Void result) {
+						// NOTE: this will never get called
+					}
+				});
+			}
+
+			@Override public void onFailure (Exception e) {
+				log(TAG, "FAILED to load Spil SDK");
+			}
+		}).inject();
+	}
 
 	public HtmlSpilSdk() {
 		this(null, true);

@@ -31,6 +31,18 @@ public class JsSpilSdk {
 		}
 	}-*/;
 
+	public static native void initWithParams (String appId, String version, String env, Callback<Void, Void> callback) /*-{
+		// since gwt runs in iframe, ads are broken on the test site.
+		// exporting various stuff to main window doesnt seem to help
+		SpilSDK(appId, version,
+        function(){
+            $entry(function(){
+					// looks like it accepts only Object for generic type
+					callback.@com.google.gwt.core.client.Callback::onSuccess(Ljava/lang/Object;)();
+				})();
+        }, env);
+	}-*/;
+
 	public static native void trackEvent (String eventName, String data, SpilEventActionListener listener) /*-{
 		// this is super janky, we convert from JsonValue to string to object and to string again in the api
 		var callback = null;

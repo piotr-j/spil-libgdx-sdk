@@ -11,27 +11,38 @@ import com.spilgames.spilgdxsdk.*;
 public class JsSpilSdk {
 	private JsSpilSdk () {}
 
-	public static native void init (String gameId, String gameVersion, String env, Callback<Void, Void> callback) /*-{
-		SpilSDK(gameId, gameVersion, $entry(function(){
-			// looks like it accepts only Object for generic type
-			callback.@com.google.gwt.core.client.Callback::onSuccess(Ljava/lang/Object;)();
-		}), env);
+	public static native void init (Callback<Void, Void> callback) /*-{
+		// looks like spil cant be initialized in gwt and work on the test site,
+		// must be directly on the page, not in iframe this runs in
+		// while we can export it, other stuff it depends on wont be
+		// but how do we ensure this is initialized?
+		// lets try exporting all stuff in this to $wnd? maybe it will help with ads!
+		SpilSDK = $wnd.SpilSDK;
+		if (typeof SpilSDK !== 'undefined' && $wnd.spilInitialized === true) {
+			$entry(function(){
+				// looks like it accepts only Object for generic type
+				callback.@com.google.gwt.core.client.Callback::onSuccess(Ljava/lang/Object;)();
+			})();
+		} else {
+			$entry(function(){
+				// looks like it accepts only Object for generic type
+				callback.@com.google.gwt.core.client.Callback::onFailure(Ljava/lang/Object;)();
+			})();
+		}
 	}-*/;
 
 	public static native void sendEvent (String eventName, String data, SpilEventActionListener listener) /*-{
 		// this is super janky, we convert from JsonValue to string to object and to string again in the api
 		var callback = null;
-		if (listener) {
+		if (listener !== null) {
 			callback = $entry(function(responseData) {
 			   console.log("JsSpilSdk response for " + eventName + ": " + JSON.stringify(responseData));
-			   // looks like we are getting something like this back at this point
-			   // {"status":"204","name":"eventName"}
 				var response = @com.spilgames.spilgdxsdk.SpilResponseEvent::new()()
 				response.@com.spilgames.spilgdxsdk.SpilResponseEvent::setName(Ljava/lang/String;)(responseData["name"]);
 				listener.@com.spilgames.spilgdxsdk.SpilEventActionListener::onResponse(Lcom/spilgames/spilgdxsdk/SpilResponseEvent;)(response);
 			});
 		}
-		if (data) {
+		if (data !== null) {
 			SpilSDK.sendEvent(eventName, JSON.parse(data), callback);
 		} else {
 			SpilSDK.sendEvent(eventName, null, callback);
@@ -48,6 +59,10 @@ public class JsSpilSdk {
 	}-*/;
 
 	public static native void setPlayerDataCallbacks (SpilPlayerDataListener listener) /*-{
+		if (listener === null) {
+			SpilSDK.setPlayerDataCallbacks(null);
+			return;
+		}
 		SpilSDK.setPlayerDataCallbacks({
 			playerDataError: $entry(function(error){
 				console.log(error);
@@ -56,7 +71,6 @@ public class JsSpilSdk {
 			}),
 			playerDataUpdated: $entry(function(reason, updatedData){
 				console.log('playerDataUpdated triggered ' + reason + ' ' + updatedData);
-				// reason String, updateData js object, we can make it into a string with JSON and do out toJsonValue stuff?
 				var jsonReader = @com.badlogic.gdx.utils.JsonReader::new()();
 				var jsonValue = jsonReader.@com.badlogic.gdx.utils.JsonReader::parse(Ljava/lang/String;)(JSON.stringify(updatedData));
 				listener.@com.spilgames.spilgdxsdk.SpilPlayerDataListener::playerDataUpdated(Ljava/lang/String;Lcom/badlogic/gdx/utils/JsonValue;)(reason, jsonValue);
@@ -73,6 +87,10 @@ public class JsSpilSdk {
 	}-*/;
 
 	public static native void setGameDataCallbacks (SpilGameDataListener listener) /*-{
+		if (listener === null) {
+			SpilSDK.setGameDataCallbacks(null);
+			return;
+		}
 		SpilSDK.setGameDataCallbacks({
 			gameDataError: $entry(function (error) {
 				console.log(error)
@@ -87,6 +105,10 @@ public class JsSpilSdk {
 	}-*/;
 
 	public static native void setAdCallbacks (SpilAdListener listener) /*-{
+		if (listener === null) {
+			SpilSDK.setAdCallbacks(null);
+			return;
+		}
 		SpilSDK.setAdCallbacks({
 			AdAvailable: $entry(function(adType){
 				console.log('AdAvailable triggered ' + adType);
@@ -102,12 +124,6 @@ public class JsSpilSdk {
 			}),
 			AdFinished: $entry(function(network, adType, reason){
 				console.log('AdFinished triggered ' + network + ' ' + adType + ' ' + reason);
-				// gotta stuff params into JsonValue
-
-				// JsonValue jsonValue = new JsonValue(JsonValue.ValueType.object);
-				//jsonValue.addChild("network", new JsonValue("network"));
-				//jsonValue.addChild("type", new JsonValue("type"));
-				//jsonValue.addChild("reason", new JsonValue("reason"));
 				var rootType = @com.badlogic.gdx.utils.JsonValue.ValueType::object;
 				var jsonValue = @com.badlogic.gdx.utils.JsonValue::new(Lcom/badlogic/gdx/utils/JsonValue$ValueType;)(rootType);
 				jsonValue.@com.badlogic.gdx.utils.JsonValue::addChild(Ljava/lang/String;Lcom/badlogic/gdx/utils/JsonValue;)(
@@ -135,6 +151,10 @@ public class JsSpilSdk {
 
 	// note: we are calling java stuff inside functions now, but it should probably by direct when we know it works
 	public static native void setConfigDataCallbacks (SpilConfigDataListener listener) /*-{
+		if (listener === null) {
+			SpilSDK.setConfigDataCallbacks(null);
+			return;
+		}
 		SpilSDK.setConfigDataCallbacks({
 			// setting the listener function directly does not seem to work
 			configDataUpdated: $entry(function(){
@@ -193,7 +213,7 @@ public class JsSpilSdk {
 	}-*/;
 
 	public static native void subtractCurrencyFromWallet (int currencyId, int amount, String reason) /*-{
-		SpilSDK.addCurrencyToWallet(currencyId, amount, reason);
+		SpilSDK.subtractCurrencyFromWallet(currencyId, amount, reason);
 	}-*/;
 
 	public static native String getInventory () /*-{

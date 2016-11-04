@@ -8,7 +8,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.*;
 import com.badlogic.gdx.utils.StringBuilder;
-import com.kotcrab.vis.ui.util.dialog.Dialogs;
 import com.kotcrab.vis.ui.widget.*;
 import com.spilgames.libgdxbridge.SpilGame;
 import com.spilgames.spilgdxsdk.SpilErrorCode;
@@ -33,7 +32,6 @@ public class PlayerDataScreen extends BackScreen {
 		walletContainer = new VisTable(true);
 		inventoryContainer = new VisTable(true);
 		scrollPane = new VisScrollPane(scrolled = new VisTable());
-		scrollPane.debugAll();
 		scrolled.add(walletContainer).expandX().fillX().row();
 		scrolled.add(inventoryContainer).expandX().fillX().row();
 		content.add(scrollPane).expand().fill();

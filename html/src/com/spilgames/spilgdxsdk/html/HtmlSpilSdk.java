@@ -6,7 +6,7 @@ import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
 import com.google.gwt.core.client.Callback;
-import com.google.gwt.core.client.ScriptInjector;
+import com.google.gwt.user.client.Timer;
 import com.spilgames.spilgdxsdk.*;
 import com.spilgames.spilgdxsdk.html.bindings.JsSpilSdk;
 import com.spilgames.spilgdxsdk.html.bindings.JsUtils;
@@ -23,39 +23,45 @@ public class HtmlSpilSdk implements SpilSdk {
 
 	private boolean initialized;
 
-	// TODO we probably dont want this stuff in constructor
-	public HtmlSpilSdk(String appId, String version, String env, String spilUrl) {
-		this(appId, version, env, spilUrl, null);
+	public HtmlSpilSdk() {
+		this(null, true);
 	}
 
-	public HtmlSpilSdk(String appId, String version, String env, String spilUrl, SpilLifecycleListener listener) {
-		this(appId, version, env, spilUrl, listener, true);
+	public HtmlSpilSdk(SpilLifecycleListener listener) {
+		this(listener, true);
 	}
 
-	public HtmlSpilSdk(final String appId, final String version, final String env, String spilUrl, SpilLifecycleListener listener, boolean loggingEnabled) {
+	public HtmlSpilSdk(SpilLifecycleListener listener, boolean loggingEnabled) {
 		setLogging(loggingEnabled);
 		setSpilLifecycleListener(listener);
-		ScriptInjector.fromUrl(spilUrl).setCallback(new Callback<Void, Exception>() {
+		final Callback<Void, Void> callback = new Callback<Void, Void>() {
+			Timer t;
 			@Override public void onSuccess (Void aVoid) {
-				JsSpilSdk.init(appId, version, env, new Callback<Void, Void>() {
-					@Override public void onSuccess (Void aVoid) {
-						log(TAG, "Spil SDK initialized");
-						initialized = true;
-						if (lifecycleListener != null) {
-							lifecycleListener.initialized(HtmlSpilSdk.this);
+				log(TAG, "Spil SDK initialized");
+				initialized = true;
+				if (lifecycleListener != null) {
+					lifecycleListener.initialized(HtmlSpilSdk.this);
+				}
+				if (t != null) {
+					t.cancel();
+				}
+			}
+
+			@Override public void onFailure (Void result) {
+				log(TAG, "Spil SDK not initialized, retrying");
+				if (t == null) {
+					final Callback<Void, Void> that = this;
+					t = new Timer() {
+						@Override public void run () {
+							JsSpilSdk.init(that);
 						}
-					}
-
-					@Override public void onFailure (Void result) {
-						// NOTE: this will never get called
-					}
-				});
+					};
+				}
+				// do we want to pass this in?
+				t.schedule(250);
 			}
-
-			@Override public void onFailure (Exception e) {
-				log(TAG, "FAILED to load Spil SDK");
-			}
-		}).inject();
+		};
+		JsSpilSdk.init(callback);
 	}
 
 	@Override public void setSpilLifecycleListener (SpilLifecycleListener listener) {

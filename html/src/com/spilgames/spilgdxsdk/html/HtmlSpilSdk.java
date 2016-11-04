@@ -163,9 +163,9 @@ public class HtmlSpilSdk implements SpilSdk {
 		log(TAG, "trackEvent ("+event+")");
 		JsonValue customData = event.getCustomData();
 		if (customData != null) {
-			JsSpilSdk.sendEvent(event.getName(), customData.toJson(JsonWriter.OutputType.json), null);
+			JsSpilSdk.trackEvent(event.getName(), customData.toJson(JsonWriter.OutputType.json), null);
 		} else {
-			JsSpilSdk.sendEvent(event.getName(), null, null);
+			JsSpilSdk.trackEvent(event.getName(), null, null);
 		}
 	}
 
@@ -173,9 +173,9 @@ public class HtmlSpilSdk implements SpilSdk {
 		log(TAG, "trackEvent ("+event+", "+listener+")");
 		JsonValue customData = event.getCustomData();
 		if (customData != null) {
-			JsSpilSdk.sendEvent(event.getName(), customData.toJson(JsonWriter.OutputType.json), listener);
+			JsSpilSdk.trackEvent(event.getName(), customData.toJson(JsonWriter.OutputType.json), listener);
 		} else {
-			JsSpilSdk.sendEvent(event.getName(), null, listener);
+			JsSpilSdk.trackEvent(event.getName(), null, listener);
 		}
 	}
 
@@ -336,8 +336,7 @@ public class HtmlSpilSdk implements SpilSdk {
 
 	@Override public void consumeBundle (int bundleId, String reason) {
 		log(TAG, "consumeBundle (" +bundleId+", "+ reason+")");
-		// TODO do we want to expose the from shop part? gotta check other backends
-		JsSpilSdk.consumeBundle(bundleId, reason, false);
+		JsSpilSdk.consumeBundle(bundleId, reason);
 	}
 
 	// customer support

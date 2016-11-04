@@ -37,8 +37,8 @@ SpilSDK = function (bundleId, appVersion, callback, environment) {
                 action: "loadscript",
                 args: ["https://payments.spilgames.com/static/javascript/spil/payment.portal.js"]
             }, {
-                action: function(callback) {
-                    ScriptLoader("http://cdn.gameplayer.io/api/js/game.js", function(){
+                action: function (callback) {
+                    ScriptLoader("http://cdn.gameplayer.io/api/js/game.js", function () {
                         Ads.SpilSDK.initAds(callback);
                     });
                 }
@@ -343,7 +343,7 @@ module.exports = {
         return sessionId;
     },
     getUrl: function () {
-        if (environment == 'prd') {
+        if (environment === "prd") {
             return "https://apptracker.spilgames.com/v1/native-events/event/" + this.getOs() + "/" + this.getBundleId();
         } else {
             return "http://api-stg.sap.dmz.ams1.spil/v1/native-events/event/" + this.getOs() + "/" + this.getBundleId();
@@ -685,7 +685,7 @@ function Shop(shopData) {
     if (!shopData || !shopData.length) {
         return;
     }
-    for (i = 0; i < shopData.length; i++) {
+    for (var i = 0; i < shopData.length; i++) {
         var tab = new Tab(shopData[i]);
         this.tabs.push(tab);
     }
@@ -975,27 +975,29 @@ var adsCallbacks = {
         "AdAvailable": function (adType) {},
         "AdNotAvailable": function (adType) {},
         "AdStart": function (adType) {},
-        "AdFinished": function (network, adType, reason) {},
-};
+        "AdFinished": function (network, adType, reason) {}
+    };
 
 module.exports = {
     "SpilSDK": {
         initAds: function (callback) {
             EventUtil.sendEvent("advertisementInit", {}, function (responseData) {
-                if(responseData.data != undefined
-                    && responseData.data.providers != undefined
-                    && responseData.data.providers.DFP != undefined){
+                if (
+                    responseData.data !== undefined &&
+                    responseData.data.providers !== undefined &&
+                    responseData.data.providers.DFP !== undefined
+                ) {
 
-                        var SpilData = {
-                            id: responseData.data.providers.DFP.adUnitID
-                        };
+                    var SpilData = {
+                        id: responseData.data.providers.DFP.adUnitID
+                    };
 
-                        GameAPI.loadAPI (function (apiInstance) {
-                            callback();
-                        }, SpilData);
-                }else{
+                    GameAPI.loadAPI (function (apiInstance) {
+                        callback();
+                    }, SpilData);
+                }else {
                     callback();
-                };
+                }
 
             });
         },
@@ -1004,24 +1006,24 @@ module.exports = {
                 adsCallbacks[listenerName] = listeners[listenerName];
             }
         },
-        RequestRewardVideo: function(){
-            GameAPI.GameBreak.isRewardAvailable().then(function(){
-                adsCallbacks.AdAvailable('rewardVideo');
-            }, function(){
-                adsCallbacks.AdNotAvailable('rewardVideo');
+        RequestRewardVideo: function () {
+            GameAPI.GameBreak.isRewardAvailable().then(function () {
+                adsCallbacks.AdAvailable("rewardVideo");
+            }, function () {
+                adsCallbacks.AdNotAvailable("rewardVideo");
             });
         },
-        PlayVideo: function(){
-            GameAPI.GameBreak.isRewardAvailable().then(function(){
-                GameAPI.GameBreak.reward(function(){
-                    adsCallbacks.AdStart('rewardVideo');
-                }, function(data){
-                    reason = 'dismiss';
-                    if(data.completed){
-                        reason = 'close';
+        PlayVideo: function () {
+            GameAPI.GameBreak.isRewardAvailable().then(function () {
+                GameAPI.GameBreak.reward(function () {
+                    adsCallbacks.AdStart("rewardVideo");
+                }, function (data) {
+                    reason = "dismiss";
+                    if (data.completed) {
+                        reason = "close";
                     }
-                    adsCallbacks.AdFinished('DFP', 'rewardVideo', reason);
-                })
+                    adsCallbacks.AdFinished("DFP", "rewardVideo", reason);
+                });
             });
         }
     }
@@ -1029,7 +1031,6 @@ module.exports = {
 
 },{"./EventUtil":26}],25:[function(require,module,exports){
 var EventUtil = require("./EventUtil");
-var Events = require("../core_modules/Events");
 
 var config = {},
     configDataCallbacks = {
@@ -1061,7 +1062,7 @@ module.exports = {
     }
 };
 
-},{"../core_modules/Events":4,"./EventUtil":26}],26:[function(require,module,exports){
+},{"./EventUtil":26}],26:[function(require,module,exports){
 var Utils = require("../core_modules/Utils");
 
 function ajax(method, data, success, failure) {
@@ -1111,25 +1112,27 @@ function createEvent(eventName, customData) {
     };
 }
 
-function sendEvent(eventName, data, callback) {
+function sendEvent(eventName, data, callback, failureCallback) {
     requestData = createEvent(eventName, data);
     if (!callback) {
         callback = function (responseData) {
             console.log("Got response from " + eventName + ": " + JSON.stringify(responseData));
         };
     }
-    ajax("POST", requestData, callback, function (responseData) {
-        console.log("Ajax request failed: ");
-        console.log(responseData);
-    });
+    if (!failureCallback) {
+        failureCallback = function (responseData) {
+            console.log("Ajax request failed: ");
+            console.log(responseData);
+        };
+    }
+    ajax("POST", requestData, callback, failureCallback);
 }
 
 module.exports = {
     sendEvent: sendEvent,
     "SpilSDK": {
-        sendEvent: sendEvent,
-        sendCustomEvent: function (eventName, data, callback) {
-            sendEvent(eventName, data, callback);
+        trackEvent: function (eventName, data, callback, failureCallback) {
+            sendEvent(eventName, data, callback, failureCallback);
         },
         getUuid: function () {
             return Utils.getUuid();
@@ -1496,9 +1499,9 @@ function updateInventoryWithBundle(bundleId, reason, fromShop) {
     }
 
     var prices = bundle.getPrices(),
-        promotion = gameData.getPromotion(bundle.getId()),
-        usePromotion = promotion && fromShop;
-    if (usePromotion) {
+        promotion = gameData.getPromotion(bundle.getId());
+
+    if (promotion) {
         prices = promotion.getPrices();
     }
     //Look at tempCurrency
@@ -1533,7 +1536,7 @@ function updateInventoryWithBundle(bundleId, reason, fromShop) {
             }),
             inventoryItem = userProfile.getInventory().getItem(bundleItem.getId()),
             bundleItemAmount = bundleItem.getAmount();
-        if (usePromotion) {
+        if (promotion) {
             bundleItemAmount *= promotion.getAmount();
         }
         if (inventoryItem != null) {
@@ -1819,6 +1822,7 @@ var playerDataUpdateReasons = {
 
 module.exports = {
     "SpilSDK": {
+        playerDataUpdateReasons: playerDataUpdateReasons,
         requestPlayerData: function (callback) {
 
             function request(callback) {
@@ -1879,8 +1883,8 @@ module.exports = {
             }
             updateInventoryWithItem(itemId, amount, "substract", reason);
         },
-        consumeBundle: function (bundleId, reason, fromShop) {
-            updateInventoryWithBundle(bundleId, reason, fromShop);
+        consumeBundle: function (bundleId, reason) {
+            updateInventoryWithBundle(bundleId, reason);
         },
         addCurrencyToWallet: function (currencyId, delta, reason) {
 

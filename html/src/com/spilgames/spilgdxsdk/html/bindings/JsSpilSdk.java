@@ -31,7 +31,7 @@ public class JsSpilSdk {
 		}
 	}-*/;
 
-	public static native void sendEvent (String eventName, String data, SpilEventActionListener listener) /*-{
+	public static native void trackEvent (String eventName, String data, SpilEventActionListener listener) /*-{
 		// this is super janky, we convert from JsonValue to string to object and to string again in the api
 		var callback = null;
 		if (listener !== null) {
@@ -43,16 +43,11 @@ public class JsSpilSdk {
 			});
 		}
 		if (data !== null) {
-			SpilSDK.sendEvent(eventName, JSON.parse(data), callback);
+			SpilSDK.trackEvent(eventName, JSON.parse(data), callback);
 		} else {
-			SpilSDK.sendEvent(eventName, null, callback);
+			SpilSDK.trackEvent(eventName, null, callback);
 		}
 	}-*/;
-
-	public static void sendCustomEvent(String eventName, String data, SpilEventActionListener listener) {
-		// NOTE sendCustomEvent in js just delegates to sendEvent, so we will do the same
-		sendEvent(eventName, data, listener);
-	}
 
 	public static native void requestPlayerData () /*-{
 		SpilSDK.requestPlayerData();
@@ -199,8 +194,8 @@ public class JsSpilSdk {
 		return JSON.stringify(SpilSDK.getGameData());
 	}-*/;
 
-	public static native void consumeBundle(int bundleId, String reason, boolean fromShop) /*-{
-		SpilSDK.consumeBundle(bundleId, reason, fromShop);
+	public static native void consumeBundle(int bundleId, String reason) /*-{
+		SpilSDK.consumeBundle(bundleId, reason);
 	}-*/;
 
 	public static native String getWallet () /*-{

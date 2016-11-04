@@ -32,7 +32,7 @@ allprojects {
         gdxVersion = '1.9.4'
         roboVMVersion = '2.2.0'
         robopodsVersion = '2.2.0-SNAPSHOT'
-        spilGDXSDKVersion = '2.2.3'
+        spilGDXSDKVersion = '2.2.4'
         // TODO this should be 9.4.0 but it doesnt work for whatever reason
         gmsVersion = '9.2.0'
     }

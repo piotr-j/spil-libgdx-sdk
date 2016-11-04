@@ -135,11 +135,11 @@ public class HtmlSpilSdk implements SpilSdk {
 	}
 
 	@Override public void requestMoreApps () {
-		log(TAG, "requestMoreApps");
+		log(TAG, "requestMoreApps ()");
 	}
 
 	@Override public void requestRewardVideo () {
-		log(TAG, "requestRewardVideo");
+		log(TAG, "requestRewardVideo ()");
 		JsSpilSdk.requestRewardVideo();
 	}
 
@@ -223,39 +223,43 @@ public class HtmlSpilSdk implements SpilSdk {
 	}
 
 	@Override public void requestConfig () {
+		log(TAG, "requestConfig ()");
 		JsSpilSdk.refreshConfig();
 	}
 
 	@Override public JsonValue getConfig () {
+		log(TAG, "getConfig ()");
 		return toJson(JsSpilSdk.getConfigAll());
 	}
 
 	@Override public void setSpilConfigLDataListener (SpilConfigDataListener listener) {
+		log(TAG, "setSpilConfigLDataListener ("+listener+")");
 		// NOTE perhaps we will need simpler listeners as we need to translate some stuff into out classes, might be simpler in java
 		JsSpilSdk.setConfigDataCallbacks(listener);
 	}
 
 	@Override public void requestPackages () {
-		log(TAG, "requestPackages");
+		log(TAG, "requestPackages ()");
 		JsSpilSdk.requestPackages();
 	}
 
 	@Override public JsonValue getPromotion (String packageId) {
-		log(TAG, "getPromotion");
+		log(TAG, "getPromotion ("+packageId+")");
 		return toJson(JsSpilSdk.getPromotion(packageId));
 	}
 
 	@Override public JsonValue getPackage (String packageId) {
-		log(TAG, "getPackage");
+		log(TAG, "getPackage ("+packageId+")");
 		return toJson(JsSpilSdk.getPackage(packageId));
 	}
 
 	@Override public JsonValue getAllPackages () {
-		log(TAG, "getAllPackages");
+		log(TAG, "getAllPackages ()");
 		return toJson(JsSpilSdk.getAllPackages());
 	}
 
 	@Override public boolean isAdProviderInitialized (String provider) {
+		log(TAG, "isAdProviderInitialized ("+provider+")");
 		// we don't really have providers on html, do we?
 		return true;
 	}
@@ -265,11 +269,11 @@ public class HtmlSpilSdk implements SpilSdk {
 	}
 
 	@Override public void showMoreApps () {
-		log(TAG, "showMoreApps");
+		log(TAG, "showMoreApps ()");
 	}
 
 	@Override public void showRewardVideo () {
-		log(TAG, "showRewardVideo");
+		log(TAG, "showRewardVideo ()");
 		JsSpilSdk.playVideo();
 	}
 
@@ -301,13 +305,17 @@ public class HtmlSpilSdk implements SpilSdk {
 	}
 
 	@Override public void requestGameData () {
-		log(TAG, "requestGameData");
+		log(TAG, "requestGameData ()");
 		JsSpilSdk.requestGameData();
 	}
 
 	@Override public void requestPlayerData () {
-		log(TAG, "requestPlayerData)");
+		log(TAG, "requestPlayerData ()");
 		JsSpilSdk.requestPlayerData();
+	}
+
+	@Override public void updatePlayerData () {
+		log(TAG, "requestPlayerData ()");
 	}
 
 	@Override public void setSpilPlayerDataListener (SpilPlayerDataListener playerDataListener) {
@@ -325,11 +333,11 @@ public class HtmlSpilSdk implements SpilSdk {
 	}
 
 	@Override public JsonValue getUserProfile () {
-		log(TAG, "getUserProfile");
+		log(TAG, "getUserProfile ()");
 		return toJson(JsSpilSdk.getUserProfile());
 	}
 	@Override public JsonValue getGameData () {
-		log(TAG, "getGameData");
+		log(TAG, "getGameData ()");
 		return toJson(JsSpilSdk.getGameData());
 	}
 
@@ -344,7 +352,7 @@ public class HtmlSpilSdk implements SpilSdk {
 //	}
 
 	@Override public JsonValue getWallet () {
-		log(TAG, "getWallet");
+		log(TAG, "getWallet ()");
 		return toJson(JsSpilSdk.getWallet());
 	}
 
@@ -359,7 +367,7 @@ public class HtmlSpilSdk implements SpilSdk {
 	}
 
 	@Override public JsonValue getInventory () {
-		log(TAG, "getInventory");
+		log(TAG, "getInventory ()");
 		return toJson(JsSpilSdk.getInventory());
 	}
 
@@ -389,6 +397,23 @@ public class HtmlSpilSdk implements SpilSdk {
 
 	@Override public void showZendeskContactCenter () {
 		log(TAG, "showZendeskContactCenter ()");
+	}
+
+	// web
+	@Override public void requestDailyBonus () {
+		log(TAG, "requestDailyBonus ()");
+	}
+
+	@Override public void setSpilDailyBonusListener (SpilDailyBonusListener listener) {
+		log(TAG, "setSpilDailyBonusListener (" + listener + ")");
+	}
+
+	@Override public void requestSplashScreen () {
+		log(TAG, "requestSplashScreen ()");
+	}
+
+	@Override public void setSpilSplashScreenListener (SpilSplashScreenListener listener) {
+		log(TAG, "setSpilSplashScreenListener (" + listener + ")");
 	}
 
 	private JsonReader jsonReader = new JsonReader();

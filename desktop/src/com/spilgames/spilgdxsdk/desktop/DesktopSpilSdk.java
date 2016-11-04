@@ -47,11 +47,11 @@ public class DesktopSpilSdk implements SpilSdk {
 	}
 
 	@Override public void requestMoreApps () {
-		log(TAG, "requestMoreApps");
+		log(TAG, "requestMoreApps ()");
 	}
 
 	@Override public void requestRewardVideo () {
-		log(TAG, "requestRewardVideo");
+		log(TAG, "requestRewardVideo ()");
 	}
 
 	@Override public void setDebug (boolean debug) {
@@ -131,21 +131,21 @@ public class DesktopSpilSdk implements SpilSdk {
 	}
 
 	@Override public void requestPackages () {
-		log(TAG, "requestPackages");
+		log(TAG, "requestPackages ()");
 	}
 
 	@Override public JsonValue getPromotion (String packageId) {
-		log(TAG, "getPromotion");
+		log(TAG, "getPromotion ()");
 		return null;
 	}
 
 	@Override public JsonValue getPackage (String packageId) {
-		log(TAG, "getPackage");
+		log(TAG, "getPackage ()");
 		return null;
 	}
 
 	@Override public JsonValue getAllPackages () {
-		log(TAG, "getAllPackages");
+		log(TAG, "getAllPackages ()");
 		return null;
 	}
 
@@ -158,11 +158,11 @@ public class DesktopSpilSdk implements SpilSdk {
 	}
 
 	@Override public void showMoreApps () {
-		log(TAG, "showMoreApps");
+		log(TAG, "showMoreApps ()");
 	}
 
 	@Override public void showRewardVideo () {
-		log(TAG, "showRewardVideo");
+		log(TAG, "showRewardVideo ()");
 	}
 
 	@Override public void setSpilAdListener (SpilAdListener adCallbacks) {
@@ -186,11 +186,15 @@ public class DesktopSpilSdk implements SpilSdk {
 	}
 
 	@Override public void requestGameData () {
-		log(TAG, "requestGameData");
+		log(TAG, "requestGameData ()");
 	}
 
 	@Override public void requestPlayerData () {
-		log(TAG, "requestPlayerData)");
+		log(TAG, "requestPlayerData ()");
+	}
+
+	@Override public void updatePlayerData () {
+		log(TAG, "updatePlayerData ()");
 	}
 
 	@Override public void setSpilPlayerDataListener (SpilPlayerDataListener playerDataListener) {
@@ -202,22 +206,22 @@ public class DesktopSpilSdk implements SpilSdk {
 	}
 
 	@Override public JsonValue getUserProfile () {
-		log(TAG, "getUserProfile");
+		log(TAG, "getUserProfile ()");
 		return null;
 	}
 
 	@Override public JsonValue getWallet () {
-		log(TAG, "getWallet");
+		log(TAG, "getWallet ()");
 		return null;
 	}
 
 	@Override public JsonValue getGameData () {
-		log(TAG, "getGameData");
+		log(TAG, "getGameData ()");
 		return null;
 	}
 
 	@Override public JsonValue getInventory () {
-		log(TAG, "getInventory");
+		log(TAG, "getInventory ()");
 		return null;
 	}
 
@@ -262,5 +266,22 @@ public class DesktopSpilSdk implements SpilSdk {
 
 	@Override public void showZendeskContactCenter () {
 		log(TAG, "showZendeskContactCenter ()");
+	}
+
+	// web
+	@Override public void requestDailyBonus () {
+		log(TAG, "requestDailyBonus ()");
+	}
+
+	@Override public void setSpilDailyBonusListener (SpilDailyBonusListener listener) {
+		log(TAG, "setSpilDailyBonusListener (" + listener + ")");
+	}
+
+	@Override public void requestSplashScreen () {
+		log(TAG, "requestSplashScreen ()");
+	}
+
+	@Override public void setSpilSplashScreenListener (SpilSplashScreenListener listener) {
+		log(TAG, "setSpilSplashScreenListener (" + listener + ")");
 	}
 }

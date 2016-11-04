@@ -66,6 +66,7 @@ public interface SpilSdk {
 
 	// wallet
 	void requestPlayerData();
+	void updatePlayerData();
 	void requestGameData();
 	void setSpilGameDataListener(SpilGameDataListener gameDataListener);
 	void setSpilPlayerDataListener(SpilPlayerDataListener playerDataListener);
@@ -107,4 +108,11 @@ public interface SpilSdk {
 
 	// Automated events
 	void setSpilAutomatedEventsListener (SpilAutomatedEventsListener automatedEventsListener);
+
+	// web
+	void requestDailyBonus();
+	void setSpilDailyBonusListener (SpilDailyBonusListener listener);
+
+	void requestSplashScreen();
+	void setSpilSplashScreenListener (SpilSplashScreenListener listener);
 }

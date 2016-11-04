@@ -34,6 +34,56 @@ public class SpilDelegateAdapter extends NSObject implements SpilDelegate {
 
 	}
 
+	@NotImplemented("splashScreenOpen")
+	@Override public void splashScreenOpen () {
+
+	}
+
+	@NotImplemented("splashScreenNotAvailable")
+	@Override public void splashScreenNotAvailable () {
+
+	}
+
+	@NotImplemented("splashScreenClosed")
+	@Override public void splashScreenClosed () {
+
+	}
+
+	@NotImplemented("splashScreenOpenShop")
+	@Override public void splashScreenOpenShop () {
+
+	}
+
+	@NotImplemented("splashScreenError:")
+	@Override public void splashScreenError (String message) {
+
+	}
+
+	@NotImplemented("dailyBonusOpen")
+	@Override public void dailyBonusOpen () {
+
+	}
+
+	@NotImplemented("dailyBonusNotAvailable")
+	@Override public void dailyBonusNotAvailable () {
+
+	}
+
+	@NotImplemented("dailyBonusClosed")
+	@Override public void dailyBonusClosed () {
+
+	}
+
+	@NotImplemented("dailyBonusReward:")
+	@Override public void dailyBonusReward (NSDictionary<?, ?> data) {
+
+	}
+
+	@NotImplemented("dailyBonusError:")
+	@Override public void dailyBonusError (String message) {
+
+	}
+
 	@NotImplemented("packagesLoaded")
 	@Override public void packagesLoaded () {
 

@@ -298,6 +298,10 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 		Spil.requestPlayerData();
 	}
 
+	@Override public void updatePlayerData () {
+		Spil.updatePlayerData();
+	}
+
 	@Override public void setSpilPlayerDataListener (SpilPlayerDataListener playerDataListener) {
 		delegate().playerDataListener = playerDataListener;
 	}
@@ -356,6 +360,28 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 		Spil.showContactCenter();
 	}
 
+	// web
+	@Override public void requestDailyBonus () {
+		Spil.requestDailyBonus();
+	}
+
+	@Override public void setSpilDailyBonusListener (SpilDailyBonusListener listener) {
+		delegate().dailyBonusListener = listener;
+	}
+
+	@Override public void requestSplashScreen () {
+		Spil.requestSplashScreen();
+	}
+
+	@Override public void setSpilSplashScreenListener (SpilSplashScreenListener listener) {
+		delegate().splashScreenListener = listener;
+	}
+
+	// ios only
+	public void setCustomBundleId (String bundleIdentifier) {
+		Spil.setCustomBundleId(bundleIdentifier);
+	}
+
 	private class SpilDelegate extends SpilDelegateAdapter {
 		SpilAdListener adListener;
 		SpilNotificationDataListener notificationDataListener;
@@ -364,6 +390,8 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 		SpilConfigDataListener configDataListener;
 		SpilGameStateListener gameStateListener;
 		SpilAutomatedEventsListener automatedEventsListener;
+		SpilDailyBonusListener dailyBonusListener;
+		SpilSplashScreenListener splashScreenListener;
 
 		@Override public void adAvailable (String type) {
 			if (adListener != null) adListener.adAvailable(type);
@@ -447,6 +475,46 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 
 		@Override public void openGameShop () {
 			if (automatedEventsListener != null) automatedEventsListener.openGameShop();
+		}
+
+		@Override public void splashScreenOpen () {
+			if (splashScreenListener != null) splashScreenListener.splashScreenOpen();
+		}
+
+		@Override public void splashScreenNotAvailable () {
+			if (splashScreenListener != null) splashScreenListener.splashScreenNotAvailable();
+		}
+
+		@Override public void splashScreenClosed () {
+			if (splashScreenListener != null) splashScreenListener.splashScreenClosed();
+		}
+
+		@Override public void splashScreenOpenShop () {
+			if (splashScreenListener != null) splashScreenListener.splashScreenOpenShop();
+		}
+
+		@Override public void splashScreenError (String message) {
+			if (splashScreenListener != null) splashScreenListener.splashScreenError(convertErrorMessage(message));
+		}
+
+		@Override public void dailyBonusOpen () {
+			if (dailyBonusListener != null) dailyBonusListener.dailyBonusOpen();
+		}
+
+		@Override public void dailyBonusNotAvailable () {
+			if (dailyBonusListener != null) dailyBonusListener.dailyBonusNotAvailable();
+		}
+
+		@Override public void dailyBonusClosed () {
+			if (dailyBonusListener != null) dailyBonusListener.dailyBonusClosed();
+		}
+
+		@Override public void dailyBonusReward (NSDictionary<?, ?> data) {
+			if (dailyBonusListener != null) dailyBonusListener.dailyBonusReward(toJson(data));
+		}
+
+		@Override public void dailyBonusError (String message) {
+			if (dailyBonusListener != null) dailyBonusListener.dailyBonusError(convertErrorMessage(message));
 		}
 
 		SpilErrorCode convertErrorMessage(String message) {

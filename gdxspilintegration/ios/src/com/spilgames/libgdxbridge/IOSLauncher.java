@@ -48,6 +48,7 @@ public class IOSLauncher extends IOSApplication.Delegate {
 		spilSdk = new IosRoboVMSpilSdk(this);
 		spilSdk.onCreate();
 		spilSdk.registerPushNotifications();
+		spilSdk.setCustomBundleId("com.spilgames.tappyplane");
 
 		return new IOSApplication(new SpilGame(spilSdk, bridge), config);
 	}

@@ -10,7 +10,7 @@
 #import "HookBridge.h"
 #import "GAI.h"
 
-#define SDK_VERSION @"2.0.8"
+#define SDK_VERSION @"2.1.2"
 
 @class Spil;
 @class UserProfile;
@@ -34,6 +34,20 @@
 // Notification events
 -(void)grantReward:(NSDictionary*)data;
 
+// Splash screen events
+-(void)splashScreenOpen;
+-(void)splashScreenNotAvailable;
+-(void)splashScreenClosed;
+-(void)splashScreenOpenShop;
+-(void)splashScreenError:(NSString*)message;
+
+// Daily bonus screen events
+-(void)dailyBonusOpen;
+-(void)dailyBonusNotAvailable;
+-(void)dailyBonusClosed;
+-(void)dailyBonusReward:(NSDictionary*)data;
+-(void)dailyBonusError:(NSString*)message;
+
 // Config events
 -(void)configUpdated;
 
@@ -53,9 +67,6 @@
 -(void)gameStateUpdated:(NSString*)access; // Access: private|public
 -(void)otherUsersGameStateLoaded:(NSDictionary*)data forProvider:(NSString*)provider; // Data: <NSString* userId, NSString* data>
 -(void)gameStateError:(NSString*)message;
-
-// Automated events
--(void)openGameShop;
 
 @end
 
@@ -88,6 +99,22 @@
  *  @param advancedLoggingEnabled Enables or disables the advanced log printing
  */
 +(void)setAdvancedLoggingEnabled:(BOOL)advancedLoggingEnabled;
+
+/**
+ *  Helper method to log a message to the console
+ *  Especially useful when building a wrapped games (e.g. Unity) where the log messages are sometimes stripped out.
+ *  This method gives the oppertunity to log the message at the native layer instead.
+ *
+ *  @param The message to log
+ */
++(void)log:(NSString*)message;
+
+/**
+ *  Method to set a custom bundle id, useful during debugging.
+ *
+ *  @param The custom bundle id to use
+ */
++(void)setCustomBundleId:(NSString*)bundleId;
 
 /**
  *  Get the Spil user id
@@ -374,6 +401,11 @@
 +(void)requestPlayerData;
 
 /**
+ * Request the player data
+ */
++(void)updatePlayerData;
+
+/**
  * Request the game data
  */
 +(void)requestGameData;
@@ -463,6 +495,18 @@
  * Shows the help center webview version
  */
 +(void)showHelpCenterWebview;
+
+#pragma mark Web
+
+/**
+ * Request the daily bonus screen
+ */
++(void)requestDailyBonus;
+
+/**
+ * Request a splash screen
+ */
++(void)requestSplashScreen;
 
 #pragma mark User data
 

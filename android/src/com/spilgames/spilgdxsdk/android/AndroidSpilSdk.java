@@ -398,6 +398,10 @@ public class AndroidSpilSdk implements SpilSdk {
 		instance.requestPlayerData();
 	}
 
+	@Override public void updatePlayerData () {
+		instance.updatePlayerData();
+	}
+
 	@Override public void setSpilGameDataListener (SpilGameDataListener gameDataListener) {
 		gameListener.listener = gameDataListener;
 	}
@@ -456,6 +460,24 @@ public class AndroidSpilSdk implements SpilSdk {
 		instance.showContactZendeskCenter();
 	}
 
+	// web
+	@Override public void requestDailyBonus () {
+		instance.requestDailyBonus();
+	}
+
+	@Override public void setSpilDailyBonusListener (SpilDailyBonusListener listener) {
+		dailyListener.listener = listener;
+	}
+
+	@Override public void requestSplashScreen () {
+		instance.requestSplashScreen();
+	}
+
+	@Override public void setSpilSplashScreenListener (SpilSplashScreenListener listener) {
+		splashListener.listener = listener;
+	}
+
+	// android lifecycle
 	public void onCreate () {
 		instance.onCreate();
 	}
@@ -547,46 +569,50 @@ public class AndroidSpilSdk implements SpilSdk {
 	}
 
 	private static class MyOnDailyBonusListener implements OnDailyBonusListener {
-		@Override public void DailyBonusOpen () {
+		SpilDailyBonusListener listener;
 
+		@Override public void DailyBonusOpen () {
+			if (listener != null) listener.dailyBonusOpen();
 		}
 
 		@Override public void DailyBonusClosed () {
-
+			if (listener != null) listener.dailyBonusClosed();
 		}
 
 		@Override public void DailyBonusNotAvailable () {
-
+			if (listener != null) listener.dailyBonusNotAvailable();
 		}
 
 		@Override public void DailyBonusError (ErrorCodes errorCode) {
-
+			if (listener != null) listener.dailyBonusError(SpilErrorCode.fromId(errorCode.getId()));
 		}
 
 		@Override public void DailyBonusReward (String rewardList) {
-
+			if (listener != null) listener.dailyBonusReward(toJson(rewardList));
 		}
 	}
 
 	private static class MyOnSplashScreenListener implements OnSplashScreenListener {
-		@Override public void SplashScreenOpenShop () {
+		SpilSplashScreenListener listener;
 
+		@Override public void SplashScreenOpenShop () {
+			if (listener != null) listener.splashScreenOpenShop();
 		}
 
 		@Override public void SplashScreenOpen () {
-
+			if (listener != null) listener.splashScreenOpen();
 		}
 
 		@Override public void SplashScreenClosed () {
-
+			if (listener != null) listener.splashScreenClosed();
 		}
 
 		@Override public void SplashScreenNotAvailable () {
-
+			if (listener != null) listener.splashScreenNotAvailable();
 		}
 
 		@Override public void SplashScreenError (ErrorCodes errorCode) {
-
+			if (listener != null) listener.splashScreenError(SpilErrorCode.fromId(errorCode.getId()));
 		}
 	}
 }

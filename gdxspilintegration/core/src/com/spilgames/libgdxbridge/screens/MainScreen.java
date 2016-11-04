@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.kotcrab.vis.ui.widget.VisLabel;
+import com.kotcrab.vis.ui.widget.VisScrollPane;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.spilgames.libgdxbridge.SpilGame;
@@ -19,11 +20,14 @@ public class MainScreen extends BaseScreen {
 		super(game);
 
 		VisTable table = new VisTable(true);
+		VisScrollPane scrollPane = new VisScrollPane(table);
+		scrollPane.setScrollingDisabled(true, false);
 		table.add(new VisLabel("General")).row();
 		addScreenButton(table, "Config", ConfigScreen.class);
 		addScreenButton(table, "IAPEvents", IAPEventsScreen.class);
 		addScreenButton(table, "CustomEvents", CustomEventsScreen.class);
 		addScreenButton(table, "Tracking shortcuts", TrackingScreen.class);
+		addScreenButton(table, "Daily Bonus & Splash Screen", WebScreen.class);
 
 		table.add(new VisLabel("Packages & Promotions")).row();
 		addScreenButton(table, "Packages & Promotions", PackagesScreen.class);
@@ -39,7 +43,7 @@ public class MainScreen extends BaseScreen {
 		table.add(new VisLabel("Customer Support")).row();
 		addScreenButton(table, "Zendesk", ZendeskScreen.class);
 
-		root.add(table).expand().top();
+		root.add(scrollPane).expand().fillX().top();
 	}
 
 	private void addScreenButton (VisTable table, String label, final Class<? extends BaseScreen> aClass) {

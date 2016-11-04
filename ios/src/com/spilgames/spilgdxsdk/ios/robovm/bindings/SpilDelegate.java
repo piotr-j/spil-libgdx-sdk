@@ -35,6 +35,38 @@ public interface SpilDelegate extends NSObjectProtocol {
 	@Method(selector = "grantReward:")
 	void grantReward(NSDictionary<?, ?> reward);
 
+	// Splash screen events
+	@Method(selector = "splashScreenOpen")
+	void splashScreenOpen();
+
+	@Method(selector = "splashScreenNotAvailable")
+	void splashScreenNotAvailable();
+
+	@Method(selector = "splashScreenClosed")
+	void splashScreenClosed();
+
+	@Method(selector = "splashScreenOpenShop")
+	void splashScreenOpenShop();
+
+	@Method(selector = "splashScreenError:")
+	void splashScreenError(String message);
+
+	// Daily bonus screen events
+	@Method(selector = "dailyBonusOpen")
+	void dailyBonusOpen();
+
+	@Method(selector = "dailyBonusNotAvailable")
+	void dailyBonusNotAvailable();
+
+	@Method(selector = "dailyBonusClosed")
+	void dailyBonusClosed();
+
+	@Method(selector = "dailyBonusReward:")
+	void dailyBonusReward(NSDictionary<?, ?> data);
+
+	@Method(selector = "dailyBonusError:")
+	void dailyBonusError(String message);
+
 	// Package events
 	@Method(selector = "packagesLoaded")
 	void packagesLoaded();

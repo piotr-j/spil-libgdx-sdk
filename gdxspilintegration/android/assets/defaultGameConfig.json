@@ -14,8 +14,8 @@
     "googleAnalyticsId":"UA-55365967-3",
     "adjustAppToken":"cyafkpw8soow",
     "zendeskSubdomain":"https://spilapps.zendesk.com",
-    "zendeskAppId":"3d3a17f327b472289377eb3dabcf5628a3a948663d950eb3",
-    "zendeskOauthClientId":"mobile_sdk_client_24c6e04403c90003b62b",
+    "zendeskAppId":"73fc3647bd842920d20862af48414472ae0c607c9e5d414c",
+    "zendeskOauthClientId":"mobile_sdk_client_9fcb4e68b1c9094237f8",
     "zendeskCustomTheme":{
       "customizeNavBar":"true",
       "navBarItemsColor":"#000000",

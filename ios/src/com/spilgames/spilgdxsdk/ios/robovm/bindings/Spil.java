@@ -108,6 +108,25 @@ public class Spil extends NSObject {
 	@Method(selector = "start")
 	public static native void start();
 
+
+	/**
+	 *  Helper method to log a message to the console
+	 *  Especially useful when building a wrapped games (e.g. Unity) where the log messages are sometimes stripped out.
+	 *  This method gives the oppertunity to log the message at the native layer instead.
+	 *
+	 *  @param message message to log
+	 */
+	@Method(selector = "start:")
+	public static native void log(String message);
+
+	/**
+	 *  Method to set a custom bundle id, useful during debugging.
+	 *
+	 *  @param bundleId custom bundle id to use
+	 */
+	@Method(selector = "setCustomBundleId:")
+	public static native void setCustomBundleId(String bundleId);
+
 	/**
 	 * @param skuId             The product identifier of the item that was purchased
 	 * @param transactionId     The transaction identifier of the item that was purchased (also called orderId)
@@ -369,6 +388,12 @@ public class Spil extends NSObject {
 	@Method(selector = "requestPlayerData")
 	public static native void requestPlayerData();
 
+	/**
+	 * Update the player data
+	 */
+	@Method(selector = "updatePlayerData")
+	public static native void updatePlayerData();
+
 	// NOTE this is not exposed in header for some reason, internally its 'requestGameData' event
 	@Method(selector = "requestGameData")
 	public static native void requestGameData();
@@ -415,4 +440,17 @@ public class Spil extends NSObject {
 
 	@Method(selector = "showHelpCenter")
 	public static native void showHelpCenter();
+
+	// web
+	/**
+	 * Request the daily bonus screen
+	 */
+	@Method(selector = "requestDailyBonus")
+	public static native void requestDailyBonus();
+
+	/**
+	 * Request a splash screen
+	 */
+	@Method(selector = "requestSplashScreen")
+	public static native void requestSplashScreen();
 }

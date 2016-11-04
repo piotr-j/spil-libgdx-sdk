@@ -26,8 +26,10 @@ import com.spilgames.spilsdk.playerdata.PlayerDataCallbacks;
 import com.spilgames.spilsdk.pushnotifications.NotificationDataCallbacks;
 import com.spilgames.spilsdk.pushnotifications.OnNotificationListener;
 import com.spilgames.spilsdk.utils.error.ErrorCodes;
-import com.spilgames.spilsdk.web.OnWebListener;
-import com.spilgames.spilsdk.web.WebCallbacks;
+import com.spilgames.spilsdk.web.dailybonus.DailyBonusCallbacks;
+import com.spilgames.spilsdk.web.dailybonus.OnDailyBonusListener;
+import com.spilgames.spilsdk.web.splashscreen.OnSplashScreenListener;
+import com.spilgames.spilsdk.web.splashscreen.SplashScreenCallbacks;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,6 +40,8 @@ public class AndroidSpilSdk implements SpilSdk {
 	private MyOnPlayerDataListener playerListener;
 	private MySpilGameDataCallbacks gameListener;
 	private MyOnAdsListener adListener;
+	private MyOnDailyBonusListener dailyListener;
+	private MyOnSplashScreenListener splashListener;
 	private com.spilgames.spilsdk.SpilSdk instance;
 	private AndroidTrack track;
 	private SpilLifecycleListener lifecycleListener;
@@ -53,6 +57,8 @@ public class AndroidSpilSdk implements SpilSdk {
 		instance.setPlayerDataCallbacks(new PlayerDataCallbacks(playerListener = new MyOnPlayerDataListener()));
 		instance.setGameDataCallbacks(new SpilGameDataCallbacks(gameListener = new MySpilGameDataCallbacks()));
 		instance.setNativeAdCallbacks(new AdCallbacks(adListener = new MyOnAdsListener()));
+		instance.setSplashScreenCallbacks(new SplashScreenCallbacks(splashListener = new MyOnSplashScreenListener()));
+		instance.setDailyBonusCallbacks(new DailyBonusCallbacks(dailyListener = new MyOnDailyBonusListener()));
 		track = new AndroidTrack(context);
 		setSpilLifecycleListener(listener);
 	}
@@ -61,58 +67,6 @@ public class AndroidSpilSdk implements SpilSdk {
 		lifecycleListener = listener;
 		if (lifecycleListener != null) {
 			lifecycleListener.initialized(this);
-		}
-	}
-
-	private static class MyOnConfigDataListener implements OnConfigDataListener {
-		SpilConfigDataListener listener;
-		@Override public void ConfigDataUpdated () {
-			if (listener != null) listener.configDataUpdated();
-		}
-	}
-
-	private static class MyOnPlayerDataListener implements OnPlayerDataListener {
-		SpilPlayerDataListener listener;
-		@Override public void PlayerDataAvailable () {
-			if (listener != null) listener.playerDataAvailable();
-		}
-
-		@Override public void PlayerDataUpdated (String reason, String updatedData) {
-			if (listener != null) listener.playerDataUpdated(reason, toJson(updatedData));
-		}
-
-		@Override public void PlayerDataError (ErrorCodes error) {
-			if (listener != null) listener.playerDataError(SpilErrorCode.fromId(error.getId()));
-		}
-	}
-
-	private static class MySpilGameDataCallbacks implements OnGameDataListener {
-		SpilGameDataListener listener;
-		@Override public void GameDataAvailable () {
-			if (listener != null) listener.gameDataAvailable();
-		}
-
-		@Override public void GameDataError (ErrorCodes error) {
-			if (listener != null) listener.gameDataError(SpilErrorCode.fromId(error.getId()));
-		}
-	}
-
-	private static class MyOnAdsListener implements OnAdsListener {
-		SpilAdListener listener;
-		@Override public void AdAvailable (String type) {
-			if (listener != null) listener.adAvailable(type);
-		}
-
-		@Override public void AdNotAvailable (String type) {
-			if (listener != null) listener.adNotAvailable(type);
-		}
-
-		@Override public void AdStart () {
-			if (listener != null) listener.adStart();
-		}
-
-		@Override public void AdFinished (String response) {
-			if (listener != null) listener.adFinished(toJson(response));
 		}
 	}
 
@@ -201,19 +155,21 @@ public class AndroidSpilSdk implements SpilSdk {
 	}
 
 	@Override public void setSpilAutomatedEventsListener (final SpilAutomatedEventsListener automatedEventsListener) {
-		if (automatedEventsListener == null) {
-			instance.setWebCallbacks(null);
-			return;
-		}
-		instance.setWebCallbacks(new WebCallbacks(new OnWebListener() {
-			@Override public void OpenGameShop () {
-				automatedEventsListener.openGameShop();
-			}
+		// removed in 2.2.4, replaced by daily/splash callbacks
 
-			@Override public void ReceiveReward (String rewardData) {
-				// TODO what about this? is this the same as notification reward thing? what about ios?
-			}
-		}));
+//		if (automatedEventsListener == null) {
+//			instance.setWebCallbacks(null);
+//			return;
+//		}
+//		instance.setWebCallbacks(new WebCallbacks(new OnWebListener() {
+//			@Override public void OpenGameShop () {
+//				automatedEventsListener.openGameShop();
+//			}
+//
+//			@Override public void ReceiveReward (String rewardData) {
+//				// TODO what about this? is this the same as notification reward thing? what about ios?
+//			}
+//		}));
 	}
 
 	@Override public AndroidTrack track () {
@@ -535,6 +491,102 @@ public class AndroidSpilSdk implements SpilSdk {
 			runnable.run();
 		} else {
 			((AndroidApplication)Gdx.app).runOnUiThread(runnable);
+		}
+	}
+
+	private static class MyOnConfigDataListener implements OnConfigDataListener {
+		SpilConfigDataListener listener;
+		@Override public void ConfigDataUpdated () {
+			if (listener != null) listener.configDataUpdated();
+		}
+	}
+
+	private static class MyOnPlayerDataListener implements OnPlayerDataListener {
+		SpilPlayerDataListener listener;
+		@Override public void PlayerDataAvailable () {
+			if (listener != null) listener.playerDataAvailable();
+		}
+
+		@Override public void PlayerDataUpdated (String reason, String updatedData) {
+			if (listener != null) listener.playerDataUpdated(reason, toJson(updatedData));
+		}
+
+		@Override public void PlayerDataError (ErrorCodes error) {
+			if (listener != null) listener.playerDataError(SpilErrorCode.fromId(error.getId()));
+		}
+	}
+
+	private static class MySpilGameDataCallbacks implements OnGameDataListener {
+		SpilGameDataListener listener;
+		@Override public void GameDataAvailable () {
+			if (listener != null) listener.gameDataAvailable();
+		}
+
+		@Override public void GameDataError (ErrorCodes error) {
+			if (listener != null) listener.gameDataError(SpilErrorCode.fromId(error.getId()));
+		}
+	}
+
+	private static class MyOnAdsListener implements OnAdsListener {
+		SpilAdListener listener;
+		@Override public void AdAvailable (String type) {
+			if (listener != null) listener.adAvailable(type);
+		}
+
+		@Override public void AdNotAvailable (String type) {
+			if (listener != null) listener.adNotAvailable(type);
+		}
+
+		@Override public void AdStart () {
+			if (listener != null) listener.adStart();
+		}
+
+		@Override public void AdFinished (String response) {
+			if (listener != null) listener.adFinished(toJson(response));
+		}
+	}
+
+	private static class MyOnDailyBonusListener implements OnDailyBonusListener {
+		@Override public void DailyBonusOpen () {
+
+		}
+
+		@Override public void DailyBonusClosed () {
+
+		}
+
+		@Override public void DailyBonusNotAvailable () {
+
+		}
+
+		@Override public void DailyBonusError (ErrorCodes errorCode) {
+
+		}
+
+		@Override public void DailyBonusReward (String rewardList) {
+
+		}
+	}
+
+	private static class MyOnSplashScreenListener implements OnSplashScreenListener {
+		@Override public void SplashScreenOpenShop () {
+
+		}
+
+		@Override public void SplashScreenOpen () {
+
+		}
+
+		@Override public void SplashScreenClosed () {
+
+		}
+
+		@Override public void SplashScreenNotAvailable () {
+
+		}
+
+		@Override public void SplashScreenError (ErrorCodes errorCode) {
+
 		}
 	}
 }

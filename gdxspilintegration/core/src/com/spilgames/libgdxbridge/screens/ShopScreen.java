@@ -76,9 +76,13 @@ public class ShopScreen extends BackScreen {
 		if (data != null) {
 			JsonValue shopData = data.get("shop");
 			if (shopData != null) {
-				JsonValue tabs = shopData.get("tabs");
-				if (tabs != null) {
-					return tabs;
+				if (shopData.isObject()) {
+					JsonValue tabs = shopData.get("tabs");
+					if (tabs != null) {
+						return tabs;
+					}
+				} else if (shopData.isArray()){
+					return shopData;
 				}
 			}
 		}

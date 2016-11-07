@@ -442,7 +442,7 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 		}
 
 		@Override public void spilGameDataError (String message) {
-			if (gameDataListener != null) playerDataListener.playerDataError(convertErrorMessage(message));
+			if (gameDataListener != null) gameDataListener.gameDataError(convertErrorMessage(message));
 		}
 
 		@Override public void playerDataAvailable () {

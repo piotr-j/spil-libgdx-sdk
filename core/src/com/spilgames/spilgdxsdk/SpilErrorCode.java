@@ -48,7 +48,9 @@ public enum SpilErrorCode {
 	private static SpilErrorCode[] all = values();
 
 	public static SpilErrorCode fromId(int id) {
-		if (id < 1 || id > 11) return Invalid;
-		return all[id];
+		for (SpilErrorCode code : all) {
+			if (code.id == id) return code;
+		}
+		return Invalid;
 	}
 }

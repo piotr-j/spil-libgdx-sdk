@@ -521,7 +521,7 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 			JsonValue value = toJson(message);
 			if (value != null) {
 				int id = value.getInt("id", -1);
-				SpilErrorCode.fromId(id);
+				return SpilErrorCode.fromId(id);
 			}
 			return SpilErrorCode.Invalid;
 		}

@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.JsonWriter;
 import com.badlogic.gdx.utils.StringBuilder;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisScrollPane;
@@ -16,6 +17,7 @@ import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPane;
 import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneAdapter;
 import com.spilgames.libgdxbridge.SpilGame;
 import com.spilgames.spilgdxsdk.SpilErrorCode;
+import com.spilgames.spilgdxsdk.SpilEvent;
 import com.spilgames.spilgdxsdk.SpilGameDataListener;
 import com.spilgames.spilgdxsdk.SpilPlayerDataListener;
 
@@ -69,6 +71,8 @@ public class ShopScreen extends BackScreen {
 			}
 		});
 		spilSdk.requestGameData();
+		// we force the update as the ios backend doesnt delegate game data events properly
+		updateUI();
 	}
 
 	private JsonValue getTabs() {

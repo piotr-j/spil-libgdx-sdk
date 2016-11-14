@@ -186,6 +186,10 @@ public class JsSpilSdk {
 		return JSON.stringify(SpilSDK.getPromotion(packageId));
 	}-*/;
 
+	public static native void openPaymentsScreen(String packageId) /*-{
+		SpilSDK.openPaymentsScreen(packageId);
+	}-*/;
+
 	public static native void requestRewardVideo () /*-{
 		SpilSDK.RequestRewardVideo();
 	}-*/;

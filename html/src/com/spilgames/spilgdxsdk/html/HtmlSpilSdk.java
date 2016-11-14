@@ -258,6 +258,11 @@ public class HtmlSpilSdk implements SpilSdk {
 		return toJson(JsSpilSdk.getAllPackages());
 	}
 
+	@Override public void buyPackage (String packageId) {
+		log(TAG, "buyPackage ("+packageId+")");
+		JsSpilSdk.openPaymentsScreen(packageId);
+	}
+
 	@Override public boolean isAdProviderInitialized (String provider) {
 		log(TAG, "isAdProviderInitialized ("+provider+")");
 		// we don't really have providers on html, do we?

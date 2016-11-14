@@ -282,6 +282,10 @@ public class AndroidSpilSdk implements SpilSdk {
 		return toJson(instance.getPromotion(packageId));
 	}
 
+	@Override public void buyPackage (String packageId) {
+
+	}
+
 	private static JsonValue toJson (String data) {
 		if (data == null) return null;
 		try {

@@ -149,6 +149,10 @@ public class DesktopSpilSdk implements SpilSdk {
 		return null;
 	}
 
+	@Override public void buyPackage (String packageId) {
+		log(TAG, "buyPackage ("+packageId+")");
+	}
+
 	@Override public boolean isAdProviderInitialized (String provider) {
 		return false;
 	}

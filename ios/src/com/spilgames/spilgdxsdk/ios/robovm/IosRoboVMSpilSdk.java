@@ -184,6 +184,10 @@ public class IosRoboVMSpilSdk implements SpilSdk {
 		return toJson(Spil.getAllPackages());
 	}
 
+	@Override public void buyPackage (String packageId) {
+
+	}
+
 	// no android equivalent
 	public JsonValue getAllPromotions () {
 		return toJson(Spil.getAllPromotions());

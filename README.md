@@ -1,9 +1,9 @@
 # Spil GDX SDK Bridge
 
-Based on Spil Android SDK 2.2.2 and iOS SDK 2.0.8
+Based on Spil Android SDK 2.2.2, iOS SDK 2.0.8 and html sdk 0.1.0
 
 ##Supported Platforms
-Android, iOS-RoboVM
+Android, iOS-RoboVM, html/gwt
 
 ##Requirements
 libGDX 1.9.3+, Android API 15+, ios 7.1+
@@ -92,6 +92,17 @@ Add this to your info.plist.xml
 </dict>
 ```
 
+**Html**
+
+Add this to your build.gradle html dependencies
+```gradle
+compile "com.spilgames.spilgdxsdk:spil-gdx-sdk-html:$spilGDXSDKVersion"
+compile "com.spilgames.spilgdxsdk:spil-gdx-sdk-html:$spilGDXSDKVersion:sources"
+compile "com.spilgames.spilgdxsdk:spil-gdx-sdk-core:$spilGDXSDKVersion:sources"
+```
+
+Build spil-sdk.js from https://github.com/spilgames/spil-html5-sdk and copy it into `html/webapp`
+
 
 **Desktop**
 
@@ -107,7 +118,22 @@ Main thing that differs are various lifecycle methods that must be called on dif
 
 **Core**
 
-Your main class implementing ApplicationListener should take SpilSdk interface as one of its parameters. 
+Your main class implementing ApplicationListener should take SpilSdk interface as one of its parameters.
+
+Setting up a `SpilLifecycleListener` is an important step, this should be done in `create()` method in your `ApplicationAdapter`
+
+```java
+@Override public void create () {
+    // ...
+    spilSdk.setSpilLifecycleListener(new SpilLifecycleListener() {
+        @Override public void initialized (SpilSdk spilSdk) {
+            // spil sdk is now fully initialized
+        }
+    });
+    // or if ApplicationAdapter implements SpilLifecycleListener
+    // spilSdk.setSpilLifecycleListener(this);
+}
+```
 
 **Android**
 
@@ -198,6 +224,43 @@ public class IOSLauncher extends IOSApplication.Delegate {
 ```
 
 Other sdks omitted for clarity
+
+**Html**
+
+Load `spil-sdk.js` on the page that will show the game, `webapp/index.html` in default libgdx project
+
+```html
+<head>
+    <!-- ... -->
+    <script src="spil-sdk.js"></script>
+</head>
+```
+
+and initialize it
+
+```html
+<script>
+    <!-- ... -->
+    spilInitialized = false;
+    SpilSDK("appId", "appVersion",
+        function(){
+            // this is required for gwt part to work!
+            spilInitialized = true;
+        }, "appEnvironment");
+</script>
+```
+
+Then pass instance of HtmlSpilSdk to your game
+
+```java
+@Override public ApplicationListener createApplicationListener () {
+    return new GdxGame(new HtmlSpilSdk());
+}
+```
+
+Currently html sdk is less featured then android and ios counterparts.
+See http://www.spilgames.com/developers/integration/javascript/api/ for available apis
+
 
 **Desktop**
 

@@ -33,7 +33,6 @@ allprojects {
         roboVMVersion = '2.2.0'
         robopodsVersion = '2.2.0-SNAPSHOT'
         spilGDXSDKVersion = '2.2.3'
-        // TODO this should be 9.4.0 but it doesnt work for whatever reason
         gmsVersion = '9.2.0'
     }
 
@@ -147,7 +146,6 @@ project(":html") {
         // used for gui
         compile "com.kotcrab.vis:vis-ui:1.1.1:sources"
 
-        // This is disabled for now as some classes in core are not compatible with GWT
         compile "com.spilgames.spilgdxsdk:spil-gdx-sdk-html:$spilGDXSDKVersion"
         compile "com.spilgames.spilgdxsdk:spil-gdx-sdk-html:$spilGDXSDKVersion:sources"
         compile "com.spilgames.spilgdxsdk:spil-gdx-sdk-core:$spilGDXSDKVersion:sources"

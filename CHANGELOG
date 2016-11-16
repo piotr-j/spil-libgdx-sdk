@@ -1,4 +1,7 @@
 2.2.2
+    * added html/gwt backend using spil-html5-sdk
+    * added SpilLifecycleListener
+2.2.2
     * updated android sdk to 2.2.2 and ios sdk to 2.0.8
 2.1.0
 	* initial release
